@@ -10,9 +10,9 @@ namespace TaskManagerAPI.Services
 
 		public Task<ServiceResponse<ProjectGetResponseDto>> GetById(int id);
 
-		public Task<ServiceResponse<List<ProjectGetResponseDto>>> Post(ProjectAddRequestDto p);
+		public Task<ServiceResponse<List<ProjectGetResponseDto>>> Create(ProjectAddRequestDto p);
 
-		public Task<ServiceResponse<ProjectGetResponseDto>> Put(ProjectUpdateRequestDto updatedProject);
+		public Task<ServiceResponse<ProjectGetResponseDto>> Update(ProjectUpdateRequestDto updatedProject);
 
 		public Task<ServiceResponse<List<ProjectGetResponseDto>>> Delete(int id);
 	}

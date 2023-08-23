@@ -39,7 +39,7 @@ namespace TaskManagerAPI.Services
 			return response;
 		}
 
-		async Task<ServiceResponse<List<ProjectGetResponseDto>>> IProjectService.Post(ProjectAddRequestDto p)
+		async Task<ServiceResponse<List<ProjectGetResponseDto>>> IProjectService.Create(ProjectAddRequestDto p)
 		{
 			var response = new ServiceResponse<List<ProjectGetResponseDto>>();
 			var newProject = _mapper.Map<Project>(p);
@@ -50,7 +50,7 @@ namespace TaskManagerAPI.Services
 			return response;
 		}
 
-		async Task<ServiceResponse<ProjectGetResponseDto>> IProjectService.Put(ProjectUpdateRequestDto updatedProject)
+		async Task<ServiceResponse<ProjectGetResponseDto>> IProjectService.Update(ProjectUpdateRequestDto updatedProject)
 		{
 			var response = new ServiceResponse<ProjectGetResponseDto>();
 			var projects = await _dataContext.Projects.ToListAsync();

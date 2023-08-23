@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerAPI.Dtos.Project;
 using TaskManagerAPI.Models;
@@ -17,12 +18,14 @@ namespace TaskManagerAPI.Controllers
 			_projectService = projectService;
 		}
 
+		[Authorize]
 		[HttpGet]
 		public async Task<ActionResult<ServiceResponse<List<ProjectGetResponseDto>>>> GetAll()
 		{
 			return Ok(await _projectService.GetAll());
 		}
 
+		[Authorize]
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ServiceResponse<ProjectGetResponseDto>>> GetById(int id)
 		{
@@ -34,16 +37,18 @@ namespace TaskManagerAPI.Controllers
 			return NotFound(response);
 		}
 
+		[Authorize]
 		[HttpPost]
-		public async Task<ActionResult<ServiceResponse<List<ProjectGetResponseDto>>>> Post(ProjectAddRequestDto p)
+		public async Task<ActionResult<ServiceResponse<List<ProjectGetResponseDto>>>> Create(ProjectAddRequestDto p)
 		{
-			return Ok(await _projectService.Post(p));
+			return Ok(await _projectService.Create(p));
 		}
 
+		[Authorize]
 		[HttpPut]
-		public async Task<ActionResult<ProjectGetResponseDto>> Put(ProjectUpdateRequestDto updatedProject)
+		public async Task<ActionResult<ProjectGetResponseDto>> Update(ProjectUpdateRequestDto updatedProject)
 		{
-			var response = await _projectService.Put(updatedProject);
+			var response = await _projectService.Update(updatedProject);
 			if (response.Success)
 			{
 				return Ok(response);
@@ -51,6 +56,7 @@ namespace TaskManagerAPI.Controllers
 			return NotFound(response);
 		}
 
+		[Authorize]
 		[HttpDelete("{id}")]
 		public async Task<ActionResult<List<ProjectGetResponseDto>>> Delete(int id)
 		{
