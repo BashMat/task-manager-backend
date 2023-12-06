@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskManagerAPI.Data;
+using TaskManagerApi.Data;
 
 #nullable disable
 
-namespace TaskManagerAPI.Migrations
+namespace TaskManagerApi.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20230802160419_InitialMigration")]

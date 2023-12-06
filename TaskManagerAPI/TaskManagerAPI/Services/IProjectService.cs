@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskManagerAPI.Models;
-using TaskManagerAPI.Dtos.Project;
+using TaskManagerApi.Domain.Dtos.Project;
+using TaskManagerApi.Domain;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerApi.Services
 {
 	public interface IProjectService
 	{

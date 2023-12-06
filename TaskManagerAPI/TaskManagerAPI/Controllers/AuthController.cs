@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerAPI.Dtos.User;
-using TaskManagerAPI.Models;
-using TaskManagerAPI.Services;
+using TaskManagerApi.Domain.Dtos.User;
+using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Domain;
+using TaskManagerApi.Services;
 
-namespace TaskManagerAPI.Controllers
+namespace TaskManagerApi.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]

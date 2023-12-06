@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManagerAPI.Data;
-using TaskManagerAPI.Dtos.Project;
-using TaskManagerAPI.Models;
+using TaskManagerApi.Data;
+using TaskManagerApi.Domain.Dtos.Project;
+using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Domain;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerApi.Services
 {
 	public class ProjectService : IProjectService
 	{

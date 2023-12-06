@@ -1,8 +1,8 @@
-﻿using TaskManagerAPI.Dtos.Project;
-using TaskManagerAPI.Dtos.User;
-using TaskManagerAPI.Models;
+﻿using TaskManagerApi.Domain.Dtos.User;
+using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Domain;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerApi.Services
 {
 	public interface IAuthService
 	{

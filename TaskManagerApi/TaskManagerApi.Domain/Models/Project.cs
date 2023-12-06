@@ -1,6 +1,6 @@
-﻿namespace TaskManagerAPI.Dtos.Project
+﻿namespace TaskManagerApi.Domain.Models
 {
-	public class ProjectUpdateRequestDto
+	public class Project
 	{
 		public int Id { get; set; }
 

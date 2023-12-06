@@ -1,4 +1,4 @@
-﻿namespace TaskManagerAPI.Dtos.Project
+﻿namespace TaskManagerApi.Domain.Dtos.Project
 {
 	public class ProjectGetResponseDto
 	{

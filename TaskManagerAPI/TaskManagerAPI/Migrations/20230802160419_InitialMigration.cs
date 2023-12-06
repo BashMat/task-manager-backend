@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TaskManagerAPI.Migrations
+namespace TaskManagerApi.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

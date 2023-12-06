@@ -1,4 +1,4 @@
-﻿namespace TaskManagerAPI.Dtos.User
+﻿namespace TaskManagerApi.Domain.Dtos.User
 {
 	public class UserDto
 	{

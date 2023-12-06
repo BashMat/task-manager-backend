@@ -2,14 +2,15 @@
 using System.Security.Cryptography;
 using System.Security.Claims;
 using System.Text;
-using TaskManagerAPI.Dtos.User;
-using TaskManagerAPI.Models;
+using TaskManagerApi.Domain.Dtos.User;
+using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Domain;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using TaskManagerAPI.Data;
+using TaskManagerApi.Data;
 
-namespace TaskManagerAPI.Services
+namespace TaskManagerApi.Services
 {
 	public class AuthService : IAuthService
 	{

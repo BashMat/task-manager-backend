@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using TaskManagerAPI.Dtos.Project;
-using TaskManagerAPI.Models;
+using TaskManagerApi.Domain.Dtos.Project;
+using TaskManagerApi.Domain.Models;
 
-namespace TaskManagerAPI.AutoMapperProfile
+namespace TaskManagerApi.AutoMapperProfile
 {
 	public class AutoMapperProfile : Profile
 	{

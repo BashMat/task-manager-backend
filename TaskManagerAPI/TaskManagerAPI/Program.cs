@@ -1,5 +1,5 @@
-using TaskManagerAPI.Services;
-using TaskManagerAPI.Data;
+using TaskManagerApi.Services;
+using TaskManagerApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace TaskManagerAPI
+namespace TaskManagerApi
 {
 	public class Program
 	{
