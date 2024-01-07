@@ -1,13 +1,9 @@
-using TaskManagerApi.Services;
-using TaskManagerApi.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using TaskManagerApi.Services.Auth;
-using TaskManagerApi.Services.Project;
 using TaskManagerApi.DataAccess.Repositories;
 
 namespace TaskManagerApi
@@ -19,10 +15,8 @@ namespace TaskManagerApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddDbContext<DataContext>(options => 
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
@@ -36,10 +30,12 @@ namespace TaskManagerApi
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
-            builder.Services.AddScoped<IProjectService, ProjectService>();
+
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -53,6 +49,7 @@ namespace TaskManagerApi
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("MyDefaultPolicy",

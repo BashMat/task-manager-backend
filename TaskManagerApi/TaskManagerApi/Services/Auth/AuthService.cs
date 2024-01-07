@@ -6,16 +6,7 @@ using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using TaskManagerApi.Data;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using TaskManagerApi.DataAccess.Data;
-using Azure.Core;
-using Microsoft.AspNetCore.Mvc;
 using TaskManagerApi.DataAccess.Repositories;
-using Azure;
 
 namespace TaskManagerApi.Services.Auth
 {
