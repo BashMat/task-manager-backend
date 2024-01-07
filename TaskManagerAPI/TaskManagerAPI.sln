@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi", "TaskManagerApi\TaskManagerApi.csproj", "{E91EDEE9-6F61-4376-9BB0-1206FD7CDA19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.Domain", "TaskManagerApi.Domain\TaskManagerApi.Domain.csproj", "{525A8CB5-3988-4120-B79F-46491EFB2AFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Domain", "TaskManagerApi.Domain\TaskManagerApi.Domain.csproj", "{525A8CB5-3988-4120-B79F-46491EFB2AFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.DataAccess", "TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj", "{A92D1813-776E-4A24-A786-1B26C250C168}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{525A8CB5-3988-4120-B79F-46491EFB2AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{525A8CB5-3988-4120-B79F-46491EFB2AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{525A8CB5-3988-4120-B79F-46491EFB2AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A92D1813-776E-4A24-A786-1B26C250C168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A92D1813-776E-4A24-A786-1B26C250C168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A92D1813-776E-4A24-A786-1B26C250C168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A92D1813-776E-4A24-A786-1B26C250C168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
-using TaskManagerApi.Services;
+using Microsoft.AspNetCore.Cors;
+using TaskManagerApi.Services.Auth;
 
 namespace TaskManagerApi.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class AuthController : ControllerBase
 	{
@@ -19,17 +20,11 @@ namespace TaskManagerApi.Controllers
 			_authService = authService;
 		}
 
-		[Authorize]
-		[HttpGet("test")]
-		public ActionResult Get()
-		{
-			return Ok();
-		}
-
+		[EnableCors("MyDefaultPolicy")]
 		[HttpPost("register")]
-		public async Task<ActionResult<ServiceResponse<User>>> SignUp(UserDto user)
+		public async Task<ActionResult<ServiceResponse<User>>> SignUp(UserSignUpRequestDto requestData)
 		{
-			ServiceResponse<User> response = await _authService.SignUp(user);
+			ServiceResponse<UserSignUpResponseDto> response = await _authService.SignUp(requestData);
 			if (response.Success)
 			{
 				return Ok(response);
@@ -37,10 +32,11 @@ namespace TaskManagerApi.Controllers
 			return BadRequest(response);
 		}
 
+		[EnableCors("MyDefaultPolicy")]
 		[HttpPost("login")]
-		public async Task<ActionResult<ServiceResponse<string>>> Login(UserDto user)
+		public async Task<ActionResult<ServiceResponse<string>>> LogIn(UserLogInRequestDto requestData)
 		{
-			ServiceResponse<string> response = await _authService.Login(user);
+			ServiceResponse<string> response = await _authService.LogIn(requestData);
 			if (response.Success)
 			{
 				return Ok(response);

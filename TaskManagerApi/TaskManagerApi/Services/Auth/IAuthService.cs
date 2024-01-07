@@ -2,13 +2,13 @@
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
 
-namespace TaskManagerApi.Services
+namespace TaskManagerApi.Services.Auth
 {
 	public interface IAuthService
 	{
-		public Task<ServiceResponse<User>> SignUp(UserDto user);
+		public Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData);
 
-		public Task<ServiceResponse<string>> Login(UserDto user);
+		public Task<ServiceResponse<string>> LogIn(UserLogInRequestDto requestData);
 
 		public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
 

@@ -6,7 +6,7 @@ using TaskManagerApi.Domain.Dtos.Project;
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
 
-namespace TaskManagerApi.Services
+namespace TaskManagerApi.Services.Project
 {
 	public class ProjectService : IProjectService
 	{
@@ -43,7 +43,7 @@ namespace TaskManagerApi.Services
 		async Task<ServiceResponse<List<ProjectGetResponseDto>>> IProjectService.Create(ProjectAddRequestDto p)
 		{
 			var response = new ServiceResponse<List<ProjectGetResponseDto>>();
-			var newProject = _mapper.Map<Project>(p);
+			var newProject = _mapper.Map<Domain.Models.Project>(p);
 			await _dataContext.Projects.AddAsync(newProject);
 			await _dataContext.SaveChangesAsync();
 			var projects = await _dataContext.Projects.ToListAsync();
