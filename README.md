@@ -9,13 +9,19 @@ App supports creating user profiles (requires username, email and password), pro
 ## Stack
 Project created using:
 - C#
+  - .NET 6
   - ASP.NET Core 6
-  - Entity Framework Core 7
+  - Dapper
+- SQL (Transact-SQL)
 - Microsoft SQL Server
 
 
 ## Structure
-TBA
+- \TaskManagerApi
+  - \TaskManagerApi - core project, includes startup file, controllers and services
+  - \TaskManagerApi.Common - project for common files like const strings
+  - \TaskManagerApi.DataAccess - project for Data Access Layer, includes classes for DB queries and SQL scripts
+  - \TaskManagerApi.Domain - project for domain classes and DTOs
 
 ## API routes
 TBA

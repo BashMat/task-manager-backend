@@ -6,7 +6,8 @@ using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerApi.DataAccess.Repositories;
+using TaskManagerApi.DataAccess.Repositories.User;
+using TaskManagerApi.Common;
 
 namespace TaskManagerApi.Services.Auth
 {
@@ -21,11 +22,11 @@ namespace TaskManagerApi.Services.Auth
             _userRepository = userRepository;
         }
 
-        async Task<ServiceResponse<UserSignUpResponseDto>> IAuthService.SignUp(UserSignUpRequestDto requestData)
+        public async Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData)
         {
             ServiceResponse<UserSignUpResponseDto> response = new ();
 
-            if(await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
+            if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
             {
                 response.Data = null;
                 response.Success = false;
@@ -58,7 +59,7 @@ namespace TaskManagerApi.Services.Auth
             return response;
         }
 
-        async Task<ServiceResponse<string>> IAuthService.LogIn(UserLogInRequestDto requestData)
+        public async Task<ServiceResponse<string>> LogIn(UserLogInRequestDto requestData)
         {
             ServiceResponse<string> response = new();
 
@@ -110,24 +111,12 @@ namespace TaskManagerApi.Services.Auth
 
             //var expire = DateTime.Now.AddHours(4);
             var expire = DateTime.Now.AddMinutes(30);
-            var key = new SymmetricSecurityKey(GetKey());
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(null, null, claims, null, expire, creds);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
-        }
-
-        private byte[] GetKey()
-        {
-            try
-            {
-                return Encoding.UTF8.GetBytes(_configuration.GetSection("Token").Value);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Possibly token key was not specified");
-            }
         }
     }
 }

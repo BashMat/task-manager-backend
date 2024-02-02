@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using TaskManagerApi.Domain.Dtos.User;
-using TaskManagerApi.Domain.Models;
+using Models = TaskManagerApi.Domain.Models;
 
-namespace TaskManagerApi.DataAccess.Repositories
+namespace TaskManagerApi.DataAccess.Repositories.User
 {
     public class UserRepository : IUserRepository
     {
@@ -24,7 +23,7 @@ namespace TaskManagerApi.DataAccess.Repositories
                 (int id, byte[] passwordHash, byte[] passwordSalt) = await connection.QueryFirstAsync<(int, byte[], byte[])>(
                     "select [Id], [PasswordHash], [PasswordSalt] from [User] where [UserName] = @LogInData or [Email] = @LogInData",
                     new { LogInData = logInData });
-                return new (id, passwordHash, passwordSalt);
+                return new(id, passwordHash, passwordSalt);
             }
             catch (Exception ex)
             {
@@ -32,7 +31,24 @@ namespace TaskManagerApi.DataAccess.Repositories
             }
         }
 
-        async Task<bool> IUserRepository.CheckIfUserExistsByUserNameOrEmail(string userName, string email)
+        public async Task<bool> CheckIfUserExistsById(int id)
+        {
+            using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
+
+            try
+            {
+                await connection.QueryFirstAsync(
+                    "select [UserName], [Email] from [User] where [Id] = @Id",
+                    new { Id = id });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
         {
             using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
 
@@ -42,25 +58,25 @@ namespace TaskManagerApi.DataAccess.Repositories
 
             try
             {
-                UserSignUpResponseDto user = await connection.QueryFirstAsync<UserSignUpResponseDto>(
+                await connection.QueryFirstAsync(
                     "select [UserName], [Email] from [User] where [UserName] = @UserName or [Email] = @Email",
                     parameters);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
         }
 
-        async Task IUserRepository.Insert(User user)
+        public async Task Insert(Models.User user)
         {
             using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
 
             await connection.ExecuteAsync(
                 "insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values " +
                 "(@UserName, @Email, @CreatedAt, @UpdatedAt, @PasswordHash, @PasswordSalt)", user);
-            
+
             return;
         }
     }

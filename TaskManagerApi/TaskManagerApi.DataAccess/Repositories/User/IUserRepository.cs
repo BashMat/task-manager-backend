@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskManagerApi.Domain.Dtos.User;
-using TaskManagerApi.Domain.Models;
+﻿using Models = TaskManagerApi.Domain.Models;
 
-namespace TaskManagerApi.DataAccess.Repositories
+namespace TaskManagerApi.DataAccess.Repositories.User
 {
     public interface IUserRepository
     {
         public Task<Tuple<int, byte[], byte[]>?> GetUserPasswordData(string logInData);
+        public Task<bool> CheckIfUserExistsById(int id);
         public Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email);
-        public Task Insert(User user);
+        public Task Insert(Models.User user);
     }
 }

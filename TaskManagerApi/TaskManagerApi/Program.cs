@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using TaskManagerApi.Services.Auth;
-using TaskManagerApi.DataAccess.Repositories;
+using TaskManagerApi.Common;
 
 namespace TaskManagerApi
 {
@@ -13,6 +13,13 @@ namespace TaskManagerApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Configuration[ConfigurationKeys.Token] = builder.Configuration.GetSection(ConfigurationKeys.Token).Value;
+
+            if (builder.Configuration[ConfigurationKeys.Token] == null)
+            {
+                throw new ApplicationException("Secret key for token was not specified");
+            }
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -42,7 +49,7 @@ namespace TaskManagerApi
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Token").Value)),
+                        Encoding.UTF8.GetBytes(builder.Configuration[ConfigurationKeys.Token])),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,

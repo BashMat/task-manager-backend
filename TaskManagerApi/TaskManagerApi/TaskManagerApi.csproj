@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaskManagerApi.Common\TaskManagerApi.Common.csproj" />
     <ProjectReference Include="..\TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj" />
     <ProjectReference Include="..\TaskManagerApi.Domain\TaskManagerApi.Domain.csproj" />
   </ItemGroup>
