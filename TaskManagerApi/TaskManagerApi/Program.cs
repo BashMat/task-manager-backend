@@ -4,6 +4,9 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using TaskManagerApi.Services.Auth;
+using TaskManagerApi.Services.Board;
+using TaskManagerApi.DataAccess.Repositories.Board;
+using TaskManagerApi.DataAccess.Repositories.User;
 using TaskManagerApi.Common;
 
 namespace TaskManagerApi
@@ -41,7 +44,9 @@ namespace TaskManagerApi
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IBoardService, BoardService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IBoardRepository, BoardRepository>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
