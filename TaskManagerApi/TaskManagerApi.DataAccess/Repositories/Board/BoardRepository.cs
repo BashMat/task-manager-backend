@@ -2,8 +2,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TaskManagerApi.Domain.Dtos.Board;
+using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain.Models;
-using Models = TaskManagerApi.Domain.Models;
 
 namespace TaskManagerApi.DataAccess.Repositories.Board
 {
@@ -26,20 +26,24 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             "select scope_identity();", insertedBoard);
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto,
-                                                                                  Models.User,
+                                                                                  UserInfoDto,
+                                                                                  UserInfoDto,
                                                                                   BoardGetResponseDto>(
                 "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[U].[Id], [U].[UserName], [U].[FirstName], [U].[LastName], [U].[Email] " +
+                "[Creator].[Id], [Creator].[UserName], [Creator].[FirstName], [Creator].[LastName], [Creator].[Email], " +
+                "[Updater].[Id], [Updater].[UserName], [Updater].[FirstName], [Updater].[LastName], [Updater].[Email] " +
                 "from [Board] as [B] " +
-                "inner join [User] as [U] on [B].[CreatedBy] = [U].[Id] " +
+                "inner join [User] as [Creator] on [B].[CreatedBy] = [Creator].[Id] " +
+                "inner join [User] as [Updater] on [B].[UpdatedBy] = [Updater].[Id] " +
                 "where [B].[Id] = @BoardId",
-                (board, user) =>
+                (board, userCreator, userUpdater) =>
                 {
-                    board.CreatedBy = user;
+                    board.CreatedBy = userCreator;
+                    board.UpdatedBy = userUpdater;
                     return board;
                 },
                 param: new { BoardId = id },
-                splitOn: "Id");
+                splitOn: "Id, Id");
             return boards.First();
         }
 
@@ -58,22 +62,26 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto,
-                                                                                  Models.User,
+                                                                                  UserInfoDto,
+                                                                                  UserInfoDto,
                                                                                   ColumnGetResponseDto,
                                                                                   CardGetResponseDto,
                                                                                   BoardGetResponseDto>(
                 "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[U].[Id], [U].[UserName], [U].[FirstName], [U].[LastName], [U].[Email], " +
+                "[Creator].[Id], [Creator].[UserName], [Creator].[FirstName], [Creator].[LastName], [Creator].[Email], " +
+                "[Updater].[Id], [Updater].[UserName], [Updater].[FirstName], [Updater].[LastName], [Updater].[Email], " +
                 "[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
                 "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt] " +
                 "from [Board] as [B] " +
-                "inner join [User] as [U] on [B].[CreatedBy] = [U].[Id] " +
+                "inner join [User] as [Creator] on [B].[CreatedBy] = [Creator].[Id] " +
+                "inner join [User] as [Updater] on [B].[UpdatedBy] = [Updater].[Id] " +
                 "left join [Column] as [Col] on [B].[Id] = [Col].[BoardId] " +
                 "left join [Card] on [Col].[Id] = [Card].[ColumnId] " +
                 "where [B].[Id] = @BoardId",
-                (board, user, column, card) => ToDto(historyBoards, historyColumns, board, user, column, card),
+                (board, userCreator, userUpdater, column, card) => 
+                ToDto(historyBoards, historyColumns, board, userCreator, userUpdater, column, card),
                 param: new { BoardId = boardId },
-                splitOn: "Id, Id, Id");
+                splitOn: "Id, Id, Id, Id");
             return boards.Distinct().First();
         }
 
@@ -85,29 +93,34 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto,
-                                                              Models.User,
+                                                              UserInfoDto,
+                                                              UserInfoDto,
                                                               ColumnGetResponseDto,
                                                               CardGetResponseDto,
                                                               BoardGetResponseDto>(
                 "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[U].[Id], [U].[UserName], [U].[FirstName], [U].[LastName], [U].[Email], " +
+                "[Creator].[Id], [Creator].[UserName], [Creator].[FirstName], [Creator].[LastName], [Creator].[Email], " +
+                "[Updater].[Id], [Updater].[UserName], [Updater].[FirstName], [Updater].[LastName], [Updater].[Email], " +
                 "[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
                 "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt] " +
                 "from [Board] as [B] " +
-                "inner join [User] as [U] on [B].[CreatedBy] = [U].[Id] " +
+                "inner join [User] as [Creator] on [B].[CreatedBy] = [Creator].[Id] " +
+                "inner join [User] as [Updater] on [B].[UpdatedBy] = [Updater].[Id] " +
                 "left join [Column] as [Col] on [B].[Id] = [Col].[BoardId] " +
                 "left join [Card] on [Col].[Id] = [Card].[ColumnId] " +
-                "where [U].[Id] = @UserId",
-                (board, user, column, card) => ToDto(historyBoards, historyColumns, board, user, column, card),
+                "where [Creator].[Id] = @UserId",
+                (board, userCreator, userUpdater, column, card) => 
+                ToDto(historyBoards, historyColumns, board, userCreator, userUpdater, column, card),
                 param: new { UserId = userId },
-                splitOn: "Id, Id, Id");
+                splitOn: "Id, Id, Id, Id");
             return boards.Distinct().ToList();
         }
 
         private BoardGetResponseDto ToDto(Dictionary<int, BoardGetResponseDto> historyBoards,
                                    Dictionary<int, ColumnGetResponseDto> historyColumns,
                                    BoardGetResponseDto board,
-                                   Models.User user,
+                                   UserInfoDto userCreator,
+                                   UserInfoDto userUpdater,
                                    ColumnGetResponseDto column,
                                    CardGetResponseDto card)
         {
@@ -115,7 +128,8 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             {
                 curBoard = board;
                 historyBoards.Add(curBoard.Id, curBoard);
-                curBoard.CreatedBy = user;
+                curBoard.CreatedBy = userCreator;
+                curBoard.UpdatedBy = userUpdater;
                 curBoard.Columns = new();
             }
 
@@ -153,16 +167,20 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             "where [Board].[Id] = @Id", updatedBoard);
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto,
-                                                                                  Models.User,
+                                                                                  UserInfoDto,
+                                                                                  UserInfoDto,
                                                                                   BoardGetResponseDto>(
                 "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[U].[Id], [U].[UserName], [U].[FirstName], [U].[LastName], [U].[Email] " +
+                "[Creator].[Id], [Creator].[UserName], [Creator].[FirstName], [Creator].[LastName], [Creator].[Email], " +
+                "[Updater].[Id], [Updater].[UserName], [Updater].[FirstName], [Updater].[LastName], [Updater].[Email] " +
                 "from [Board] as [B] " +
-                "inner join [User] as [U] on [B].[CreatedBy] = [U].[Id] " +
+                "inner join [User] as [Creator] on [B].[CreatedBy] = [Creator].[Id] " +
+                "inner join [User] as [Updater] on [B].[UpdatedBy] = [Updater].[Id] " +
                 "where [B].[Id] = @BoardId",
-                (board, user) =>
+                (board, userCreator, userUpdater) =>
                 {
-                    board.CreatedBy = user;
+                    board.CreatedBy = userCreator;
+                    board.UpdatedBy = userUpdater;
                     return board;
                 },
                 param: new { BoardId = updatedBoard.Id },
