@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using TaskManagerApi.Common;
 using Models = TaskManagerApi.Domain.Models;
 
 namespace TaskManagerApi.DataAccess.Repositories.User
@@ -16,7 +17,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task<Tuple<int, byte[], byte[]>?> GetUserPasswordData(string logInData)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
+            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             try
             {
@@ -33,7 +34,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsById(int id)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
+            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             try
             {
@@ -50,7 +51,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
+            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             DynamicParameters parameters = new();
             parameters.Add("@UserName", userName);
@@ -71,7 +72,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task Insert(Models.User user)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnection"));
+            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             await connection.ExecuteAsync(
                 "insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values " +
