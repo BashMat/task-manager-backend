@@ -93,6 +93,7 @@ namespace TaskManagerApi.Services.Board
             {
                 Title = newColumn.Title,
                 Description = newColumn.Description,
+                BoardId = newColumn.BoardId,
                 CreatedBy = userId,
                 CreatedAt = DateTime.UtcNow
             };
@@ -124,7 +125,9 @@ namespace TaskManagerApi.Services.Board
             return response;
         }
 
-        public async Task<ServiceResponse<ColumnGetResponseDto>> UpdateColumn(int userId, int columnId, ColumnUpdateRequestDto updatedColumn)
+        public async Task<ServiceResponse<ColumnGetResponseDto>> UpdateColumn(int userId,
+                                                                              int columnId,
+                                                                              ColumnUpdateRequestDto updatedColumn)
         {
             ColumnUpdateDto updatedColumnDb = new()
             {
@@ -163,6 +166,7 @@ namespace TaskManagerApi.Services.Board
             {
                 Title = newCard.Title,
                 Description = newCard.Description,
+                ColumnId = newCard.ColumnId,
                 CreatedBy = userId,
                 CreatedAt = DateTime.UtcNow
             };
@@ -194,13 +198,16 @@ namespace TaskManagerApi.Services.Board
             return response;
         }
 
-        public async Task<ServiceResponse<CardGetResponseDto>> UpdateCard(int userId, int cardId, CardUpdateRequestDto updatedCard)
+        public async Task<ServiceResponse<CardGetResponseDto>> UpdateCard(int userId,
+                                                                          int cardId,
+                                                                          CardUpdateRequestDto updatedCard)
         {
             CardUpdateDto updatedCardDb = new()
             {
                 Id = cardId,
                 Title = updatedCard.Title,
                 Description = updatedCard.Description,
+                ColumnId = updatedCard.ColumnId,
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = userId
             };

@@ -235,8 +235,9 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
         {
             using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
-            int id = await connection.ExecuteScalarAsync<int>("insert into [Column] ([Title], [Description], [CreatedBy], " +
-                "[CreatedAt], [UpdatedBy], [UpdatedAt]) values (@Title, @Desctiption, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
+            int id = await connection.ExecuteScalarAsync<int>("insert into [Column] ([Title], [Description], " +
+                "[BoardId], [CreatedBy], [CreatedAt], [UpdatedBy], [UpdatedAt]) " +
+                "values (@Title, @Description, @BoardId, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
                 "select scope_identity();",
                 insertedColumn);
 
@@ -396,8 +397,9 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
         {
             using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
-            int id = await connection.ExecuteScalarAsync<int>("insert into [Card] ([Title], [Description], [CreatedBy], " +
-                "[CreatedAt], [UpdatedBy], [UpdatedAt]) values (@Title, @Desctiption, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
+            int id = await connection.ExecuteScalarAsync<int>("insert into [Card] ([Title], [Description], " +
+                "[ColumnId], [CreatedBy], [CreatedAt], [UpdatedBy], [UpdatedAt]) " +
+                "values (@Title, @Description, @ColumnId, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
                 "select scope_identity();",
                 insertedCard);
 
@@ -424,7 +426,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
 
             await connection.ExecuteAsync("update [Card] " +
                 "set [Card].[Title] = @Title, [Card].[Description] = @Description, " +
-                "[Card].[UpdatedBy] = @UpdatedBy, [Card].[UpdatedAt] = @UpdatedAt " +
+                "[Card].[ColumnId] = @ColumnId, [Card].[UpdatedBy] = @UpdatedBy, [Card].[UpdatedAt] = @UpdatedAt " +
                 "where [Card].[Id] = @Id", updatedCard);
 
             return await GetCardByIdInternal(connection, updatedCard.Id);
