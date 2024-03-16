@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Domain", "Ta
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.DataAccess", "TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj", "{A92D1813-776E-4A24-A786-1B26C250C168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.Common", "TaskManagerApi.Common\TaskManagerApi.Common.csproj", "{0093037A-A88D-4583-887D-D0541B70306C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Common", "TaskManagerApi.Common\TaskManagerApi.Common.csproj", "{0093037A-A88D-4583-887D-D0541B70306C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74310997-414F-4BB2-A8A9-9BB65A3C2B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.Tests", "TaskManagerApi.Tests\TaskManagerApi.Tests.csproj", "{85D74549-D466-41F9-B3CD-F951DD2DFEFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{0093037A-A88D-4583-887D-D0541B70306C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0093037A-A88D-4583-887D-D0541B70306C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0093037A-A88D-4583-887D-D0541B70306C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85D74549-D466-41F9-B3CD-F951DD2DFEFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85D74549-D466-41F9-B3CD-F951DD2DFEFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85D74549-D466-41F9-B3CD-F951DD2DFEFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85D74549-D466-41F9-B3CD-F951DD2DFEFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{85D74549-D466-41F9-B3CD-F951DD2DFEFA} = {74310997-414F-4BB2-A8A9-9BB65A3C2B94}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6F7C1D1-D9D1-4337-8E51-402A28DB46F1}
