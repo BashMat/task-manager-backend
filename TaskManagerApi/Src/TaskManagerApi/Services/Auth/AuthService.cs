@@ -16,6 +16,10 @@ namespace TaskManagerApi.Services.Auth
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
 
+        private const string UserAlreadyExistsMessage = "Username and/or Email already exists";
+        private const string UserDoesNotExistMessage = "This user does not exist";
+        private const string IncorrectCredentialsMessage = "Incorrect username/password pair";
+
         public AuthService(IConfiguration configuration, IUserRepository userRepository)
         {
             _configuration = configuration;
@@ -30,7 +34,7 @@ namespace TaskManagerApi.Services.Auth
             {
                 response.Data = null;
                 response.Success = false;
-                response.Message = "Username and/or Email already exists";
+                response.Message = UserAlreadyExistsMessage;
                 return response;
             }
 
@@ -69,7 +73,7 @@ namespace TaskManagerApi.Services.Auth
             {
                 response.Data = null;
                 response.Success = false;
-                response.Message = "This user does not exist";
+                response.Message = UserDoesNotExistMessage;
                 return response;
             }
 
@@ -82,38 +86,36 @@ namespace TaskManagerApi.Services.Auth
 
             response.Data = null;
             response.Success = false;
-            response.Message = "Incorrect username/password pair";
+            response.Message = IncorrectCredentialsMessage;
 
             return response;
         }
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512();
             passwordSalt = hmac.Key;
             passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         }
 
-        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
-            }
+            using var hmac = new HMACSHA512(passwordSalt);
+            return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
         }
 
-        public string CreateToken(int userId)
+        private string CreateToken(int userId)
         {
             var claims = new List<Claim>
             {
-                new Claim("sub", userId.ToString())
+                new ("sub", userId.ToString())
             };
 
             //var expire = DateTime.Now.AddHours(4);
             var expire = DateTime.Now.AddMinutes(30);
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(null, null, claims, null, expire, creds);
+            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
