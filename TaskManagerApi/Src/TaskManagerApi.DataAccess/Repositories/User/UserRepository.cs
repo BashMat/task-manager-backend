@@ -34,7 +34,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsById(int id)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             try
             {
@@ -51,7 +51,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             DynamicParameters parameters = new();
             parameters.Add("@UserName", userName);
@@ -72,7 +72,7 @@ namespace TaskManagerApi.DataAccess.Repositories.User
 
         public async Task Insert(Models.User user)
         {
-            using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             await connection.ExecuteAsync(
                 "insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values " +
