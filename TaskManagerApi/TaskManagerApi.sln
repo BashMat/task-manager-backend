@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi", "TaskManagerApi\TaskManagerApi.csproj", "{E91EDEE9-6F61-4376-9BB0-1206FD7CDA19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi", "Src\TaskManagerApi\TaskManagerApi.csproj", "{E91EDEE9-6F61-4376-9BB0-1206FD7CDA19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Domain", "TaskManagerApi.Domain\TaskManagerApi.Domain.csproj", "{525A8CB5-3988-4120-B79F-46491EFB2AFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Domain", "Src\TaskManagerApi.Domain\TaskManagerApi.Domain.csproj", "{525A8CB5-3988-4120-B79F-46491EFB2AFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.DataAccess", "TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj", "{A92D1813-776E-4A24-A786-1B26C250C168}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.DataAccess", "Src\TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj", "{A92D1813-776E-4A24-A786-1B26C250C168}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Common", "TaskManagerApi.Common\TaskManagerApi.Common.csproj", "{0093037A-A88D-4583-887D-D0541B70306C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi.Common", "Src\TaskManagerApi.Common\TaskManagerApi.Common.csproj", "{0093037A-A88D-4583-887D-D0541B70306C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74310997-414F-4BB2-A8A9-9BB65A3C2B94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.Tests", "TaskManagerApi.Tests\TaskManagerApi.Tests.csproj", "{85D74549-D466-41F9-B3CD-F951DD2DFEFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerApi.Tests", "Tests\TaskManagerApi.Tests\TaskManagerApi.Tests.csproj", "{85D74549-D466-41F9-B3CD-F951DD2DFEFA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{C72978E8-FF22-43B4-9DF9-DC920FD4E616}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{85D74549-D466-41F9-B3CD-F951DD2DFEFA} = {74310997-414F-4BB2-A8A9-9BB65A3C2B94}
+		{0093037A-A88D-4583-887D-D0541B70306C} = {C72978E8-FF22-43B4-9DF9-DC920FD4E616}
+		{A92D1813-776E-4A24-A786-1B26C250C168} = {C72978E8-FF22-43B4-9DF9-DC920FD4E616}
+		{525A8CB5-3988-4120-B79F-46491EFB2AFD} = {C72978E8-FF22-43B4-9DF9-DC920FD4E616}
+		{E91EDEE9-6F61-4376-9BB0-1206FD7CDA19} = {C72978E8-FF22-43B4-9DF9-DC920FD4E616}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6F7C1D1-D9D1-4337-8E51-402A28DB46F1}
