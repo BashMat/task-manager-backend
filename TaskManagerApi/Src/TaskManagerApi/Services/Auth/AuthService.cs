@@ -1,28 +1,22 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Security.Claims;
-using System.Text;
-using TaskManagerApi.Domain.Dtos.User;
+﻿using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain.Models;
 using TaskManagerApi.Domain;
-using Microsoft.IdentityModel.Tokens;
 using TaskManagerApi.DataAccess.Repositories.User;
-using TaskManagerApi.Common;
 
 namespace TaskManagerApi.Services.Auth
 {
     public class AuthService : IAuthService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IAuthProvider _authProvider;
         private readonly IUserRepository _userRepository;
 
         private const string UserAlreadyExistsMessage = "Username and/or Email already exists";
         private const string UserDoesNotExistMessage = "This user does not exist";
         private const string IncorrectCredentialsMessage = "Incorrect username/password pair";
 
-        public AuthService(IConfiguration configuration, IUserRepository userRepository)
+        public AuthService(IAuthProvider authProvider, IUserRepository userRepository)
         {
-            _configuration = configuration;
+            _authProvider = authProvider;
             _userRepository = userRepository;
         }
 
@@ -38,28 +32,18 @@ namespace TaskManagerApi.Services.Auth
                 return response;
             }
 
-            UserSignUpResponseDto responseData = new()
+            (byte[] passwordHash, byte[] passwordSalt) =
+                _authProvider.CreatePasswordHashAndSalt(requestData.Password);
+            
+            User newUser = new(requestData.UserName, requestData.Email, passwordHash, passwordSalt);
+            await _userRepository.Insert(newUser);
+
+            response.Data = new UserSignUpResponseDto 
             {
                 UserName = requestData.UserName,
                 Email = requestData.Email
             };
-
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(requestData.Password, out passwordHash, out passwordSalt);
-
-            DateTime createdAt = DateTime.UtcNow;
-            User newUser = new()
-            {
-                UserName = responseData.UserName,
-                Email = responseData.Email,
-                CreatedAt = createdAt,
-                UpdatedAt = createdAt,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
-            await _userRepository.Insert(newUser);
-
-            response.Data = responseData;
+            
             return response;
         }
 
@@ -78,9 +62,9 @@ namespace TaskManagerApi.Services.Auth
             }
 
             (int userId, byte[] passwordHash, byte[] passwordSalt) = passwordData;
-            if (VerifyPasswordHash(requestData.Password, passwordHash, passwordSalt))
+            if (_authProvider.VerifyPasswordHash(requestData.Password, passwordHash, passwordSalt))
             {
-                response.Data = CreateToken(userId);
+                response.Data = _authProvider.CreateToken(userId);
                 return response;
             }
 
@@ -89,36 +73,6 @@ namespace TaskManagerApi.Services.Auth
             response.Message = IncorrectCredentialsMessage;
 
             return response;
-        }
-
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using var hmac = new HMACSHA512();
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
-
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using var hmac = new HMACSHA512(passwordSalt);
-            return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
-        }
-
-        private string CreateToken(int userId)
-        {
-            var claims = new List<Claim>
-            {
-                new ("sub", userId.ToString())
-            };
-
-            //var expire = DateTime.Now.AddHours(4);
-            var expire = DateTime.Now.AddMinutes(30);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
-            var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
         }
     }
 }

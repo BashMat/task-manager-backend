@@ -47,6 +47,7 @@ namespace TaskManagerApi
             builder.Services.AddScoped<IBoardService, BoardService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IBoardRepository, BoardRepository>();
+            builder.Services.AddScoped<IAuthProvider, AuthProvider>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {

@@ -77,8 +77,6 @@ namespace TaskManagerApi.DataAccess.Repositories.User
             await connection.ExecuteAsync(
                 "insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values " +
                 "(@UserName, @Email, @CreatedAt, @UpdatedAt, @PasswordHash, @PasswordSalt)", user);
-
-            return;
         }
     }
 }
