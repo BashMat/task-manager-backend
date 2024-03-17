@@ -22,7 +22,7 @@ Project created using:
     - \TaskManagerApi – core project, includes startup file, controllers and services
     - \TaskManagerApi.Common – project for common files like const strings
     - \TaskManagerApi.DataAccess – project for Data Access Layer, includes classes for DB queries and SQL scripts
-    - \TaskManagerApi.Domain – project for domain classes and DTOs
+    - \TaskManagerApi.Domain – project for domain classes
     - \TaskManagerApi.Dto – project for DTOs
   - \Tests – folder for test code
     - \TaskManagerApi.Tests – project for TaskManagerApi related unit tests
