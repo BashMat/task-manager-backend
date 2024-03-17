@@ -1,55 +1,56 @@
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Moq;
-using TaskManagerApi.DataAccess.Repositories.User;
+using TaskManagerApi.Domain;
 using TaskManagerApi.Domain.Dtos.User;
-using TaskManagerApi.Services.Auth;
 using Xunit;
 
 namespace TaskManagerApi.Tests.Auth
 {
-    public class WhenSigningUp
+    public class WhenSigningUp : AuthServiceTestBase
     {
-        private Mock<IUserRepository> _userRepositoryMock;
-        public WhenSigningUp()
-        {
-            _userRepositoryMock = new Mock<IUserRepository>();
-        }
-
         private void SetUpUserRepositoryMock(bool userExists = false)
         {
-            _userRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(),
-                                                                                It.IsAny<string>()))
-                               .ReturnsAsync(userExists);
+            userRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(),
+                                                                               It.IsAny<string>()))
+                              .ReturnsAsync(userExists);
+        }
+
+        private Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto request)
+        {
+            return CreateAuthService().SignUp(request);
         }
         
         [Fact]
         public async Task ServiceReturnsResponseWithMessageAndNullDataIfUserAlreadyExists()
         {
             SetUpUserRepositoryMock(true);
-            AuthService sut = new(Mock.Of<IConfiguration>(), 
-                                  _userRepositoryMock.Object);
             const string TestUserName = "user";
             const string TestEmail = "email";
-            UserSignUpRequestDto request = new() { UserName = TestUserName, Email = TestEmail };
+            UserSignUpRequestDto request = new()
+            {
+                UserName = TestUserName,
+                Email = TestEmail
+            };
 
-            var response = await sut.SignUp(request);
+            var response = await SignUp(request);
 
-            response.Data.Should().Be(null);
+            response.Data.Should().BeNull();
             response.Success.Should().BeFalse();
         }
-        
+
         [Fact]
         public async Task ServiceReturnsResponseWithNotNullDataIfUserDoesNotExist()
         {
             SetUpUserRepositoryMock();
-            AuthService sut = new(Mock.Of<IConfiguration>(), 
-                _userRepositoryMock.Object);
             const string TestUserName = "user";
             const string TestEmail = "email";
-            UserSignUpRequestDto request = new() { UserName = TestUserName, Email = TestEmail };
+            UserSignUpRequestDto request = new()
+            {
+                UserName = TestUserName, 
+                Email = TestEmail
+            };
 
-            var response = await sut.SignUp(request);
+            var response = await SignUp(request);
 
             response.Data!.UserName.Should().Be(TestUserName);
             response.Data!.Email.Should().Be(TestEmail);
