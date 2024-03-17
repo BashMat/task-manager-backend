@@ -1,4 +1,4 @@
-﻿namespace TaskManagerApi.Domain.Dtos.Project
+﻿namespace TaskManagerApi.Dto.Project
 {
 	public class ProjectUpdateRequestDto
 	{

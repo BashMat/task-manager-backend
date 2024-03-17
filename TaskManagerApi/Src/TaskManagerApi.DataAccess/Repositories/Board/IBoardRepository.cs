@@ -1,5 +1,4 @@
-﻿using TaskManagerApi.Domain.Dtos.Board;
-using TaskManagerApi.Domain.Models;
+﻿using TaskManagerApi.Dto.Board;
 
 namespace TaskManagerApi.DataAccess.Repositories.Board
 {

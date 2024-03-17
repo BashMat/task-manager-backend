@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Moq;
 using TaskManagerApi.Domain;
-using TaskManagerApi.Domain.Dtos.User;
+using TaskManagerApi.Dto.User;
 using Xunit;
 
 namespace TaskManagerApi.Tests.Auth

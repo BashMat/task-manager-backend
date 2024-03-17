@@ -1,6 +1,5 @@
-﻿using TaskManagerApi.Domain.Dtos.User;
-using TaskManagerApi.Domain.Models;
-using TaskManagerApi.Domain;
+﻿using TaskManagerApi.Domain;
+using TaskManagerApi.Dto.User;
 
 namespace TaskManagerApi.Services.Auth
 {

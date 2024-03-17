@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerApi.Domain.Dtos.Board;
 using TaskManagerApi.Domain;
 using System.Security.Claims;
 using TaskManagerApi.Services.Board;
 using Microsoft.AspNetCore.Cors;
+using TaskManagerApi.Dto.Board;
 
 namespace TaskManagerApi.Controllers
 {

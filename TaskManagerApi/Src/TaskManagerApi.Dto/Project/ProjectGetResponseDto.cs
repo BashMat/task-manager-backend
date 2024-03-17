@@ -1,7 +1,9 @@
-﻿namespace TaskManagerApi.Domain.Dtos.Project
+﻿namespace TaskManagerApi.Dto.Project
 {
-	public class ProjectAddRequestDto
+	public class ProjectGetResponseDto
 	{
+		public int Id { get; set; }
+
 		public string Name { get; set; } = string.Empty;
 
 		public string Description { get; set; } = string.Empty;

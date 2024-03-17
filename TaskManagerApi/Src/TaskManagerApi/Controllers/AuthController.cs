@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskManagerApi.Domain.Dtos.User;
 using TaskManagerApi.Domain;
 using Microsoft.AspNetCore.Cors;
+using TaskManagerApi.Dto.User;
 using TaskManagerApi.Services.Auth;
 
 namespace TaskManagerApi.Controllers

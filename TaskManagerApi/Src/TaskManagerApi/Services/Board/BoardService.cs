@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using TaskManagerApi.Domain.Dtos.Board;
-using TaskManagerApi.Domain;
+﻿using TaskManagerApi.Domain;
 using TaskManagerApi.DataAccess.Repositories.Board;
-using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Dto.Board;
 
 namespace TaskManagerApi.Services.Board
 {

@@ -1,6 +1,6 @@
-﻿namespace TaskManagerApi.Domain.Models
+﻿namespace TaskManagerApi.Dto.Board
 {
-	public class BoardUpdateDto
+	public class ColumnUpdateDto
 	{
 		public int Id { get; set; }
 		public string Title { get; set; } = string.Empty;

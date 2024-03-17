@@ -1,4 +1,4 @@
-﻿namespace TaskManagerApi.Domain.Dtos.User
+﻿namespace TaskManagerApi.Dto.User
 {
 	public class UserSignUpResponseDto
 	{

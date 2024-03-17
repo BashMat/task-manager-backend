@@ -1,5 +1,5 @@
-﻿using TaskManagerApi.Domain.Dtos.Board;
-using TaskManagerApi.Domain;
+﻿using TaskManagerApi.Domain;
+using TaskManagerApi.Dto.Board;
 
 namespace TaskManagerApi.Services.Board
 {

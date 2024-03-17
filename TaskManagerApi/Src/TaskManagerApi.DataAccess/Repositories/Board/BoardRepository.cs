@@ -1,9 +1,8 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using TaskManagerApi.Domain.Dtos.Board;
-using TaskManagerApi.Domain.Dtos.User;
-using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Dto.Board;
+using TaskManagerApi.Dto.User;
 using TaskManagerApi.Common;
 
 namespace TaskManagerApi.DataAccess.Repositories.Board

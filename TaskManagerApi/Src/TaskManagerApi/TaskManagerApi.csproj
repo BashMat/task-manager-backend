@@ -18,6 +18,7 @@
     <ProjectReference Include="..\TaskManagerApi.Common\TaskManagerApi.Common.csproj" />
     <ProjectReference Include="..\TaskManagerApi.DataAccess\TaskManagerApi.DataAccess.csproj" />
     <ProjectReference Include="..\TaskManagerApi.Domain\TaskManagerApi.Domain.csproj" />
+    <ProjectReference Include="..\TaskManagerApi.Dto\TaskManagerApi.Dto.csproj" />
   </ItemGroup>
 
 </Project>

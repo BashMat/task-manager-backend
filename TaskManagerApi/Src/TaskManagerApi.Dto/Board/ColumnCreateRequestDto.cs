@@ -1,4 +1,4 @@
-﻿namespace TaskManagerApi.Domain.Dtos.Board
+﻿namespace TaskManagerApi.Dto.Board
 {
 	public class ColumnCreateRequestDto
 	{

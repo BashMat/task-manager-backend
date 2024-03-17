@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using TaskManagerApi.Domain.Dtos.Project;
 using TaskManagerApi.Domain.Models;
+using TaskManagerApi.Dto.Project;
 
 namespace TaskManagerApi.AutoMapperProfile
 {
