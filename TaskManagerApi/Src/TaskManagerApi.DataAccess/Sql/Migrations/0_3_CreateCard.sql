@@ -4,6 +4,7 @@
     [Title] nvarchar(256) not null,
     [Description] nvarchar(512),
     [ColumnId] int,
+    [OrderIndex] int not null,
     [CreatedBy] int,
     [CreatedAt] datetime2 not null,
     [UpdatedBy] int,
