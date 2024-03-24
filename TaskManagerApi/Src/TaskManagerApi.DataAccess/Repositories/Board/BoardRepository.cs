@@ -407,11 +407,12 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             int id = await connection.ExecuteScalarAsync<int>("insert into [Card] ([Title], [Description], " +
-                "[ColumnId], [CreatedBy], [CreatedAt], [UpdatedBy], [UpdatedAt]) " +
-                "values (@Title, @Description, @ColumnId, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
-                "select scope_identity();",
-                insertedCard);
-
+                                                              "[ColumnId], [OrderIndex], [CreatedBy], [CreatedAt], " +
+                                                              "[UpdatedBy], [UpdatedAt]) " +
+                                                              "values (@Title, @Description, @ColumnId, @OrderIndex, " +
+                                                              "@CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
+                                                              "select scope_identity();", 
+                                                              insertedCard);
             return await GetCardByIdInternal(connection, id);
         }
 
@@ -434,10 +435,13 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
             await connection.ExecuteAsync("update [Card] " +
-                "set [Card].[Title] = @Title, [Card].[Description] = @Description, " +
-                "[Card].[ColumnId] = @ColumnId, [Card].[UpdatedBy] = @UpdatedBy, [Card].[UpdatedAt] = @UpdatedAt " +
-                "where [Card].[Id] = @Id", updatedCard);
-
+                                          "set [Card].[Title] = @Title, [Card].[Description] = @Description, " +
+                                          "[Card].[ColumnId] = @ColumnId, " +
+                                          "[Card].[OrderIndex] = @OrderIndex, [Card].[UpdatedBy] = @UpdatedBy, " +
+                                          "[Card].[UpdatedAt] = @UpdatedAt " +
+                                          "where [Card].[Id] = @Id", 
+                                          updatedCard);
+            
             return await GetCardByIdInternal(connection, updatedCard.Id);
         }
 
@@ -459,9 +463,11 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                                                                                 UserInfoDto,
                                                                                 UserInfoDto,
                                                                                 CardGetResponseDto>(
-                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
+                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], " +
+                "[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], " +
+                "[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
+                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], " +
+                "[CardUpdater].[Email] " +
                 "from [Card] " +
                 "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
                 "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
@@ -474,6 +480,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                 },
                 param: new { UserId = userId },
                 splitOn: "Id, Id");
+            
             return cards.Distinct().ToList();
         }
 
@@ -483,9 +490,11 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                                                                                 UserInfoDto,
                                                                                 UserInfoDto,
                                                                                 CardGetResponseDto>(
-                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
+                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], " +
+                "[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], " +
+                "[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
+                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], " +
+                "[CardUpdater].[Email] " +
                 "from [Card] " +
                 "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
                 "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +

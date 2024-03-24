@@ -208,6 +208,7 @@ namespace TaskManagerApi.Services.Board
                 Title = newCard.Title,
                 Description = newCard.Description,
                 ColumnId = newCard.ColumnId,
+                OrderIndex = newCard.OrderIndex,
                 CreatedBy = userId,
                 CreatedAt = DateTime.UtcNow
             };
@@ -262,6 +263,7 @@ namespace TaskManagerApi.Services.Board
                 Title = updatedCard.Title,
                 Description = updatedCard.Description,
                 ColumnId = updatedCard.ColumnId,
+                OrderIndex = updatedCard.OrderIndex,
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = userId
             };
