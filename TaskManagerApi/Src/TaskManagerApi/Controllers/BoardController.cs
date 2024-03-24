@@ -10,7 +10,7 @@ using TaskManagerApi.Dto.Column;
 
 namespace TaskManagerApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/boards")]
 	[ApiController]
 	public class BoardController : ControllerBase
 	{
@@ -25,16 +25,23 @@ namespace TaskManagerApi.Controllers
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
-        [HttpPost("boards")]
+        [HttpPost]
         public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Create([FromBody] BoardCreateRequestDto newBoard)
         {
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.Create(userId, newBoard));
+
+            ServiceResponse<BoardGetResponseDto> response = await _boardService.Create(userId, newBoard);
+            
+            if (response.Success)
+            {
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
-		[HttpGet("boards")]
+		[HttpGet]
 		public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> GetAll()
 		{
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -43,25 +50,38 @@ namespace TaskManagerApi.Controllers
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
-        [HttpGet("boards/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> GetById([FromRoute] int id)
         {
-            return Ok(await _boardService.GetById(id));
+            ServiceResponse<BoardGetResponseDto> response = await _boardService.GetById(id);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
-		[HttpPut("boards/{id}")]
+		[HttpPut("{id}")]
         public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Update([FromRoute] int id,
                                                                     [FromBody] BoardUpdateRequestDto updatedBoard)
 		{
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.Update(userId, id, updatedBoard));
+            
+            ServiceResponse<BoardGetResponseDto> response = await _boardService.Update(userId, id, updatedBoard);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
-		[HttpDelete("boards/{id}")]
+		[HttpDelete("{id}")]
 		public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> Delete([FromRoute] int id)
 		{
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -78,7 +98,14 @@ namespace TaskManagerApi.Controllers
         public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> CreateColumn([FromBody] ColumnCreateRequestDto newColumn)
         {
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.CreateColumn(userId, newColumn));
+            
+            ServiceResponse<ColumnGetResponseDto> response = await _boardService.CreateColumn(userId, newColumn);
+            
+            if (response.Success)
+            {
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         [EnableCors("MyDefaultPolicy")]
@@ -95,7 +122,13 @@ namespace TaskManagerApi.Controllers
         [HttpGet("columns/{id}")]
         public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> GetColumnById([FromRoute] int id)
         {
-            return Ok(await _boardService.GetColumnById(id));
+            ServiceResponse<ColumnGetResponseDto> response = await _boardService.GetColumnById(id);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]
@@ -105,7 +138,14 @@ namespace TaskManagerApi.Controllers
                                                             [FromBody] ColumnUpdateRequestDto updatedColumn)
         {
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.UpdateColumn(userId, id, updatedColumn));
+            
+            ServiceResponse<ColumnGetResponseDto> response = await _boardService.UpdateColumn(userId, id, updatedColumn);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]
@@ -124,10 +164,17 @@ namespace TaskManagerApi.Controllers
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
         [HttpPost("cards")]
-        public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> CreateCard([FromBody] CardCreateRequestDto newCard)
+        public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> CreateCard([FromBody] CardCreateRequestDto newCard)
         {
             var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.CreateCard(userId, newCard));
+            
+            ServiceResponse<CardGetResponseDto> response = await _boardService.CreateCard(userId, newCard);
+            
+            if (response.Success)
+            {
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
         [EnableCors("MyDefaultPolicy")]
@@ -144,17 +191,30 @@ namespace TaskManagerApi.Controllers
         [HttpGet("cards/{id}")]
         public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> GetCardById([FromRoute] int id)
         {
-            return Ok(await _boardService.GetCardById(id));
+            ServiceResponse<CardGetResponseDto> response = await _boardService.GetCardById(id);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]
         [Authorize]
         [HttpPut("cards/{id}")]
         public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> UpdateCard([FromRoute] int id,
-                                                    [FromBody] CardUpdateRequestDto updatedCard)
+                                                                                        [FromBody] CardUpdateRequestDto updatedCard)
         {
-            var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            return Ok(await _boardService.UpdateCard(userId, id, updatedCard));
+            int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            ServiceResponse<CardGetResponseDto> response = await _boardService.UpdateCard(userId, id, updatedCard);
+            
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            return NotFound(response);
         }
 
         [EnableCors("MyDefaultPolicy")]

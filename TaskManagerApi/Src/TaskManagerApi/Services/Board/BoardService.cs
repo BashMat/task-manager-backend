@@ -9,6 +9,9 @@ namespace TaskManagerApi.Services.Board
     public class BoardService : IBoardService
     {
         private readonly IBoardRepository _boardRepository;
+        
+        private const string CouldNotCreateMessage = "Could not create resource";
+        private const string ResourceDoesNotExist = "Resource does not exist";
 
         public BoardService(IBoardRepository boardRepository)
         {
@@ -32,6 +35,12 @@ namespace TaskManagerApi.Services.Board
                 Data = await _boardRepository.Insert(boardInsert)
             };
 
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = CouldNotCreateMessage;
+            }
+
             return response;
         }
 
@@ -51,6 +60,13 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.GetById(id)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
+
             return response;
         }
 
@@ -69,6 +85,12 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.Update(updatedBoardDb)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
 
             return response;
         }
@@ -102,6 +124,12 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.InsertColumn(columnInsert)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = CouldNotCreateMessage;
+            }
 
             return response;
         }
@@ -122,6 +150,13 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.GetColumnById(id)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
+
             return response;
         }
 
@@ -143,6 +178,12 @@ namespace TaskManagerApi.Services.Board
                 Data = await _boardRepository.UpdateColumn(updatedColumnDb)
             };
 
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
+            
             return response;
         }
 
@@ -175,6 +216,12 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.InsertCard(cardInsert)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = CouldNotCreateMessage;
+            }
 
             return response;
         }
@@ -195,6 +242,13 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.GetCardById(id)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
+            
             return response;
         }
 
@@ -216,6 +270,12 @@ namespace TaskManagerApi.Services.Board
             {
                 Data = await _boardRepository.UpdateCard(updatedCardDb)
             };
+            
+            if (response.Data == null)
+            {
+                response.Success = false;
+                response.Message = ResourceDoesNotExist;
+            }
 
             return response;
         }

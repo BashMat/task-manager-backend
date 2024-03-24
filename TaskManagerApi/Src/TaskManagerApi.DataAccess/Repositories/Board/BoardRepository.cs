@@ -20,7 +20,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
 
         #region Board
 
-        public async Task<BoardGetResponseDto> Insert(BoardInsertDto insertedBoard)
+        public async Task<BoardGetResponseDto?> Insert(BoardInsertDto insertedBoard)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -46,7 +46,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             return await GetByIdInternal(connection, boardId);
         }
 
-        public async Task<BoardGetResponseDto> Update(BoardUpdateDto updatedBoard)
+        public async Task<BoardGetResponseDto?> Update(BoardUpdateDto updatedBoard)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -122,7 +122,11 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                       (UserInfoDto)types[8]),
                 param: new { BoardId = boardId },
                 splitOn: "Id, Id, Id, Id, Id, Id, Id, Id");
-            return boards.Distinct().First();
+
+            var listBoards = boards.Distinct().ToList();
+            return listBoards.Count == 0
+                ? null 
+                : listBoards[0];
         }
 
         private async Task<List<BoardGetResponseDto>> GetAllInternal(SqlConnection connection, int userId)
@@ -232,7 +236,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
 
         #region Column
 
-        public async Task<ColumnGetResponseDto> InsertColumn(ColumnInsertDto insertedColumn)
+        public async Task<ColumnGetResponseDto?> InsertColumn(ColumnInsertDto insertedColumn)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -259,7 +263,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             return await GetColumnByIdInternal(connection, columnId);
         }
 
-        public async Task<ColumnGetResponseDto> UpdateColumn(ColumnUpdateDto updatedColumn)
+        public async Task<ColumnGetResponseDto?> UpdateColumn(ColumnUpdateDto updatedColumn)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -324,7 +328,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             return columns.Distinct().ToList();
         }
 
-        private async Task<ColumnGetResponseDto> GetColumnByIdInternal(SqlConnection connection, int columnId)
+        private async Task<ColumnGetResponseDto?> GetColumnByIdInternal(SqlConnection connection, int columnId)
         {
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
 
@@ -358,7 +362,11 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                       cardUpdater),
                 param: new { ColumnId = columnId },
                 splitOn: "Id, Id, Id, Id, Id");
-            return columns.Distinct().First();
+            
+            var listColumns = columns.Distinct().ToList();
+            return listColumns.Count == 0
+                ? null 
+                : listColumns[0];
         }
 
         private ColumnGetResponseDto ToDto(Dictionary<int, ColumnGetResponseDto> historyColumns,
@@ -394,7 +402,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
 
         #region Card
 
-        public async Task<CardGetResponseDto> InsertCard(CardInsertDto insertedCard)
+        public async Task<CardGetResponseDto?> InsertCard(CardInsertDto insertedCard)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -421,7 +429,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             return await GetCardByIdInternal(connection, cardId);
         }
 
-        public async Task<CardGetResponseDto> UpdateCard(CardUpdateDto updatedCard)
+        public async Task<CardGetResponseDto?> UpdateCard(CardUpdateDto updatedCard)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
@@ -469,7 +477,7 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
             return cards.Distinct().ToList();
         }
 
-        private async Task<CardGetResponseDto> GetCardByIdInternal(SqlConnection connection, int cardId)
+        private async Task<CardGetResponseDto?> GetCardByIdInternal(SqlConnection connection, int cardId)
         {
             IEnumerable<CardGetResponseDto> cards = await connection.QueryAsync<CardGetResponseDto,
                                                                                 UserInfoDto,
@@ -490,7 +498,11 @@ namespace TaskManagerApi.DataAccess.Repositories.Board
                 },
                 param: new { CardId = cardId },
                 splitOn: "Id, Id");
-            return cards.Distinct().First();
+            
+            var cardsList = cards.Distinct().ToList();
+            return cardsList.Count == 0 
+                ? null 
+                : cardsList[0];
         }
 
         #endregion
