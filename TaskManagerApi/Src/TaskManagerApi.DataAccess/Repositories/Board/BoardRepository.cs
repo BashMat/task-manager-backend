@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using TaskManagerApi.Dto.Board;
 using TaskManagerApi.Dto.User;
 using TaskManagerApi.Common;
+using TaskManagerApi.Dto.Card;
+using TaskManagerApi.Dto.Column;
 
 namespace TaskManagerApi.DataAccess.Repositories.Board
 {

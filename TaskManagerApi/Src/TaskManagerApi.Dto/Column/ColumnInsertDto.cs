@@ -1,8 +1,7 @@
-﻿namespace TaskManagerApi.Dto.Board
+﻿namespace TaskManagerApi.Dto.Column
 {
 	public class ColumnInsertDto
 	{
-		public int Id { get; set; }
 		public string Title { get; set; } = string.Empty;
 		public string? Description { get; set; }
         public int BoardId { get; set; }

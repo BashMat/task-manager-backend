@@ -1,4 +1,4 @@
-﻿namespace TaskManagerApi.Dto.Board
+﻿namespace TaskManagerApi.Dto.Column
 {
 	public class ColumnUpdateRequestDto
 	{

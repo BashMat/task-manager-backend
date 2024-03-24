@@ -1,5 +1,7 @@
 ﻿using TaskManagerApi.Domain;
 using TaskManagerApi.Dto.Board;
+using TaskManagerApi.Dto.Card;
+using TaskManagerApi.Dto.Column;
 
 namespace TaskManagerApi.Services.Board
 {

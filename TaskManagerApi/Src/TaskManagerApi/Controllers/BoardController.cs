@@ -5,6 +5,8 @@ using System.Security.Claims;
 using TaskManagerApi.Services.Board;
 using Microsoft.AspNetCore.Cors;
 using TaskManagerApi.Dto.Board;
+using TaskManagerApi.Dto.Card;
+using TaskManagerApi.Dto.Column;
 
 namespace TaskManagerApi.Controllers
 {

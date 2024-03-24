@@ -1,6 +1,7 @@
-﻿using TaskManagerApi.Dto.User;
+﻿using TaskManagerApi.Dto.Card;
+using TaskManagerApi.Dto.User;
 
-namespace TaskManagerApi.Dto.Board
+namespace TaskManagerApi.Dto.Column
 {
 	public class ColumnGetResponseDto
 	{

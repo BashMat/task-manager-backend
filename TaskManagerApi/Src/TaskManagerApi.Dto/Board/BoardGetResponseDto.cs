@@ -1,4 +1,5 @@
-﻿using TaskManagerApi.Dto.User;
+﻿using TaskManagerApi.Dto.Column;
+using TaskManagerApi.Dto.User;
 
 namespace TaskManagerApi.Dto.Board
 {
