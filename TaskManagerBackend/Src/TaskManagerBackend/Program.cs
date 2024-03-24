@@ -41,8 +41,6 @@ namespace TaskManagerBackend
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IBoardService, BoardService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
