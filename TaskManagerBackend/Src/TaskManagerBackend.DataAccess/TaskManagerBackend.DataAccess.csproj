@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>TaskManagerBackend.DataAccess</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.Common\TaskManagerBackend.Common.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj" />
+  </ItemGroup>
+
+</Project>

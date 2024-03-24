@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>7ddebae8-073f-4ae0-9e8b-b22bcd5297fb</UserSecretsId>
+    <RootNamespace>TaskManagerBackend</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.21" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManagerBackend.Common\TaskManagerBackend.Common.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.DataAccess\TaskManagerBackend.DataAccess.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj" />
+  </ItemGroup>
+
+</Project>
