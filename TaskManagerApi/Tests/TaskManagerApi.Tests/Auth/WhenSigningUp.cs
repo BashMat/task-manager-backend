@@ -8,22 +8,10 @@ namespace TaskManagerApi.Tests.Auth
 {
     public class WhenSigningUp : AuthServiceTestBase
     {
-        private void SetUpUserRepositoryMock(bool userExists = false)
-        {
-            userRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(),
-                                                                               It.IsAny<string>()))
-                              .ReturnsAsync(userExists);
-        }
-
-        private Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto request)
-        {
-            return CreateAuthService().SignUp(request);
-        }
-        
         [Fact]
         public async Task ServiceReturnsResponseWithMessageAndNullDataIfUserAlreadyExists()
         {
-            SetUpUserRepositoryMock(true);
+            SetUpCheckIfUserExistsByUserNameOrEmail(true);
             const string TestUserName = "user";
             const string TestEmail = "email";
             UserSignUpRequestDto request = new()
@@ -41,7 +29,7 @@ namespace TaskManagerApi.Tests.Auth
         [Fact]
         public async Task ServiceReturnsResponseWithNotNullDataIfUserDoesNotExist()
         {
-            SetUpUserRepositoryMock();
+            SetUpCheckIfUserExistsByUserNameOrEmail();
             const string TestUserName = "user";
             const string TestEmail = "email";
             UserSignUpRequestDto request = new()

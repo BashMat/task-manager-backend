@@ -17,15 +17,16 @@ Project created using:
   - Transact-SQL
 
 ## Structure
-- \TaskManagerApi – main folder
-  - \Src – folder for actual app code
+- \TaskManagerApi – main directory
+  - \Src – directory for actual app code
     - \TaskManagerApi – core project, includes startup file, controllers and services
-    - \TaskManagerApi.Common – project for common files like const strings
+    - \TaskManagerApi.Common – project for common items like const strings
     - \TaskManagerApi.DataAccess – project for Data Access Layer, includes classes for DB queries and SQL scripts
     - \TaskManagerApi.Domain – project for domain classes
     - \TaskManagerApi.Dto – project for DTOs
-  - \Tests – folder for test code
+  - \Tests – directory for test code
     - \TaskManagerApi.Tests – project for TaskManagerApi related unit tests
+    - \Tests.Common – project for common testing related items
 
 ## API routes
 TBA
