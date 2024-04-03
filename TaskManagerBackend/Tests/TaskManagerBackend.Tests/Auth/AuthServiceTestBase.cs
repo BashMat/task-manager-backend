@@ -1,6 +1,5 @@
 using Moq;
 using TaskManagerBackend.DataAccess.Repositories.User;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Services.Auth;
 using Tests.Common;
