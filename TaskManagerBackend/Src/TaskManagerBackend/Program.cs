@@ -1,3 +1,4 @@
+using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -17,11 +18,9 @@ namespace TaskManagerBackend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Configuration[ConfigurationKeys.Token] = builder.Configuration.GetSection(ConfigurationKeys.Token).Value;
-
             if (builder.Configuration[ConfigurationKeys.Token] == null)
             {
-                throw new ApplicationException("Secret key for token was not specified");
+                throw new ConfigurationErrorsException("Secret key for token was not specified");
             }
 
             // Add services to the container.
