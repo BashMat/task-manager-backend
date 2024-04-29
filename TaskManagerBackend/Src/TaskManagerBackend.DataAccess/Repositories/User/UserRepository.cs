@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TaskManagerBackend.Common;
 using Models = TaskManagerBackend.Domain.Models;
-using Models_User = TaskManagerBackend.Domain.Models.User;
 
 namespace TaskManagerBackend.DataAccess.Repositories.User
 {
@@ -71,7 +70,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
             }
         }
 
-        public async Task Insert(Models_User user)
+        public async Task Insert(Models.User user)
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
 
