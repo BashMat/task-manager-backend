@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
@@ -21,7 +22,9 @@ namespace TaskManagerBackend.Tests.Auth
 
         private AuthService CreateAuthService()
         {
-            return new AuthService(_authProviderMock.Object, _userRepositoryMock.Object);
+            return new AuthService(_authProviderMock.Object,
+                                   _userRepositoryMock.Object,
+                                   Mock.Of<ILogger<AuthService>>());
         }
         
         protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists = false)

@@ -1,5 +1,4 @@
 ﻿using TaskManagerBackend.DataAccess.Repositories.User;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Models;
 using TaskManagerBackend.Dto.User;
 
@@ -9,29 +8,37 @@ namespace TaskManagerBackend.Services.Auth
     {
         private readonly IAuthProvider _authProvider;
         private readonly IUserRepository _userRepository;
+        private readonly ILogger<AuthService> _logger;
 
         private const string UserAlreadyExistsMessage = "Username and/or Email already exists";
         private const string UserDoesNotExistMessage = "This user does not exist";
         private const string IncorrectCredentialsMessage = "Incorrect username/password pair";
 
-        public AuthService(IAuthProvider authProvider, IUserRepository userRepository)
+        public AuthService(IAuthProvider authProvider, 
+                           IUserRepository userRepository, 
+                           ILogger<AuthService> logger)
         {
             _authProvider = authProvider;
             _userRepository = userRepository;
+            _logger = logger;
         }
 
         public async Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData)
         {
-            ServiceResponse<UserSignUpResponseDto> response = new ();
+            ServiceResponse<UserSignUpResponseDto> response = new();
 
             if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
             {
+                _logger.LogTrace("User already exists");
+                
                 response.Data = null;
                 response.Success = false;
                 response.Message = UserAlreadyExistsMessage;
                 return response;
             }
 
+            _logger.LogTrace("Start user registration");
+            
             (byte[] passwordHash, byte[] passwordSalt) =
                 _authProvider.CreatePasswordHashAndSalt(requestData.Password);
             
@@ -44,6 +51,8 @@ namespace TaskManagerBackend.Services.Auth
                 Email = requestData.Email
             };
             
+            _logger.LogTrace("Finish user registration");
+            
             return response;
         }
 
@@ -55,6 +64,8 @@ namespace TaskManagerBackend.Services.Auth
 
             if (passwordData == null)
             {
+                _logger.LogTrace("User does not exist");
+                
                 response.Data = null;
                 response.Success = false;
                 response.Message = UserDoesNotExistMessage;
@@ -64,9 +75,13 @@ namespace TaskManagerBackend.Services.Auth
             (int userId, byte[] passwordHash, byte[] passwordSalt) = passwordData;
             if (_authProvider.VerifyPasswordHash(requestData.Password, passwordHash, passwordSalt))
             {
+                _logger.LogTrace("Password hash was verified");
+                
                 response.Data = _authProvider.CreateToken(userId);
                 return response;
             }
+            
+            _logger.LogTrace("Password hash was not verified");
 
             response.Data = null;
             response.Success = false;
