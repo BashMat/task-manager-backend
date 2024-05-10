@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
+using Prometheus;
 using Swashbuckle.AspNetCore.Filters;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.DataAccess.Repositories.Board;
@@ -58,9 +59,10 @@ namespace TaskManagerBackend
                 builder.Services.AddScoped<IUserRepository, UserRepository>();
                 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
                 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
-
+                
                 builder.Services.AddHealthChecks()
-                                .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name);
+                                .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name)
+                                .ForwardToPrometheus();
 
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
                 {
@@ -107,11 +109,15 @@ namespace TaskManagerBackend
 
                 app.MapControllers();
 
+                app.UseMetricServer();
+
                 app.MapHealthChecks(Common.HealthChecks.DefaultHealthRoute,
                                     new HealthCheckOptions
                                     {
                                         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                                     });
+
+                app.UseHttpMetrics();
 
                 app.Run();
             }
