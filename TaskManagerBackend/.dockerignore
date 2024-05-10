@@ -1,0 +1,5 @@
+﻿# .dockerignore
+.idea/
+.vs/
+**bin/
+**obj/
