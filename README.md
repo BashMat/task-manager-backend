@@ -9,22 +9,22 @@ App supports:
 ## Stack
 Project created using:
 - .NET 6
-  - C# 10 
+  - C# 10
   - ASP.NET Core 6
   - Dapper
-- SQL 
+- SQL
   - Microsoft SQL Server
   - Transact-SQL
 
 ## Structure
 - \TaskManagerBackend – main directory
-  - \Src – directory for actual app code
+  - \src – directory for actual app code
     - \TaskManagerBackend – core project, includes startup file, controllers and services
     - \TaskManagerBackend.Common – project for common items like const strings
     - \TaskManagerBackend.DataAccess – project for Data Access Layer, includes classes for DB queries and SQL scripts
     - \TaskManagerBackend.Domain – project for domain classes
     - \TaskManagerBackend.Dto – project for DTOs
-  - \Tests – directory for test code
+  - \tests – directory for test code
     - \Tests.Common – project for common testing related items
     - \TaskManagerBackend.Tests – project for TaskManagerBackend related unit tests
 
