@@ -2,6 +2,8 @@ using System.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
@@ -9,6 +11,7 @@ using Swashbuckle.AspNetCore.Filters;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Health;
 using TaskManagerBackend.Services.Auth;
 using TaskManagerBackend.Services.Board;
 
@@ -49,11 +52,15 @@ namespace TaskManagerBackend
                                                });
 
                 builder.Host.UseNLog();
+
                 builder.Services.AddScoped<IAuthService, AuthService>();
                 builder.Services.AddScoped<IBoardService, BoardService>();
                 builder.Services.AddScoped<IUserRepository, UserRepository>();
                 builder.Services.AddScoped<IBoardRepository, BoardRepository>();
                 builder.Services.AddScoped<IAuthProvider, AuthProvider>();
+
+                builder.Services.AddHealthChecks()
+                                .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name);
 
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
                 {
@@ -99,6 +106,12 @@ namespace TaskManagerBackend
                 app.UseAuthorization();
 
                 app.MapControllers();
+
+                app.MapHealthChecks(Common.HealthChecks.DefaultHealthRoute,
+                                    new HealthCheckOptions
+                                    {
+                                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                                    });
 
                 app.Run();
             }
