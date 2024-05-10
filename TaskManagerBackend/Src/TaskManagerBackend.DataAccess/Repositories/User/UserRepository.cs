@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using TaskManagerBackend.Common;
 using Models = TaskManagerBackend.Domain.Models;
 
@@ -9,10 +10,13 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
     public class UserRepository : IUserRepository
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(IConfiguration configuration)
+        public UserRepository(IConfiguration configuration,
+                              ILogger<UserRepository> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<Tuple<int, byte[], byte[]>?> GetUserPasswordData(string logInData)
@@ -28,6 +32,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.ToString());
                 return null;
             }
         }
@@ -45,6 +50,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return false;
             }
         }
@@ -66,6 +72,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return false;
             }
         }
