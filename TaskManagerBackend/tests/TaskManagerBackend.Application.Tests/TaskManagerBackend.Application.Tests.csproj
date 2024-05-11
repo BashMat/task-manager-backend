@@ -22,7 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TaskManagerBackend.DataAccess\TaskManagerBackend.DataAccess.csproj" />
     <ProjectReference Include="..\..\src\TaskManagerBackend.Application\TaskManagerBackend.Application.csproj" />
-    <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
+    <ProjectReference Include="..\TaskManagerBackend.Tests.Common\TaskManagerBackend.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Bogus;
 
-namespace Tests.Common;
+namespace TaskManagerBackend.Tests.Common;
 
 public class CommonTestBase
 {

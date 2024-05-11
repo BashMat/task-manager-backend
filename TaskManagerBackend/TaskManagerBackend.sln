@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C72978E8-FF2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.Dto", "src\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj", "{48CF39C3-950E-4794-9CF5-7AE39F1C6D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "tests\Tests.Common\Tests.Common.csproj", "{4965F5C5-E918-4067-9CD0-59696E0D9ADF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.Tests.Common", "tests\TaskManagerBackend.Tests.Common\TaskManagerBackend.Tests.Common.csproj", "{4965F5C5-E918-4067-9CD0-59696E0D9ADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,8 +25,8 @@ Project created using:
     - \TaskManagerBackend.Domain – project for domain classes
     - \TaskManagerBackend.Dto – project for DTOs
   - \tests – directory for test code
-    - \Tests.Common – project for common testing related items
-    - \TaskManagerBackend.Tests – project for TaskManagerBackend related unit tests
+    - \TaskManagerBackend.Application.Tests – project for TaskManagerBackend.Application related unit tests
+    - \TaskManagerBackend.Tests.Common – project for common testing related items
 
 ## API routes
 - /swagger/index.html - built-in endpoint for swagger

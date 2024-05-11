@@ -3,7 +3,7 @@ using Moq;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
-using Tests.Common;
+using TaskManagerBackend.Tests.Common;
 
 namespace TaskManagerBackend.Application.Tests.Auth
 {
