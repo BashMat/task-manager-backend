@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using TaskManagerBackend.Application;
+using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
-using TaskManagerBackend.Services.Auth;
 using Tests.Common;
 
 namespace TaskManagerBackend.Tests.Auth

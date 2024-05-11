@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace TaskManagerBackend.Health
+namespace TaskManagerBackend.Application.Health
 {
     public class ServiceProcessHealthCheck : IHealthCheck
     {

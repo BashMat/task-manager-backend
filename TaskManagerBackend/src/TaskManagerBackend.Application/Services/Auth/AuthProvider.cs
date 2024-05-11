@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common;
 
-namespace TaskManagerBackend.Services.Auth;
+namespace TaskManagerBackend.Application.Services.Auth;
 
 public class AuthProvider : IAuthProvider
 {

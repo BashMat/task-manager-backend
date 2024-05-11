@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend
+﻿namespace TaskManagerBackend.Application
 {
     public class ServiceResponse<T>
     {

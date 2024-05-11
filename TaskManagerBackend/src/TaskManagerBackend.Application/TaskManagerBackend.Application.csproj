@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>7ddebae8-073f-4ae0-9e8b-b22bcd5297fb</UserSecretsId>
-    <RootNamespace>TaskManagerBackend</RootNamespace>
+    <RootNamespace>TaskManagerBackend.Application</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

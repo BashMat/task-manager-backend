@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using TaskManagerBackend.Domain;
+using Microsoft.AspNetCore.Mvc;
+using TaskManagerBackend.Application.Services.Board;
 using TaskManagerBackend.Dto.Board;
 using TaskManagerBackend.Dto.Card;
 using TaskManagerBackend.Dto.Column;
-using TaskManagerBackend.Services.Board;
 
-namespace TaskManagerBackend.Controllers
+namespace TaskManagerBackend.Application.Controllers
 {
     [Route("api/boards")]
 	[ApiController]

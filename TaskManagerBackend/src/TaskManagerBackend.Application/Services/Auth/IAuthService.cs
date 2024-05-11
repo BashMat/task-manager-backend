@@ -1,7 +1,6 @@
-﻿using TaskManagerBackend.Domain;
-using TaskManagerBackend.Dto.User;
+﻿using TaskManagerBackend.Dto.User;
 
-namespace TaskManagerBackend.Services.Auth
+namespace TaskManagerBackend.Application.Services.Auth
 {
 	public interface IAuthService
 	{

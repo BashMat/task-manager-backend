@@ -1,10 +1,9 @@
 ﻿using TaskManagerBackend.DataAccess.Repositories.Board;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Dto.Board;
 using TaskManagerBackend.Dto.Card;
 using TaskManagerBackend.Dto.Column;
 
-namespace TaskManagerBackend.Services.Board
+namespace TaskManagerBackend.Application.Services.Board
 {
     public class BoardService : IBoardService
     {

@@ -19,7 +19,7 @@ Project created using:
 ## Structure
 - \TaskManagerBackend – main directory
   - \src – directory for actual app code
-    - \TaskManagerBackend – core project, includes startup file, controllers and services
+    - \TaskManagerBackend.Application – core project, includes startup file, controllers and services
     - \TaskManagerBackend.Common – project for common items like const strings
     - \TaskManagerBackend.DataAccess – project for Data Access Layer, includes classes for DB queries and SQL scripts
     - \TaskManagerBackend.Domain – project for domain classes

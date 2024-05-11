@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Services.Auth;
+﻿namespace TaskManagerBackend.Application.Services.Auth;
 
 public interface IAuthProvider
 {

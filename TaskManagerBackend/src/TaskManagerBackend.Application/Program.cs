@@ -1,22 +1,22 @@
 using System.Configuration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using Prometheus;
 using Swashbuckle.AspNetCore.Filters;
+using TaskManagerBackend.Application.Health;
+using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Application.Services.Board;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.User;
-using TaskManagerBackend.Health;
-using TaskManagerBackend.Services.Auth;
-using TaskManagerBackend.Services.Board;
 
-namespace TaskManagerBackend
+namespace TaskManagerBackend.Application
 {
     public class Program
     {

@@ -2,7 +2,7 @@
 using TaskManagerBackend.Domain.Models;
 using TaskManagerBackend.Dto.User;
 
-namespace TaskManagerBackend.Services.Auth
+namespace TaskManagerBackend.Application.Services.Auth
 {
     public class AuthService : IAuthService
     {
