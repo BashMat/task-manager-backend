@@ -1,12 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using TaskManagerBackend.Application;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
 using Tests.Common;
 
-namespace TaskManagerBackend.Tests.Auth
+namespace TaskManagerBackend.Application.Tests.Auth
 {
     public class AuthServiceTestBase : CommonTestBase
     {

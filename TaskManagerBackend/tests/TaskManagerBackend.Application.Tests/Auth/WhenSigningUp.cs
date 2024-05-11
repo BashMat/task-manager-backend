@@ -1,10 +1,8 @@
 using FluentAssertions;
-using Moq;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Dto.User;
 using Xunit;
 
-namespace TaskManagerBackend.Tests.Auth
+namespace TaskManagerBackend.Application.Tests.Auth
 {
     public class WhenSigningUp : AuthServiceTestBase
     {

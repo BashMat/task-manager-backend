@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerBackend.Common",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{74310997-414F-4BB2-A8A9-9BB65A3C2B94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.Tests", "tests\TaskManagerBackend.Tests\TaskManagerBackend.Tests.csproj", "{85D74549-D466-41F9-B3CD-F951DD2DFEFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.Application.Tests", "tests\TaskManagerBackend.Application.Tests\TaskManagerBackend.Application.Tests.csproj", "{85D74549-D466-41F9-B3CD-F951DD2DFEFA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C72978E8-FF22-43B4-9DF9-DC920FD4E616}"
 EndProject
