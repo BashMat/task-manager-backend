@@ -15,4 +15,4 @@ RUN dotnet publish ./src -c Release -o out --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as dotnet-runtime
 WORKDIR /app
 COPY --from=dotnet-build /app/out .
-ENTRYPOINT ["dotnet", "TaskManagerBackend.dll"]
+ENTRYPOINT ["dotnet", "TaskManagerBackend.Application.dll"]
