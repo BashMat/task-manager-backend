@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Application.Services.Email;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;
@@ -13,17 +14,20 @@ namespace TaskManagerBackend.Application.Tests.Auth
 
         private readonly Mock<IAuthProvider> _authProviderMock;
         private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly Mock<IEmailService> _emailServiceMock;
 
         protected AuthServiceTestBase()
         {
             _authProviderMock = new Mock<IAuthProvider>();
             _userRepositoryMock = new Mock<IUserRepository>();
+            _emailServiceMock = new Mock<IEmailService>();
         }
 
         private AuthService CreateAuthService()
         {
             return new AuthService(_authProviderMock.Object,
                                    _userRepositoryMock.Object,
+                                   _emailServiceMock.Object,
                                    Mock.Of<ILogger<AuthService>>());
         }
         

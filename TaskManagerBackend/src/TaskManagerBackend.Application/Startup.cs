@@ -13,6 +13,7 @@ using TaskManagerBackend.Application.Configuration;
 using TaskManagerBackend.Application.Health;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Application.Services.Board;
+using TaskManagerBackend.Application.Services.Email;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.User;
@@ -154,11 +155,15 @@ public class Startup
 
     private void RegisterServices(IServiceCollection services)
     {
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IBoardService, BoardService>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IBoardRepository, BoardRepository>();
+        
+        services.AddScoped<IEmailService, EmailService>();
+        
         services.AddScoped<IAuthProvider, AuthProvider>();
+        services.AddScoped<IAuthService, AuthService>();
+        
+        services.AddScoped<IBoardRepository, BoardRepository>();
+        services.AddScoped<IBoardService, BoardService>();
     }
 
     public void ConfigureApp(WebApplication app)
