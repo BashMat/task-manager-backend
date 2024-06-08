@@ -21,7 +21,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
 
         public async Task<Tuple<int, byte[], byte[]>?> GetUserPasswordData(string logInData)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             try
             {
@@ -39,7 +39,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsById(int id)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             try
             {
@@ -57,7 +57,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
 
         public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             DynamicParameters parameters = new();
             parameters.Add("@UserName", userName);
@@ -79,7 +79,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.User
 
         public async Task Insert(Models.User user)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync(
                 "insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values " +

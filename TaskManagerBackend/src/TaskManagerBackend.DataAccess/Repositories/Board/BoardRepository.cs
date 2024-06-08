@@ -22,7 +22,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<BoardGetResponseDto?> Insert(BoardInsertDto insertedBoard)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             int id = await connection.ExecuteScalarAsync<int>(
             "insert into [Board] (Title, Description, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values " +
@@ -34,21 +34,21 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<BoardGetResponseDto>> GetAll(int userId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetAllInternal(connection, userId);
         }
 
         public async Task<BoardGetResponseDto?> GetById(int boardId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetByIdInternal(connection, boardId);
         }
 
         public async Task<BoardGetResponseDto?> Update(BoardUpdateDto updatedBoard)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("update [Board] " +
                 "set [Board].[Title] = @Title, [Board].[Description] = @Description, " +
@@ -60,7 +60,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<BoardGetResponseDto>> Delete(int userId, int boardId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("delete from [Board] where [Board].[Id]=@BoardId",
                                           new { BoardId = boardId });
@@ -238,7 +238,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<ColumnGetResponseDto?> InsertColumn(ColumnInsertDto insertedColumn)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             int id = await connection.ExecuteScalarAsync<int>("insert into [Column] ([Title], [Description], " +
                 "[BoardId], [CreatedBy], [CreatedAt], [UpdatedBy], [UpdatedAt]) " +
@@ -251,21 +251,21 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<ColumnGetResponseDto>> GetAllColumns(int userId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetAllColumnsInternal(connection, userId);
         }
 
         public async Task<ColumnGetResponseDto?> GetColumnById(int columnId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetColumnByIdInternal(connection, columnId);
         }
 
         public async Task<ColumnGetResponseDto?> UpdateColumn(ColumnUpdateDto updatedColumn)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("update [Column] " +
                 "set [Column].[Title] = @Title, [Column].[Description] = @Description, " +
@@ -277,7 +277,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<ColumnGetResponseDto>> DeleteColumn(int userId, int columnId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("delete from [Column] where [Column].[Id] = @ColumnId",
                                           new { ColumnId = columnId });
@@ -404,7 +404,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<CardGetResponseDto?> InsertCard(CardInsertDto insertedCard)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             int id = await connection.ExecuteScalarAsync<int>("insert into [Card] ([Title], [Description], " +
                                                               "[ColumnId], [OrderIndex], [CreatedBy], [CreatedAt], " +
@@ -418,21 +418,21 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<CardGetResponseDto>> GetAllCards(int userId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetAllCardsInternal(connection, userId);
         }
 
         public async Task<CardGetResponseDto?> GetCardById(int cardId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             return await GetCardByIdInternal(connection, cardId);
         }
 
         public async Task<CardGetResponseDto?> UpdateCard(CardUpdateDto updatedCard)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("update [Card] " +
                                           "set [Card].[Title] = @Title, [Card].[Description] = @Description, " +
@@ -447,7 +447,7 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
 
         public async Task<List<CardGetResponseDto>> DeleteCard(int userId, int cardId)
         {
-            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.DefaultConnection));
+            await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             await connection.ExecuteAsync("delete from [Card] where [Card].[Id] = @CardId",
                                           new { CardId = cardId });

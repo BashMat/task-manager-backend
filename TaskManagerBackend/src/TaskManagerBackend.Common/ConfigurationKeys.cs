@@ -3,6 +3,10 @@
     public class ConfigurationKeys
     {
         public const string Token = "Token";
-        public const string DefaultConnection = "DefaultConnection";
+        
+        public const string ConnectionStrings = "ConnectionStrings";
+        public const string ConnectionStringsData = "ConnectionStringsData";
+        
+        public const string TaskManagerDbConnectionString = "TaskManagerDb";
     }
 }

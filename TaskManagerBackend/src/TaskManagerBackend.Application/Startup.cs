@@ -1,12 +1,15 @@
-﻿using System.Text;
+﻿using System.Configuration;
+using System.Text;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Prometheus;
 using Swashbuckle.AspNetCore.Filters;
+using TaskManagerBackend.Application.Configuration;
 using TaskManagerBackend.Application.Health;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Application.Services.Board;
@@ -27,6 +30,8 @@ public class Startup
 
     public void ConfigureBuilder(WebApplicationBuilder builder)
     {
+        BuildConnectionStrings();
+        
         // Add services to the container.
         builder.Services.AddControllers();
 
@@ -60,7 +65,7 @@ public class Startup
                                                     ValidateIssuerSigningKey = true,
                                                     IssuerSigningKey =
                                                         new SymmetricSecurityKey(Encoding.UTF8
-                                                            .GetBytes(builder.Configuration[ConfigurationKeys.Token])),
+                                                            .GetBytes(_configuration[ConfigurationKeys.Token]!)),
                                                     ValidateIssuer = false,
                                                     ValidateAudience = false,
                                                     ValidateLifetime = true,
@@ -78,6 +83,73 @@ public class Startup
                                                                  .AllowAnyMethod();
                                                        });
                                  });
+    }
+
+    private void BuildConnectionStrings()
+    {
+        IConfigurationSection connectionStringsDataSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsData);
+        IConfigurationSection connectionStringsSection = _configuration.GetSection(ConfigurationKeys.ConnectionStrings);
+
+        if (!connectionStringsSection.Exists() || !connectionStringsDataSection.Exists())
+        {
+            return;
+        }
+
+        Dictionary<string, ConnectionStringData> connectionStringsData =
+            ParseConnectionStringsDataSection(connectionStringsDataSection);
+
+        foreach (IConfigurationSection connectionString in connectionStringsSection.GetChildren())
+        {
+            string? connectionStringValue = connectionString.Value;
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionStringValue);
+            ConnectionStringData? data = connectionStringsData.FirstOrDefault(d => d.Key == connectionString.Key).Value;
+
+            if (data is not null)
+            {
+                connectionStringBuilder.DataSource = data.Server ?? connectionStringBuilder.DataSource;
+                connectionStringBuilder.InitialCatalog = data.Database ?? connectionStringBuilder.InitialCatalog;
+                connectionStringBuilder.UserID = data.User ?? connectionStringBuilder.UserID;
+                connectionStringBuilder.Password = data.Password ?? connectionStringBuilder.Password;
+                connectionStringBuilder.ConnectTimeout = data.ConnectionTimeout ?? connectionStringBuilder.ConnectTimeout;
+            }
+
+            _configuration[connectionString.Path] = connectionStringBuilder.ConnectionString;
+        }
+    }
+
+    private Dictionary<string, ConnectionStringData> ParseConnectionStringsDataSection(IConfigurationSection connectionStringsDataSection)
+    {
+        Dictionary<string, ConnectionStringData> result = new();
+        
+        IEnumerable<IConfigurationSection> connectionStringsData = connectionStringsDataSection.GetChildren();
+        
+        foreach (var connectionStringData in connectionStringsData)
+        {
+            if (!connectionStringData.Exists())
+            {
+                throw new ConfigurationErrorsException("ConnectionStringData must not include empty subsections");
+            }
+            
+            if (result.ContainsKey(connectionStringData.Key))
+            {
+                throw new ConfigurationErrorsException("Configuration must specify each connection string only once");
+            }
+
+            ConnectionStringData data = new()
+                                        {
+                                            Server = connectionStringData.GetSection("Server").Value,
+                                            Database = connectionStringData.GetSection("Database").Value,
+                                            User = connectionStringData.GetSection("User").Value,
+                                            Password = connectionStringData.GetSection("Password").Value,
+                                            ConnectionTimeout = connectionStringData.GetSection("ConnectionTimeout").Value == null 
+                                                                    ? null
+                                                                    : int.Parse(connectionStringData.GetSection("ConnectionTimeout").Value!)
+                                        };
+
+            result.Add(connectionStringData.Key, data);
+        }
+
+        return result;
     }
 
     private void RegisterServices(IServiceCollection services)
