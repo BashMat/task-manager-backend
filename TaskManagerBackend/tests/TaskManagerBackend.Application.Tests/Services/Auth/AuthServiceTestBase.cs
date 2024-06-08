@@ -6,7 +6,7 @@ using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;
 
-namespace TaskManagerBackend.Application.Tests.Auth
+namespace TaskManagerBackend.Application.Tests.Services.Auth
 {
     public class AuthServiceTestBase : CommonTestBase
     {
@@ -29,6 +29,12 @@ namespace TaskManagerBackend.Application.Tests.Auth
                                    _userRepositoryMock.Object,
                                    _emailServiceMock.Object,
                                    Mock.Of<ILogger<AuthService>>());
+        }
+
+        protected void SetUpValidateEmailAddressFormat(bool isEmailAddressFormatCorrect = true)
+        {
+            _emailServiceMock.Setup(o => o.ValidateEmailAddressFormat(It.IsAny<string>()))
+                             .Returns(isEmailAddressFormatCorrect);
         }
         
         protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists = false)

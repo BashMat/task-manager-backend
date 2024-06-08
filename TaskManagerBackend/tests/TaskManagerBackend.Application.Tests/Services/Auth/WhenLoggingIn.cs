@@ -1,7 +1,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace TaskManagerBackend.Application.Tests.Auth
+namespace TaskManagerBackend.Application.Tests.Services.Auth
 {
     public class WhenLoggingIn : AuthServiceTestBase
     {
