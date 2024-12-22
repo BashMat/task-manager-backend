@@ -20,11 +20,11 @@ public class UserRepository : IUserRepository
         _logger = logger;
     }
 
-    public async Task<UserCredentialsData?> GetUserPasswordData(string logInData)
+    public async Task<UserPasswordData?> GetUserPasswordData(string logInData)
     {
         await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
             
-        UserCredentialsData? data = await connection.QueryFirstOrDefaultAsync<UserCredentialsData>(
+        UserPasswordData? data = await connection.QueryFirstOrDefaultAsync<UserPasswordData>(
                             @"select [Id], [PasswordHash], [PasswordSalt] from [User] 
 where [UserName] = @LogInData or [Email] = @LogInData",
                             new { LogInData = logInData });
@@ -36,7 +36,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
     {
         await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
             
-        Models.User? user = await connection.QueryFirstOrDefaultAsync<Models.User>(
+        UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
                              "select [UserName], [Email] from [User] where [Id] = @Id",
                              new { Id = id });
 
@@ -51,7 +51,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
         parameters.Add("@UserName", userName);
         parameters.Add("@Email", email);
 
-        Models.User? user = await connection.QueryFirstOrDefaultAsync<Models.User>(
+        UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
                              "select [UserName], [Email] from [User] where [UserName] = @UserName or [Email] = @Email",
                              parameters);
             

@@ -1,4 +1,5 @@
 ﻿using TaskManagerBackend.Application.Services.Email;
+using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Models;
 using TaskManagerBackend.Dto.User;
@@ -10,6 +11,7 @@ namespace TaskManagerBackend.Application.Services.Auth
         private readonly IAuthProvider _authProvider;
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
+        private readonly IDateTimeService _dateTimeService;
         private readonly ILogger<AuthService> _logger;
 
         private const string UserAlreadyExistsMessage = "Username and/or Email already exists";
@@ -19,11 +21,13 @@ namespace TaskManagerBackend.Application.Services.Auth
         public AuthService(IAuthProvider authProvider, 
                            IUserRepository userRepository,
                            IEmailService emailService,
+                           IDateTimeService dateTimeService,
                            ILogger<AuthService> logger)
         {
             _authProvider = authProvider;
             _userRepository = userRepository;
             _emailService = emailService;
+            _dateTimeService = dateTimeService;
             _logger = logger;
         }
 
@@ -56,7 +60,7 @@ namespace TaskManagerBackend.Application.Services.Auth
             (byte[] passwordHash, byte[] passwordSalt) =
                 _authProvider.CreatePasswordHashAndSalt(requestData.Password);
             
-            User newUser = new(requestData.UserName, requestData.Email, passwordHash, passwordSalt);
+            User newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
             await _userRepository.Insert(newUser);
 
             response.Data = new UserSignUpResponseDto 
@@ -74,7 +78,7 @@ namespace TaskManagerBackend.Application.Services.Auth
         {
             ServiceResponse<string> response = new();
 
-            UserCredentialsData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
+            UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
 
             if (data is null)
             {
