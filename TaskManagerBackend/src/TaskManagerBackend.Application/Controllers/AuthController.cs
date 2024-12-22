@@ -50,7 +50,7 @@ namespace TaskManagerBackend.Application.Controllers
             {
                 return Ok(response);
             }
-            return BadRequest(response);
+            return Unauthorized(response);
         }
     }
 }
