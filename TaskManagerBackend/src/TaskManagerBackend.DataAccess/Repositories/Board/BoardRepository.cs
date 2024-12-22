@@ -25,9 +25,11 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
             int id = await connection.ExecuteScalarAsync<int>(
-            "insert into [Board] (Title, Description, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values " +
-            "(@Title, @Description, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
-            "select scope_identity();", insertedBoard);
+            @"insert into [Board] (Title, Description, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
+(@Title, @Description, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); 
+
+select scope_identity();",
+            insertedBoard);
 
             return await GetByIdInternal(connection, id);
         }
@@ -50,10 +52,10 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
-            await connection.ExecuteAsync("update [Board] " +
-                "set [Board].[Title] = @Title, [Board].[Description] = @Description, " +
-                "[Board].[UpdatedBy] = @UpdatedBy, [Board].[UpdatedAt] = @UpdatedAt " +
-                "where [Board].[Id] = @Id", updatedBoard);
+            await connection.ExecuteAsync(@"update [Board] 
+set [Board].[Title] = @Title, [Board].[Description] = @Description, 
+[Board].[UpdatedBy] = @UpdatedBy, [Board].[UpdatedAt] = @UpdatedAt 
+where [Board].[Id] = @Id", updatedBoard);
 
             return await GetByIdInternal(connection, updatedBoard.Id);
         }
@@ -88,25 +90,25 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
             };
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto>(
-                "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[BoardCreator].[Id], [BoardCreator].[UserName], [BoardCreator].[FirstName], [BoardCreator].[LastName], [BoardCreator].[Email], " +
-                "[BoardUpdater].[Id], [BoardUpdater].[UserName], [BoardUpdater].[FirstName], [BoardUpdater].[LastName], [BoardUpdater].[Email], " +
-                "[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
-                "[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], " +
-                "[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], " +
-                "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
-                "from [Board] as [B] " +
-                "inner join [User] as [BoardCreator] on [B].[CreatedBy] = [BoardCreator].[Id] " +
-                "inner join [User] as [BoardUpdater] on [B].[UpdatedBy] = [BoardUpdater].[Id] " +
-                "left join [Column] as [Col] on[B].[Id] = [Col].[BoardId] " +
-                "left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] " +
-                "left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] " +
-                "left join [Card] on[Col].[Id] = [Card].[ColumnId] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [B].[Id] = @BoardId",
+                @"select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], 
+[BoardCreator].[Id], [BoardCreator].[UserName], [BoardCreator].[FirstName], [BoardCreator].[LastName], [BoardCreator].[Email], 
+[BoardUpdater].[Id], [BoardUpdater].[UserName], [BoardUpdater].[FirstName], [BoardUpdater].[LastName], [BoardUpdater].[Email], 
+[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
+[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
+[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
+from [Board] as [B] 
+inner join [User] as [BoardCreator] on [B].[CreatedBy] = [BoardCreator].[Id] 
+inner join [User] as [BoardUpdater] on [B].[UpdatedBy] = [BoardUpdater].[Id] 
+left join [Column] as [Col] on[B].[Id] = [Col].[BoardId] 
+left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] 
+left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] 
+left join [Card] on[Col].[Id] = [Card].[ColumnId] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [B].[Id] = @BoardId",
                 types,
                 (types) =>
                 ToDto(historyBoards,
@@ -147,25 +149,25 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
             };
 
             IEnumerable<BoardGetResponseDto> boards = await connection.QueryAsync<BoardGetResponseDto>(
-                "select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], " +
-                "[BoardCreator].[Id], [BoardCreator].[UserName], [BoardCreator].[FirstName], [BoardCreator].[LastName], [BoardCreator].[Email], " +
-                "[BoardUpdater].[Id], [BoardUpdater].[UserName], [BoardUpdater].[FirstName], [BoardUpdater].[LastName], [BoardUpdater].[Email], " +
-                "[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
-                "[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], " +
-                "[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], " +
-                "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
-                "from [Board] as [B] " +
-                "inner join [User] as [BoardCreator] on [B].[CreatedBy] = [BoardCreator].[Id] " +
-                "inner join [User] as [BoardUpdater] on [B].[UpdatedBy] = [BoardUpdater].[Id] " +
-                "left join [Column] as [Col] on[B].[Id] = [Col].[BoardId] " +
-                "left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] " +
-                "left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] " +
-                "left join [Card] on[Col].[Id] = [Card].[ColumnId] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [BoardCreator].[Id] = @UserId",
+                @"select [B].[Id], [B].[Title], [B].[Description], [B].[CreatedAt], [B].[UpdatedAt], 
+[BoardCreator].[Id], [BoardCreator].[UserName], [BoardCreator].[FirstName], [BoardCreator].[LastName], [BoardCreator].[Email], 
+[BoardUpdater].[Id], [BoardUpdater].[UserName], [BoardUpdater].[FirstName], [BoardUpdater].[LastName], [BoardUpdater].[Email], 
+[Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
+[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
+[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
+from [Board] as [B] 
+inner join [User] as [BoardCreator] on [B].[CreatedBy] = [BoardCreator].[Id] 
+inner join [User] as [BoardUpdater] on [B].[UpdatedBy] = [BoardUpdater].[Id] 
+left join [Column] as [Col] on[B].[Id] = [Col].[BoardId] 
+left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] 
+left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] 
+left join [Card] on[Col].[Id] = [Card].[ColumnId] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [BoardCreator].[Id] = @UserId",
                 types,
                 (types) =>
                 ToDto(historyBoards,
@@ -267,10 +269,11 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
-            await connection.ExecuteAsync("update [Column] " +
-                "set [Column].[Title] = @Title, [Column].[Description] = @Description, " +
-                "[Column].[UpdatedBy] = @UpdatedBy, [Column].[UpdatedAt] = @UpdatedAt " +
-                "where [Column].[Id] = @Id", updatedColumn);
+            await connection.ExecuteAsync(@"update [Column] 
+set [Column].[Title] = @Title, [Column].[Description] = @Description, 
+[Column].[UpdatedBy] = @UpdatedBy, [Column].[UpdatedAt] = @UpdatedAt 
+where [Column].[Id] = @Id", 
+                                          updatedColumn);
 
             return await GetColumnByIdInternal(connection, updatedColumn.Id);
         }
@@ -301,19 +304,19 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
             };
 
             IEnumerable<ColumnGetResponseDto> columns = await connection.QueryAsync<ColumnGetResponseDto>(
-                "select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
-                "[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], " +
-                "[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], " +
-                "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
-                "from [Column] as [Col] " +
-                "left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] " +
-                "left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] " +
-                "left join [Card] on[Col].[Id] = [Card].[ColumnId] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [ColumnCreator].[Id] = @UserId",
+@"select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
+[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
+[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
+from [Column] as [Col] 
+left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] 
+left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] 
+left join [Card] on[Col].[Id] = [Card].[ColumnId] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [ColumnCreator].[Id] = @UserId",
                 types,
                 (types) =>
                 ToDto(historyColumns,
@@ -339,19 +342,19 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
                                                                                     UserInfoDto,
                                                                                     UserInfoDto,
                                                                                     ColumnGetResponseDto>(
-                "select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], " +
-                "[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], " +
-                "[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], " +
-                "[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], " +
-                "[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] " +
-                "from [Column] as [Col] " +
-                "left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] " +
-                "left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] " +
-                "left join [Card] on[Col].[Id] = [Card].[ColumnId] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [Col].[Id] = @ColumnId",
+                @"select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
+[ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
+[ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
+from [Column] as [Col] 
+left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] 
+left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] 
+left join [Card] on[Col].[Id] = [Card].[ColumnId] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [Col].[Id] = @ColumnId",
                 (column, columnCreator, columnUpdater, card, cardCreator, cardUpdater) =>
                 ToDto(historyColumns,
                       column,
@@ -406,12 +409,11 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
-            int id = await connection.ExecuteScalarAsync<int>("insert into [Card] ([Title], [Description], " +
-                                                              "[ColumnId], [OrderIndex], [CreatedBy], [CreatedAt], " +
-                                                              "[UpdatedBy], [UpdatedAt]) " +
-                                                              "values (@Title, @Description, @ColumnId, @OrderIndex, " +
-                                                              "@CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt); " +
-                                                              "select scope_identity();", 
+            int id = await connection.ExecuteScalarAsync<int>(@"insert into [Card] ([Title], [Description],
+[ColumnId], [OrderIndex], [CreatedBy], [CreatedAt], [UpdatedBy], [UpdatedAt]) 
+values (@Title, @Description, @ColumnId, @OrderIndex, @CreatedBy, @CreatedAt, @CreatedBy, @CreatedAt);
+
+select scope_identity();", 
                                                               insertedCard);
             return await GetCardByIdInternal(connection, id);
         }
@@ -434,12 +436,10 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
         {
             await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
 
-            await connection.ExecuteAsync("update [Card] " +
-                                          "set [Card].[Title] = @Title, [Card].[Description] = @Description, " +
-                                          "[Card].[ColumnId] = @ColumnId, " +
-                                          "[Card].[OrderIndex] = @OrderIndex, [Card].[UpdatedBy] = @UpdatedBy, " +
-                                          "[Card].[UpdatedAt] = @UpdatedAt " +
-                                          "where [Card].[Id] = @Id", 
+            await connection.ExecuteAsync(@"update [Card] 
+set [Card].[Title] = @Title, [Card].[Description] = @Description, [Card].[ColumnId] = @ColumnId, 
+[Card].[OrderIndex] = @OrderIndex, [Card].[UpdatedBy] = @UpdatedBy, [Card].[UpdatedAt] = @UpdatedAt 
+where [Card].[Id] = @Id", 
                                           updatedCard);
             
             return await GetCardByIdInternal(connection, updatedCard.Id);
@@ -463,15 +463,15 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
                                                                                 UserInfoDto,
                                                                                 UserInfoDto,
                                                                                 CardGetResponseDto>(
-                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], " +
-                "[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], " +
-                "[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], " +
-                "[CardUpdater].[Email] " +
-                "from [Card] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [CardCreator].[Id] = @UserId",
+                @"select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], 
+[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], 
+[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], 
+[CardUpdater].[Email] 
+from [Card] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [CardCreator].[Id] = @UserId",
                 (card, cardCreator, cardUpdater) =>
                 {
                     card.CreatedBy = cardCreator;
@@ -490,15 +490,15 @@ namespace TaskManagerBackend.DataAccess.Repositories.Board
                                                                                 UserInfoDto,
                                                                                 UserInfoDto,
                                                                                 CardGetResponseDto>(
-                "select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], " +
-                "[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], " +
-                "[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], " +
-                "[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], " +
-                "[CardUpdater].[Email] " +
-                "from [Card] " +
-                "left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] " +
-                "left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] " +
-                "where [Card].[Id] = @CardId",
+                @"select [Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], 
+[Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], [CardCreator].[Id], 
+[CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
+[CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], 
+[CardUpdater].[Email] 
+from [Card] 
+left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
+left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
+where [Card].[Id] = @CardId",
                 (card, cardCreator, cardUpdater) =>
                 {
                     card.CreatedBy = cardCreator;

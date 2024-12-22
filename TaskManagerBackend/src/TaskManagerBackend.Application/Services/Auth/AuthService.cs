@@ -74,9 +74,9 @@ namespace TaskManagerBackend.Application.Services.Auth
         {
             ServiceResponse<string> response = new();
 
-            Tuple<int, byte[], byte[]>? passwordData = await _userRepository.GetUserPasswordData(requestData.LogInData);
+            UserCredentialsData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
 
-            if (passwordData == null)
+            if (data is null)
             {
                 _logger.LogTrace("User does not exist");
                 
@@ -85,13 +85,12 @@ namespace TaskManagerBackend.Application.Services.Auth
                 response.Message = IncorrectCredentialsMessage;
                 return response;
             }
-
-            (int userId, byte[] passwordHash, byte[] passwordSalt) = passwordData;
-            if (_authProvider.VerifyPasswordHash(requestData.Password, passwordHash, passwordSalt))
+            
+            if (_authProvider.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
             {
                 _logger.LogTrace("Password hash was verified");
                 
-                response.Data = _authProvider.CreateToken(userId);
+                response.Data = _authProvider.CreateToken(data.Id);
                 return response;
             }
             

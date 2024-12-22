@@ -51,11 +51,16 @@ namespace TaskManagerBackend.Application.Tests.Services.Auth
         
         protected void SetUpUserRepositoryMock(int? userId = null, byte[]? passwordHash = null, byte[]? passwordSalt = null)
         {
-            Tuple<int, byte[], byte[]>? result = null;
+            UserCredentialsData? result = null;
             
             if (userId != null && passwordHash != null && passwordSalt != null)
             {
-                result = new Tuple<int, byte[], byte[]>((int)userId, passwordHash, passwordSalt);
+                result = new UserCredentialsData
+                         {
+                             Id = (int)userId,
+                             PasswordHash = passwordHash,
+                             PasswordSalt = passwordSalt
+                         };
             }
             
             _userRepositoryMock.Setup(o => o.GetUserPasswordData(It.IsAny<string>()))
