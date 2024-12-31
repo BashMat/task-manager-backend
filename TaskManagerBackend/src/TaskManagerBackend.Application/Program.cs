@@ -1,45 +1,48 @@
+#region Usings
+
 using System.Configuration;
 using NLog;
 using NLog.Web;
 using TaskManagerBackend.Common;
 
-namespace TaskManagerBackend.Application
+#endregion
+
+namespace TaskManagerBackend.Application;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var logger = LogManager.Setup()
+                               .LoadConfigurationFromAppSettings()
+                               .GetCurrentClassLogger();
+        try
         {
-            var logger = LogManager.Setup()
-                                   .LoadConfigurationFromAppSettings()
-                                   .GetCurrentClassLogger();
-            try
-            {
-                WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-                if (string.IsNullOrWhiteSpace(builder.Configuration[ConfigurationKeys.Token]))
-                {
-                    throw new ConfigurationErrorsException("Secret key for token was not specified");
-                }
+            if (string.IsNullOrWhiteSpace(builder.Configuration[ConfigurationKeys.Token]))
+            {
+                throw new ConfigurationErrorsException("Secret key for token was not specified");
+            }
                 
-                Startup startup = new(builder.Configuration);
+            Startup startup = new(builder.Configuration);
 
-                startup.ConfigureBuilder(builder);
+            startup.ConfigureBuilder(builder);
 
-                WebApplication app = builder.Build();
+            WebApplication app = builder.Build();
                 
-                startup.ConfigureApp(app);
+            startup.ConfigureApp(app);
 
-                app.Run();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Error occured during application initialization");
-                throw;
-            }
-            finally
-            {
-                LogManager.Shutdown();
-            }
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Error occured during application initialization");
+            throw;
+        }
+        finally
+        {
+            LogManager.Shutdown();
         }
     }
 }

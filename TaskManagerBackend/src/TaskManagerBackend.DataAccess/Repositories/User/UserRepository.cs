@@ -1,10 +1,14 @@
-﻿using Dapper;
+﻿#region Usings
+
+using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.User;
 using Models = TaskManagerBackend.Domain.Models;
+
+#endregion
 
 namespace TaskManagerBackend.DataAccess.Repositories.User;
 

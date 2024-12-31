@@ -1,5 +1,9 @@
-﻿using TaskManagerBackend.Dto.User;
+﻿#region Usings
+
+using TaskManagerBackend.Dto.User;
 using Models = TaskManagerBackend.Domain.Models;
+
+#endregion
 
 namespace TaskManagerBackend.DataAccess.Repositories.User;
 

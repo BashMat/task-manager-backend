@@ -1,8 +1,7 @@
-﻿namespace TaskManagerBackend.Dto.User
+﻿namespace TaskManagerBackend.Dto.User;
+
+public class UserSignUpResponseDto
 {
-	public class UserSignUpResponseDto
-	{
-		public string UserName { get; set; } = string.Empty;
-		public string Email { get; set; } = string.Empty;
-	}
+    public string UserName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
 }

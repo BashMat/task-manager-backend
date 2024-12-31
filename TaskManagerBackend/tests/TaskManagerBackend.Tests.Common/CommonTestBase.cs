@@ -1,4 +1,8 @@
-﻿using Bogus;
+﻿#region Usings
+
+using Bogus;
+
+#endregion
 
 namespace TaskManagerBackend.Tests.Common;
 

@@ -1,11 +1,14 @@
-﻿using TaskManagerBackend.Dto.User;
+﻿#region Usings
 
-namespace TaskManagerBackend.Application.Services.Auth
+using TaskManagerBackend.Dto.User;
+
+#endregion
+
+namespace TaskManagerBackend.Application.Services.Auth;
+
+public interface IAuthService
 {
-	public interface IAuthService
-	{
-		public Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData);
+    public Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData);
 
-		public Task<ServiceResponse<string>> LogIn(UserLogInRequestDto requestData);
-	}
+    public Task<ServiceResponse<string>> LogIn(UserLogInRequestDto requestData);
 }

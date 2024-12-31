@@ -1,9 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿#region Usings
+
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Services.Auth;
 

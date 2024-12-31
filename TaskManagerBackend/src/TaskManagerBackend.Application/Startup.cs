@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿#region Usings
+
+using System.Configuration;
 using System.Text;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +19,8 @@ using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.User;
+
+#endregion
 
 namespace TaskManagerBackend.Application;
 

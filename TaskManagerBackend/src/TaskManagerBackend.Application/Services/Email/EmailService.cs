@@ -1,4 +1,8 @@
-﻿using System.Net.Mail;
+﻿#region Usings
+
+using System.Net.Mail;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Services.Email;
 

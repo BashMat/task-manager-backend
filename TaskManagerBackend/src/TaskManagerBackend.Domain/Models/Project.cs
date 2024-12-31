@@ -1,11 +1,10 @@
-﻿namespace TaskManagerBackend.Domain.Models
+﻿namespace TaskManagerBackend.Domain.Models;
+
+public class Project
 {
-	public class Project
-	{
-		public int Id { get; set; }
+    public int Id { get; set; }
 
-		public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
-		public string Description { get; set; } = string.Empty;
-	}
+    public string Description { get; set; } = string.Empty;
 }

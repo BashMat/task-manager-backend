@@ -1,8 +1,12 @@
+#region Usings
+
 using FluentAssertions;
 using Moq;
 using TaskManagerBackend.Domain.Models;
 using TaskManagerBackend.Dto.User;
 using Xunit;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Tests.Services.Auth;
 

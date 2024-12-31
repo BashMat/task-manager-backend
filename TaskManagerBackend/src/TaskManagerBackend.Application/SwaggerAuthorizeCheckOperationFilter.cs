@@ -1,8 +1,12 @@
-﻿using System.Net;
+﻿#region Usings
+
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+
+#endregion
 
 namespace TaskManagerBackend.Application;
 
