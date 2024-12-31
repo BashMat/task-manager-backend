@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.Dto.Board;
 using TaskManagerBackend.Dto.Card;
@@ -12,13 +13,16 @@ namespace TaskManagerBackend.Application.Services.Board;
 public class BoardService : IBoardService
 {
     private readonly IBoardRepository _boardRepository;
+    private readonly IDateTimeService _dateTimeService;
         
     private const string CouldNotCreateMessage = "Could not create resource";
     private const string ResourceDoesNotExist = "Resource does not exist";
 
-    public BoardService(IBoardRepository boardRepository)
+    public BoardService(IBoardRepository boardRepository,
+                        IDateTimeService dateTimeService)
     {
         _boardRepository = boardRepository;
+        _dateTimeService = dateTimeService;
     }
 
     #region Board
@@ -30,7 +34,7 @@ public class BoardService : IBoardService
                                          Title = newBoard.Title,
                                          Description = newBoard.Description,
                                          CreatedBy = userId,
-                                         CreatedAt = DateTime.UtcNow
+                                         CreatedAt = _dateTimeService.UtcNow
                                      };
 
         ServiceResponse<BoardGetResponseDto> response = new()
@@ -80,7 +84,7 @@ public class BoardService : IBoardService
                                             Id = boardId,
                                             Title = updatedBoard.Title,
                                             Description = updatedBoard.Description,
-                                            UpdatedAt = DateTime.Now,
+                                            UpdatedAt = _dateTimeService.UtcNow,
                                             UpdatedBy = userId
                                         };
 
@@ -120,7 +124,7 @@ public class BoardService : IBoardService
                                            Description = newColumn.Description,
                                            BoardId = newColumn.BoardId,
                                            CreatedBy = userId,
-                                           CreatedAt = DateTime.UtcNow
+                                           CreatedAt = _dateTimeService.UtcNow
                                        };
 
         ServiceResponse<ColumnGetResponseDto> response = new()
@@ -172,7 +176,7 @@ public class BoardService : IBoardService
                                               Id = columnId,
                                               Title = updatedColumn.Title,
                                               Description = updatedColumn.Description,
-                                              UpdatedAt = DateTime.Now,
+                                              UpdatedAt = _dateTimeService.UtcNow,
                                               UpdatedBy = userId
                                           };
 
@@ -213,7 +217,7 @@ public class BoardService : IBoardService
                                        ColumnId = newCard.ColumnId,
                                        OrderIndex = newCard.OrderIndex,
                                        CreatedBy = userId,
-                                       CreatedAt = DateTime.UtcNow
+                                       CreatedAt = _dateTimeService.UtcNow
                                    };
 
         ServiceResponse<CardGetResponseDto> response = new()
@@ -267,7 +271,7 @@ public class BoardService : IBoardService
                                           Description = updatedCard.Description,
                                           ColumnId = updatedCard.ColumnId,
                                           OrderIndex = updatedCard.OrderIndex,
-                                          UpdatedAt = DateTime.Now,
+                                          UpdatedAt = _dateTimeService.UtcNow,
                                           UpdatedBy = userId
                                       };
 

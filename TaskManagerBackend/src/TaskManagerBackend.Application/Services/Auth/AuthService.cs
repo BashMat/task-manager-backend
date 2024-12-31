@@ -52,7 +52,7 @@ public class AuthService : IAuthService
         if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
         {
             _logger.LogTrace("User already exists");
-                
+
             response.Data = null;
             response.Success = false;
             response.Message = UserAlreadyExistsMessage;
@@ -60,7 +60,7 @@ public class AuthService : IAuthService
         }
 
         _logger.LogTrace("Start user registration");
-            
+
         (byte[] passwordHash, byte[] passwordSalt) =
             _authProvider.CreatePasswordHashAndSalt(requestData.Password);
             
@@ -72,9 +72,9 @@ public class AuthService : IAuthService
                             UserName = requestData.UserName,
                             Email = requestData.Email
                         };
-            
+
         _logger.LogTrace("Finish user registration");
-            
+
         return response;
     }
 
@@ -87,21 +87,21 @@ public class AuthService : IAuthService
         if (data is null)
         {
             _logger.LogTrace("User does not exist");
-                
+
             response.Data = null;
             response.Success = false;
             response.Message = IncorrectCredentialsMessage;
             return response;
         }
-            
+
         if (_authProvider.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
         {
             _logger.LogTrace("Password hash was verified");
-                
+
             response.Data = _authProvider.CreateToken(data.Id);
             return response;
         }
-            
+
         _logger.LogTrace("Password hash was not verified");
 
         response.Data = null;

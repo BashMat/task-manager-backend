@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common;
+using TaskManagerBackend.Common.Services;
 
 #endregion
 
@@ -13,10 +14,13 @@ namespace TaskManagerBackend.Application.Services.Auth;
 
 public class AuthProvider : IAuthProvider
 {
+    private readonly IDateTimeService _dateTimeService;
     private readonly IConfiguration _configuration;
     
-    public AuthProvider(IConfiguration configuration)
+    public AuthProvider(IDateTimeService dateTimeService,
+                        IConfiguration configuration)
     {
+        _dateTimeService = dateTimeService;
         _configuration = configuration;
     }
     
@@ -41,7 +45,7 @@ public class AuthProvider : IAuthProvider
             new (Claims.Sub, userId.ToString())
         };
             
-        var expire = DateTime.Now.AddMinutes(30);
+        var expire = _dateTimeService.UtcNow.AddMinutes(30);
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
         var token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
