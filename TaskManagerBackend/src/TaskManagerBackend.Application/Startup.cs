@@ -8,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Prometheus;
-using Swashbuckle.AspNetCore.Filters;
 using TaskManagerBackend.Application.Configuration;
 using TaskManagerBackend.Application.Health;
 using TaskManagerBackend.Application.Services.Auth;
@@ -41,15 +40,20 @@ public class Startup
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
                                        {
-                                           options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                                           options.SwaggerDoc("v1", new OpenApiInfo
+                                                                    {
+                                                                        Version = "v1",
+                                                                        Title = "Task Manager Backend",
+                                                                        Description = "An ASP.NET Core Web API for managing tasks",
+                                                                    });
+                                           options.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
                                                                              {
-                                                                                 Description =
-                                                                                     "Use the Bearer scheme: \"bearer {token}\"",
-                                                                                 In = ParameterLocation.Header,
-                                                                                 Name = "Authorization",
-                                                                                 Type = SecuritySchemeType.ApiKey
+                                                                                 Type = SecuritySchemeType.Http,
+                                                                                 Scheme = JwtBearerDefaults.AuthenticationScheme,
+                                                                                 BearerFormat = "JWT",
+                                                                                 Description = "JWT Authorization header using the Bearer scheme."
                                                                              });
-                                           options.OperationFilter<SecurityRequirementsOperationFilter>();
+                                           options.OperationFilter<SwaggerAuthorizeCheckOperationFilter>();
                                        });
 
         builder.Host.UseNLog();
