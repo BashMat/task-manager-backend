@@ -76,8 +76,7 @@ where [Board].[Id] = @Id", updatedBoard);
         {
             Dictionary<int, BoardGetResponseDto> historyBoards = new();
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
-            Type[] types = new Type[]
-            {
+            Type[] types = {
                 typeof(BoardGetResponseDto),
                 typeof(UserInfoDto),
                 typeof(UserInfoDto),
@@ -102,26 +101,26 @@ where [Board].[Id] = @Id", updatedBoard);
 from [Board] as [B] 
 inner join [User] as [BoardCreator] on [B].[CreatedBy] = [BoardCreator].[Id] 
 inner join [User] as [BoardUpdater] on [B].[UpdatedBy] = [BoardUpdater].[Id] 
-left join [Column] as [Col] on[B].[Id] = [Col].[BoardId] 
+left join [Column] as [Col] on [B].[Id] = [Col].[BoardId] 
 left join [User] as [ColumnCreator] on [Col].[CreatedBy] = [ColumnCreator].[Id] 
 left join [User] as [ColumnUpdater] on [Col].[UpdatedBy] = [ColumnUpdater].[Id] 
-left join [Card] on[Col].[Id] = [Card].[ColumnId] 
+left join [Card] on [Col].[Id] = [Card].[ColumnId] 
 left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id] 
 left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
 where [B].[Id] = @BoardId",
                 types,
-                (types) =>
+                typesArg =>
                 ToDto(historyBoards,
                       historyColumns,
-                      (BoardGetResponseDto)types[0],
-                      (UserInfoDto)types[1],
-                      (UserInfoDto)types[2],
-                      (ColumnGetResponseDto)types[3],
-                      (UserInfoDto)types[4],
-                      (UserInfoDto)types[5],
-                      (CardGetResponseDto)types[6],
-                      (UserInfoDto)types[7],
-                      (UserInfoDto)types[8]),
+                      (BoardGetResponseDto)typesArg[0],
+                      (UserInfoDto)typesArg[1],
+                      (UserInfoDto)typesArg[2],
+                      (ColumnGetResponseDto?)typesArg[3],
+                      (UserInfoDto?)typesArg[4],
+                      (UserInfoDto?)typesArg[5],
+                      (CardGetResponseDto?)typesArg[6],
+                      (UserInfoDto?)typesArg[7],
+                      (UserInfoDto?)typesArg[8]),
                 param: new { BoardId = boardId },
                 splitOn: "Id, Id, Id, Id, Id, Id, Id, Id");
 
@@ -135,7 +134,7 @@ where [B].[Id] = @BoardId",
         {
             Dictionary<int, BoardGetResponseDto> historyBoards = new();
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
-            Type[] types = new Type[]
+            Type[] types = new[]
             {
                 typeof(BoardGetResponseDto),
                 typeof(UserInfoDto),
@@ -169,18 +168,18 @@ left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id]
 left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
 where [BoardCreator].[Id] = @UserId",
                 types,
-                (types) =>
+                typesArg =>
                 ToDto(historyBoards,
                       historyColumns,
-                      (BoardGetResponseDto)types[0],
-                      (UserInfoDto)types[1],
-                      (UserInfoDto)types[2],
-                      (ColumnGetResponseDto)types[3],
-                      (UserInfoDto)types[4],
-                      (UserInfoDto)types[5],
-                      (CardGetResponseDto)types[6],
-                      (UserInfoDto)types[7],
-                      (UserInfoDto)types[8]),
+                      (BoardGetResponseDto)typesArg[0],
+                      (UserInfoDto)typesArg[1],
+                      (UserInfoDto)typesArg[2],
+                      (ColumnGetResponseDto?)typesArg[3],
+                      (UserInfoDto?)typesArg[4],
+                      (UserInfoDto?)typesArg[5],
+                      (CardGetResponseDto?)typesArg[6],
+                      (UserInfoDto?)typesArg[7],
+                      (UserInfoDto?)typesArg[8]),
                 param: new { UserId = userId },
                 splitOn: "Id, Id, Id, Id, Id, Id, Id, Id");
             return boards.Distinct().ToList();
@@ -191,12 +190,12 @@ where [BoardCreator].[Id] = @UserId",
                                           BoardGetResponseDto board,
                                           UserInfoDto boardCreator,
                                           UserInfoDto boardUpdater,
-                                          ColumnGetResponseDto column,
-                                          UserInfoDto columnCreator,
-                                          UserInfoDto columnUpdater,
-                                          CardGetResponseDto card,
-                                          UserInfoDto cardCreator,
-                                          UserInfoDto cardUpdater)
+                                          ColumnGetResponseDto? column,
+                                          UserInfoDto? columnCreator,
+                                          UserInfoDto? columnUpdater,
+                                          CardGetResponseDto? card,
+                                          UserInfoDto? cardCreator,
+                                          UserInfoDto? cardUpdater)
         {
             if (!historyBoards.TryGetValue(board.Id, out BoardGetResponseDto? curBoard))
             {
@@ -217,16 +216,16 @@ where [BoardCreator].[Id] = @UserId",
                 curColumn = column;
                 historyColumns.Add(curColumn.Id, curColumn);
                 curBoard.Columns.Add(curColumn);
-                curColumn.CreatedBy = columnCreator;
-                curColumn.UpdatedBy = columnUpdater;
+                curColumn.CreatedBy = columnCreator!;
+                curColumn.UpdatedBy = columnUpdater!;
                 curColumn.Cards = new();
             }
 
             if (card != null)
             {
                 curColumn.Cards.Add(card);
-                card.CreatedBy = cardCreator;
-                card.UpdatedBy = cardUpdater;
+                card.CreatedBy = cardCreator!;
+                card.UpdatedBy = cardUpdater!;
             }
 
             return curBoard;
@@ -293,8 +292,7 @@ where [Column].[Id] = @Id",
         private async Task<List<ColumnGetResponseDto>> GetAllColumnsInternal(SqlConnection connection, int userId)
         {
             Dictionary<int, ColumnGetResponseDto> historyColumns = new();
-            Type[] types = new Type[]
-            {
+            Type[] types = {
                 typeof(ColumnGetResponseDto),
                 typeof(UserInfoDto),
                 typeof(UserInfoDto),
@@ -318,14 +316,14 @@ left join [User] as [CardCreator] on [Card].[CreatedBy] = [CardCreator].[Id]
 left join [User] as [CardUpdater] on [Card].[UpdatedBy] = [CardUpdater].[Id] 
 where [ColumnCreator].[Id] = @UserId",
                 types,
-                (types) =>
+                typesArg =>
                 ToDto(historyColumns,
-                      (ColumnGetResponseDto)types[0],
-                      (UserInfoDto)types[1],
-                      (UserInfoDto)types[2],
-                      (CardGetResponseDto)types[3],
-                      (UserInfoDto)types[4],
-                      (UserInfoDto)types[5]),
+                      (ColumnGetResponseDto)typesArg[0],
+                      (UserInfoDto)typesArg[1],
+                      (UserInfoDto)typesArg[2],
+                      (CardGetResponseDto?)typesArg[3],
+                      (UserInfoDto?)typesArg[4],
+                      (UserInfoDto?)typesArg[5]),
                 param: new { UserId = userId },
                 splitOn: "Id, Id, Id, Id, Id");
             return columns.Distinct().ToList();
@@ -376,9 +374,9 @@ where [Col].[Id] = @ColumnId",
                                            ColumnGetResponseDto column,
                                            UserInfoDto columnCreator,
                                            UserInfoDto columnUpdater,
-                                           CardGetResponseDto card,
-                                           UserInfoDto cardCreator,
-                                           UserInfoDto cardUpdater)
+                                           CardGetResponseDto? card,
+                                           UserInfoDto? cardCreator,
+                                           UserInfoDto? cardUpdater)
         {
             if (!historyColumns.TryGetValue(column.Id, out ColumnGetResponseDto? curColumn))
             {
@@ -392,8 +390,8 @@ where [Col].[Id] = @ColumnId",
             if (card != null)
             {
                 curColumn.Cards.Add(card);
-                card.CreatedBy = cardCreator;
-                card.UpdatedBy = cardUpdater;
+                card.CreatedBy = cardCreator!;
+                card.UpdatedBy = cardUpdater!;
             }
 
             return curColumn;
