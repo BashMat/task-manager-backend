@@ -37,7 +37,7 @@ public class BoardController : ControllerBase
             
         if (response.Success)
         {
-            return StatusCode(StatusCodes.Status201Created);
+            return CreatedAtAction(nameof(Create), response);
         }
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
@@ -106,7 +106,7 @@ public class BoardController : ControllerBase
             
         if (response.Success)
         {
-            return StatusCode(StatusCodes.Status201Created);
+            return CreatedAtAction(nameof(CreateColumn), response);
         }
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
@@ -175,7 +175,7 @@ public class BoardController : ControllerBase
             
         if (response.Success)
         {
-            return StatusCode(StatusCodes.Status201Created);
+            return CreatedAtAction(nameof(CreateCard), response);
         }
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
