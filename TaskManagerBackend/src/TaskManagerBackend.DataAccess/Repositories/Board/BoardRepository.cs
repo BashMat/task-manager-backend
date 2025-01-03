@@ -99,7 +99,7 @@ where [Board].[Id] = @Id", updatedBoard);
 [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
 [ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
 [ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
-[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], 
 [CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
 [CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
 from [Board] as [B] 
@@ -158,7 +158,7 @@ where [B].[Id] = @BoardId",
 [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
 [ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
 [ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
-[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], 
 [CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
 [CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
 from [Board] as [B] 
@@ -309,7 +309,7 @@ where [Column].[Id] = @Id",
                                                      @"select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
 [ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
 [ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
-[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], 
 [CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
 [CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
 from [Column] as [Col] 
@@ -347,7 +347,7 @@ where [ColumnCreator].[Id] = @UserId",
                                                                               @"select [Col].[Id], [Col].[BoardId], [Col].[Title], [Col].[Description], [Col].[CreatedAt], [Col].[UpdatedAt], 
 [ColumnCreator].[Id], [ColumnCreator].[UserName], [ColumnCreator].[FirstName], [ColumnCreator].[LastName], [ColumnCreator].[Email], 
 [ColumnUpdater].[Id], [ColumnUpdater].[UserName], [ColumnUpdater].[FirstName], [ColumnUpdater].[LastName], [ColumnUpdater].[Email], 
-[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[CreatedAt], [Card].[UpdatedAt], 
+[Card].[Id], [Card].[ColumnId], [Card].[Title], [Card].[Description], [Card].[OrderIndex], [Card].[CreatedAt], [Card].[UpdatedAt], 
 [CardCreator].[Id], [CardCreator].[UserName], [CardCreator].[FirstName], [CardCreator].[LastName], [CardCreator].[Email], 
 [CardUpdater].[Id], [CardUpdater].[UserName], [CardUpdater].[FirstName], [CardUpdater].[LastName], [CardUpdater].[Email] 
 from [Column] as [Col] 
