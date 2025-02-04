@@ -4,21 +4,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerBackend.Common;
-using TaskManagerBackend.Common.Services;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Services.Auth;
+namespace TaskManagerBackend.Common.Services;
 
-public class AuthProvider : IAuthProvider
+public class CryptographyService : ICryptographyService
 {
     private readonly IDateTimeService _dateTimeService;
     private readonly IConfiguration _configuration;
     
-    public AuthProvider(IDateTimeService dateTimeService,
-                        IConfiguration configuration)
+    public CryptographyService(IDateTimeService dateTimeService,
+                               IConfiguration configuration)
     {
         _dateTimeService = dateTimeService;
         _configuration = configuration;

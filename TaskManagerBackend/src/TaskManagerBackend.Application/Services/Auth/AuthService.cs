@@ -12,7 +12,7 @@ namespace TaskManagerBackend.Application.Services.Auth;
 
 public class AuthService : IAuthService
 {
-    private readonly IAuthProvider _authProvider;
+    private readonly ICryptographyService _cryptographyService;
     private readonly IUserRepository _userRepository;
     private readonly IEmailService _emailService;
     private readonly IDateTimeService _dateTimeService;
@@ -22,13 +22,13 @@ public class AuthService : IAuthService
     private const string IncorrectCredentialsMessage = "Incorrect username/password pair";
     private const string InvalidEmailAddressMessage = "Email address has invalid format";
 
-    public AuthService(IAuthProvider authProvider, 
+    public AuthService(ICryptographyService cryptographyService, 
                        IUserRepository userRepository,
                        IEmailService emailService,
                        IDateTimeService dateTimeService,
                        ILogger<AuthService> logger)
     {
-        _authProvider = authProvider;
+        _cryptographyService = cryptographyService;
         _userRepository = userRepository;
         _emailService = emailService;
         _dateTimeService = dateTimeService;
@@ -62,7 +62,7 @@ public class AuthService : IAuthService
         _logger.LogTrace("Start user registration");
 
         (byte[] passwordHash, byte[] passwordSalt) =
-            _authProvider.CreatePasswordHashAndSalt(requestData.Password);
+            _cryptographyService.CreatePasswordHashAndSalt(requestData.Password);
             
         User newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
         await _userRepository.Insert(newUser);
@@ -94,11 +94,11 @@ public class AuthService : IAuthService
             return response;
         }
 
-        if (_authProvider.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
+        if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
         {
             _logger.LogTrace("Password hash was verified");
 
-            response.Data = _authProvider.CreateToken(data.Id);
+            response.Data = _cryptographyService.CreateToken(data.Id);
             return response;
         }
 

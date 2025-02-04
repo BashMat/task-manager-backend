@@ -1,6 +1,6 @@
-﻿namespace TaskManagerBackend.Application.Services.Auth;
+﻿namespace TaskManagerBackend.Common.Services;
 
-public interface IAuthProvider
+public interface ICryptographyService
 {
     ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password);
     bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);

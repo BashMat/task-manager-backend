@@ -65,8 +65,8 @@ public class Startup
         RegisterServices(builder.Services);
 
         builder.Services.AddHealthChecks()
-               .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name)
-               .ForwardToPrometheus();
+                        .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name)
+                        .ForwardToPrometheus();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
@@ -166,12 +166,12 @@ public class Startup
     {
         // First adding base services for possible common functionality.
         services.AddScoped<IDateTimeService, DateTimeService>();
+        services.AddScoped<ICryptographyService, CryptographyService>();
         services.AddScoped<IEmailService, EmailService>();
         
         // Then register services for main functionality
         // Auth and users:
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IAuthProvider, AuthProvider>();
         services.AddScoped<IAuthService, AuthService>();
         
         // Boards:

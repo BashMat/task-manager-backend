@@ -17,14 +17,14 @@ public class AuthServiceTestBase : CommonTestBase
 {
     private const string DefaultToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzEwNjA2MTUzfQ.Qr4baSoGgjHXUkHQ4ILRJTGBXUA4d_l7fQzV_dLV899n-K2O5hAelYl1zMM3cVEMeAk-4NwRlsJZpfb-dPMnlA";
 
-    protected Mock<IAuthProvider> AuthProviderMock { get; private set; }
+    protected Mock<ICryptographyService> AuthProviderMock { get; private set; }
     protected Mock<IUserRepository> UserRepositoryMock { get; private set; }
     protected Mock<IEmailService> EmailServiceMock { get; private set; }
     protected Mock<IDateTimeService> DateTimeServiceMock { get; private set; }
 
     protected AuthServiceTestBase()
     {
-        AuthProviderMock = new Mock<IAuthProvider>();
+        AuthProviderMock = new Mock<ICryptographyService>();
         UserRepositoryMock = new Mock<IUserRepository>();
         EmailServiceMock = new Mock<IEmailService>();
         DateTimeServiceMock = new Mock<IDateTimeService>();
