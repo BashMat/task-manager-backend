@@ -3,9 +3,9 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using TaskManagerBackend.Application.Services.Auth;
-using TaskManagerBackend.Application.Services.Email;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.Validators;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;
 
@@ -19,14 +19,14 @@ public class AuthServiceTestBase : CommonTestBase
 
     protected Mock<ICryptographyService> AuthProviderMock { get; private set; }
     protected Mock<IUserRepository> UserRepositoryMock { get; private set; }
-    protected Mock<IEmailService> EmailServiceMock { get; private set; }
+    protected Mock<IEmailValidator> EmailServiceMock { get; private set; }
     protected Mock<IDateTimeService> DateTimeServiceMock { get; private set; }
 
     protected AuthServiceTestBase()
     {
         AuthProviderMock = new Mock<ICryptographyService>();
         UserRepositoryMock = new Mock<IUserRepository>();
-        EmailServiceMock = new Mock<IEmailService>();
+        EmailServiceMock = new Mock<IEmailValidator>();
         DateTimeServiceMock = new Mock<IDateTimeService>();
     }
 

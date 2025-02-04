@@ -1,9 +1,9 @@
 ﻿#region Usings
 
-using TaskManagerBackend.Application.Services.Email;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Models;
+using TaskManagerBackend.Domain.Validators;
 using TaskManagerBackend.Dto.User;
 
 #endregion
@@ -14,7 +14,7 @@ public class AuthService : IAuthService
 {
     private readonly ICryptographyService _cryptographyService;
     private readonly IUserRepository _userRepository;
-    private readonly IEmailService _emailService;
+    private readonly IEmailValidator _emailValidator;
     private readonly IDateTimeService _dateTimeService;
     private readonly ILogger<AuthService> _logger;
 
@@ -24,13 +24,13 @@ public class AuthService : IAuthService
 
     public AuthService(ICryptographyService cryptographyService, 
                        IUserRepository userRepository,
-                       IEmailService emailService,
+                       IEmailValidator emailValidator,
                        IDateTimeService dateTimeService,
                        ILogger<AuthService> logger)
     {
         _cryptographyService = cryptographyService;
         _userRepository = userRepository;
-        _emailService = emailService;
+        _emailValidator = emailValidator;
         _dateTimeService = dateTimeService;
         _logger = logger;
     }
@@ -39,7 +39,7 @@ public class AuthService : IAuthService
     {
         ServiceResponse<UserSignUpResponseDto> response = new();
 
-        if (!_emailService.ValidateEmailAddressFormat(requestData.Email))
+        if (!_emailValidator.ValidateEmailAddressFormat(requestData.Email))
         {
             _logger.LogTrace("Invalid email address format");
                 

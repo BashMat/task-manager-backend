@@ -1,16 +1,17 @@
 ﻿#region Usings
 
 using System.Net.Mail;
+using Microsoft.Extensions.Logging;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Services.Email;
+namespace TaskManagerBackend.Domain.Validators;
 
-public class EmailService : IEmailService
+public class EmailValidator : IEmailValidator
 {
-    private readonly ILogger<EmailService> _logger;
+    private readonly ILogger<EmailValidator> _logger;
     
-    public EmailService(ILogger<EmailService> logger)
+    public EmailValidator(ILogger<EmailValidator> logger)
     {
         _logger = logger;
     }

@@ -14,11 +14,11 @@ using TaskManagerBackend.Application.Configuration;
 using TaskManagerBackend.Application.Health;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Application.Services.Board;
-using TaskManagerBackend.Application.Services.Email;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.Validators;
 
 #endregion
 
@@ -164,12 +164,14 @@ public class Startup
 
     private void RegisterServices(IServiceCollection services)
     {
-        // First adding base services for possible common functionality.
+        // Common
         services.AddScoped<IDateTimeService, DateTimeService>();
         services.AddScoped<ICryptographyService, CryptographyService>();
-        services.AddScoped<IEmailService, EmailService>();
         
-        // Then register services for main functionality
+        // Domain
+        services.AddScoped<IEmailValidator, EmailValidator>();
+        
+        // Application
         // Auth and users:
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();

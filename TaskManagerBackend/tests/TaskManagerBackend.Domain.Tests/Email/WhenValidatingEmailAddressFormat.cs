@@ -5,9 +5,9 @@ using Xunit;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Tests.Services.Email;
+namespace TaskManagerBackend.Domain.Tests.Email;
 
-public class WhenValidatingEmailAddressFormat : EmailServiceTestBase
+public class WhenValidatingEmailAddressFormat : EmailValidatorTestBase
 {
     [Theory]
     [InlineData("test@test.com", true)]
@@ -19,8 +19,8 @@ public class WhenValidatingEmailAddressFormat : EmailServiceTestBase
     [InlineData("te st@test.com", false)]
     [InlineData("test@te st.com", false)]
     [InlineData("test test@test.com", false)]
-    public void ServiceReturnsResponseWithMessageAndNullDataIfUserDoesNotExist(string emailAddress, 
-                                                                               bool isEmailAddressFormatCorrect)
+    public void ValidationIsCorrectForVariousAddresses(string emailAddress, 
+                                                       bool isEmailAddressFormatCorrect)
     {
         ValidateEmailAddressFormat(emailAddress).Should().Be(isEmailAddressFormatCorrect);
     }
