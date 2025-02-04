@@ -1,6 +1,9 @@
 ﻿namespace TaskManagerBackend.Common;
 
-public class HealthChecks
+/// <summary>
+///     Provides constant values for health check diagnostics.
+/// </summary>
+public abstract class HealthChecks
 {
     public const string DefaultHealthRoute = "_health";
     public const string Uptime = "Uptime";

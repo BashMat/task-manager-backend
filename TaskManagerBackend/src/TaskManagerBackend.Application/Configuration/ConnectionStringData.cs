@@ -1,5 +1,8 @@
 ﻿namespace TaskManagerBackend.Application.Configuration;
 
+/// <summary>
+///     Represents data object holding values for Connection String
+/// </summary>
 public class ConnectionStringData
 {
     public string? Server { get; init; }

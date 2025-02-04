@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TaskManagerBackend.Common.Services;
 
+/// <inheritdoc/>
 public class CryptographyService : ICryptographyService
 {
     private readonly IDateTimeService _dateTimeService;

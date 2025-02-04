@@ -1,6 +1,9 @@
 ﻿namespace TaskManagerBackend.Common;
 
-public class ConfigurationKeys
+/// <summary>
+///     Provides constant values for configuration fields.
+/// </summary>
+public abstract class ConfigurationKeys
 {
     public const string Token = "Token";
 

@@ -1,4 +1,8 @@
-﻿using TaskManagerBackend.Common.Services;
+﻿#region Usings
+
+using TaskManagerBackend.Common.Services;
+
+#endregion
 
 namespace TaskManagerBackend.Domain.Models;
 
