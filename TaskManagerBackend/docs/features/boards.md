@@ -1,6 +1,7 @@
 ﻿# Boards
 
 ## About
+
 This article describes `Boards` feature.
 
 `Boards` is application feature responsible for managing:
@@ -9,6 +10,7 @@ This article describes `Boards` feature.
 - `Cards` – items representing tasks themselves.
 
 ## Details
+
 Web API uses `/api/boards` to denote all endpoints related to `Boards`.
 Following endpoints are provided, which can be seen in `BoardsController`:
 - `/api/boards` – endpoints for `Boards`:
@@ -37,6 +39,7 @@ Following endpoints are provided, which can be seen in `BoardsController`:
         - `DELETE` request deletes specified `Card`;
 
 ### Object structure
+
 All specified objects have similar structure:
 - `int` Id – `required` value.
 - `string` Title – `required` value used as a "name" for object
@@ -60,8 +63,9 @@ Hence, following rules can be inferred:
 - A `Board` instance may include any `Columns` and `Cards` (through `Columns`);
 
 ### Cards
+
 `Cards` have a more unique structure due to support for user-specified ordering. An `int` order index value is stored to sort `Card` instances accordingly to user-specified values.
 
 > ⚠️ **Warning**
 >
-> Due to complications of using `int` ordering values (it is impossible to insert value between items with indices `x` and `x + 1`, which required to recalculate values for multiple records), it is planned to implement ordering based on `double` values in future versions. It will make easier reordering by calculating new index as `(x + y) / 2`, for example.
+> Due to complications of using `int` ordering values (it is impossible to insert value between items with indices `x` and `x + 1`, which requires values for multiple records to be recalculated), it is planned to implement ordering based on `double` values in future versions. It will make easier reordering by calculating new index as `(x + y) / 2`, for example.

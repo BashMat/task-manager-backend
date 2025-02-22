@@ -1,6 +1,7 @@
 ﻿# Project
 
 ## About
+
 This article describes main project information.
 
 `Task Manager Backend` is a web API hobby project for task management (task tracking). It is inspired by other task managing software applications and methodologies.
@@ -8,9 +9,11 @@ This article describes main project information.
 See `Task Manager Frontend` client in its own repository: [task-manager-frontend](https://github.com/BashMat/task-manager-frontend).
 
 ## Versioning
+
 Application uses `semver` for versioning. Currently, it is deep under development, hence version `0.x.x` is used.
 
 ## Stack
+
 Project uses following technologies:
 - `.NET 6`
     - `C# 10`
@@ -32,7 +35,8 @@ Project uses following technologies:
 - `Docker`
 
 ## Project Structure
-- `./TaskManagerBackend` – main directory for project.
+
+- `task-management-backend/TaskManagerBackend` – main directory for project.
     - `/docs` – directory for documentation. `.md` file extension is used for articles.
     - `/infrastructure` – directory for files related to setting up infrastructure for application to be used. For example, it includes Dockerfile and Docker Compose file.
     - `/src` – directory for actual app source code.
@@ -47,6 +51,7 @@ Project uses following technologies:
         - `/TaskManagerBackend.Tests.Common` – project for common testing related items.
 
 ## Application Components
+
 Application consists of two main components:
 - Actual web API application (API provider).
 - Relational database storing persisted data.

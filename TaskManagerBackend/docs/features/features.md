@@ -5,6 +5,7 @@
 This article describes project features, redirecting to more specific sections for detailed information.
 
 ## Supported features
+
 Application provides following features:
 - `Authorization` – responsible for:
   - User registration, authentication and authorization.
