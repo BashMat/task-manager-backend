@@ -7,6 +7,9 @@ This article describes main project information.
 
 See `Task Manager Frontend` client in its own repository: [task-manager-frontend](https://github.com/BashMat/task-manager-frontend).
 
+## Versioning
+Application uses `semver` for versioning. Currently, it is deep under development, hence version `0.x.x` is used.
+
 ## Stack
 Project uses following technologies:
 - `.NET 6`

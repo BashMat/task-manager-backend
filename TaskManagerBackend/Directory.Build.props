@@ -1,0 +1,6 @@
+﻿<Project>
+    <PropertyGroup>
+        <Product>Task Manager Backend</Product>
+        <Version>0.1.0</Version>
+    </PropertyGroup>
+</Project>
