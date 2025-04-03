@@ -24,7 +24,7 @@ public class WhenSigningUp : AuthServiceTestBase
                                            Email = TestEmail
                                        };
 
-        var response = await SignUp(request);
+        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
 
         response.Data.Should().BeNull();
         response.Success.Should().BeFalse();
@@ -43,7 +43,7 @@ public class WhenSigningUp : AuthServiceTestBase
                                            Email = TestEmail
                                        };
 
-        var response = await SignUp(request);
+        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
 
         response.Data.Should().BeNull();
         response.Success.Should().BeFalse();
@@ -62,7 +62,7 @@ public class WhenSigningUp : AuthServiceTestBase
                                            Email = TestEmail
                                        };
 
-        var response = await SignUp(request);
+        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
 
         response.Data!.UserName.Should().Be(TestUserName);
         response.Data!.Email.Should().Be(TestEmail);

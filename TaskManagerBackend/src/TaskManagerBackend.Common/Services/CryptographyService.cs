@@ -26,7 +26,7 @@ public class CryptographyService : ICryptographyService
     
     public ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password)
     {
-        using var hmac = new HMACSHA512();
+        using HMACSHA512 hmac = new();
         byte[] passwordSalt = hmac.Key;
         byte[] passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
         return (passwordHash, passwordSalt);
@@ -34,22 +34,22 @@ public class CryptographyService : ICryptographyService
     
     public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        using var hmac = new HMACSHA512(passwordSalt);
+        using HMACSHA512 hmac = new(passwordSalt);
         return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
     }
 
     public string CreateToken(int userId)
     {
-        var claims = new List<Claim>
-        {
-            new (Claims.Sub, userId.ToString())
-        };
+        List<Claim> claims = new()
+                             {
+                                 new Claim(Claims.Sub, userId.ToString())
+                             };
             
-        var expire = _dateTimeService.UtcNow.AddMinutes(30);
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
-        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        var token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        DateTime expire = _dateTimeService.UtcNow.AddMinutes(30);
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
+        SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        JwtSecurityToken token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
+        string jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return jwt;
     }

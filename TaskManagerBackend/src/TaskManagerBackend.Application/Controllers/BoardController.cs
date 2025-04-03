@@ -31,7 +31,7 @@ public class BoardController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Create([FromBody] BoardCreateRequestDto newBoard)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
         ServiceResponse<BoardGetResponseDto> response = await _boardService.Create(userId, newBoard);
             
@@ -47,7 +47,7 @@ public class BoardController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> GetAll()
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.GetAll(userId));
     }
 
@@ -71,7 +71,7 @@ public class BoardController : ControllerBase
     public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Update([FromRoute] int id,
         [FromBody] BoardUpdateRequestDto updatedBoard)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             
         ServiceResponse<BoardGetResponseDto> response = await _boardService.Update(userId, id, updatedBoard);
             
@@ -87,7 +87,7 @@ public class BoardController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> Delete([FromRoute] int id)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.Delete(userId, id));
     }
 
@@ -100,7 +100,7 @@ public class BoardController : ControllerBase
     [HttpPost("columns")]
     public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> CreateColumn([FromBody] ColumnCreateRequestDto newColumn)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             
         ServiceResponse<ColumnGetResponseDto> response = await _boardService.CreateColumn(userId, newColumn);
             
@@ -116,7 +116,7 @@ public class BoardController : ControllerBase
     [HttpGet("columns")]
     public async Task<ActionResult<ServiceResponse<List<ColumnGetResponseDto>>>> GetAllColumns()
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.GetAllColumns(userId));
     }
 
@@ -140,7 +140,7 @@ public class BoardController : ControllerBase
     public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> UpdateColumn([FromRoute] int id,
         [FromBody] ColumnUpdateRequestDto updatedColumn)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             
         ServiceResponse<ColumnGetResponseDto> response = await _boardService.UpdateColumn(userId, id, updatedColumn);
             
@@ -156,7 +156,7 @@ public class BoardController : ControllerBase
     [HttpDelete("columns/{id}")]
     public async Task<ActionResult<ServiceResponse<List<ColumnGetResponseDto>>>> DeleteColumn([FromRoute] int id)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.DeleteColumn(userId, id));
     }
 
@@ -169,7 +169,7 @@ public class BoardController : ControllerBase
     [HttpPost("cards")]
     public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> CreateCard([FromBody] CardCreateRequestDto newCard)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             
         ServiceResponse<CardGetResponseDto> response = await _boardService.CreateCard(userId, newCard);
             
@@ -185,7 +185,7 @@ public class BoardController : ControllerBase
     [HttpGet("cards")]
     public async Task<ActionResult<ServiceResponse<List<CardGetResponseDto>>>> GetAllCards()
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.GetAllCards(userId));
     }
 
@@ -225,7 +225,7 @@ public class BoardController : ControllerBase
     [HttpDelete("cards/{id}")]
     public async Task<ActionResult<ServiceResponse<List<CardGetResponseDto>>>> DeleteCard([FromRoute] int id)
     {
-        var userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        int userId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return Ok(await _boardService.DeleteCard(userId, id));
     }
 

@@ -133,7 +133,7 @@ public class Startup
         
         IEnumerable<IConfigurationSection> connectionStringsData = connectionStringsDataSection.GetChildren();
         
-        foreach (var connectionStringData in connectionStringsData)
+        foreach (IConfigurationSection connectionStringData in connectionStringsData)
         {
             if (!connectionStringData.Exists())
             {

@@ -128,7 +128,7 @@ where [B].[Id] = @BoardId",
                                                    param: new { BoardId = boardId },
                                                    splitOn: "Id, Id, Id, Id, Id, Id, Id, Id");
 
-        var listBoards = boards.Distinct().ToList();
+        List<BoardGetResponseDto> listBoards = boards.Distinct().ToList();
         return listBoards.Count == 0
                    ? null 
                    : listBoards[0];
@@ -368,7 +368,7 @@ where [Col].[Id] = @ColumnId",
                                                                               param: new { ColumnId = columnId },
                                                                               splitOn: "Id, Id, Id, Id, Id");
             
-        var listColumns = columns.Distinct().ToList();
+        List<ColumnGetResponseDto> listColumns = columns.Distinct().ToList();
         return listColumns.Count == 0
                    ? null 
                    : listColumns[0];
@@ -510,7 +510,7 @@ where [Card].[Id] = @CardId",
                                                                         param: new { CardId = cardId },
                                                                         splitOn: "Id, Id");
             
-        var cardsList = cards.Distinct().ToList();
+        List<CardGetResponseDto> cardsList = cards.Distinct().ToList();
         return cardsList.Count == 0 
                    ? null 
                    : cardsList[0];

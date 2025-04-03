@@ -14,7 +14,7 @@ public class WhenLoggingIn : AuthServiceTestBase
     {
         SetUpUserRepositoryMock();
 
-        var response = await LogIn();
+        ServiceResponse<string> response = await LogIn();
 
         response.Data.Should().BeNull();
         response.Success.Should().BeFalse();
@@ -30,7 +30,7 @@ public class WhenLoggingIn : AuthServiceTestBase
         SetUpUserRepositoryMock(UserId, passwordHash, passwordSalt);
         SetUpAuthProviderMock(token: token);
 
-        var response = await LogIn();
+        ServiceResponse<string> response = await LogIn();
 
         response.Data!.Should().Be(token);
         response.Success.Should().BeTrue();
@@ -45,7 +45,7 @@ public class WhenLoggingIn : AuthServiceTestBase
         SetUpUserRepositoryMock(UserId, passwordHash, passwordSalt);
         SetUpAuthProviderMock(false);
 
-        var response = await LogIn();
+        ServiceResponse<string> response = await LogIn();
 
         response.Data!.Should().BeNull();
         response.Success.Should().BeFalse();

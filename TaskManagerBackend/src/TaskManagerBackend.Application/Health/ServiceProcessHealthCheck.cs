@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 #endregion
@@ -13,11 +14,11 @@ public class ServiceProcessHealthCheck : IHealthCheck
     private const string Description = "Service process is active";
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
-                                                    CancellationToken cancellationToken = new CancellationToken())
+                                                    CancellationToken cancellationToken = new())
     {
-        var additionalData = new Dictionary<string, object>();
+        Dictionary<string, object> additionalData = new();
         
-        var assembly = System.Reflection.Assembly.GetEntryAssembly();
+        Assembly? assembly = Assembly.GetEntryAssembly();
         if (!string.IsNullOrWhiteSpace(assembly?.FullName))
         {
             additionalData.Add(Common.HealthChecks.AssemblyName, assembly.FullName);
