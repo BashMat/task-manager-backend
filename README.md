@@ -9,7 +9,7 @@ App supports:
 ## Stack
 
 Project created using:
-- .NET 6 (C# 10)
+- .NET 8 (C# 12)
 - SQL (Microsoft SQL Server)
 
 ## Documentation
