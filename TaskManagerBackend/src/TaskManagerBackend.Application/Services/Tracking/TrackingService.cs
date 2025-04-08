@@ -3,6 +3,7 @@
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
 #endregion
 
@@ -81,6 +82,35 @@ public class TrackingService : ITrackingService
                                                               {
                                                                   Data = await _trackingRepository.Delete(userId, boardId)
                                                               };
+
+        return response;
+    }
+
+    #endregion
+
+    #region Tracking Log Entry Statuses
+
+    public async Task<ServiceResponse<TrackingLogEntryStatus>> CreateTrackingLogStatus(int userId, TrackingLogEntryStatusCreateRequest newStatus)
+    {
+        NewTrackingLogEntryStatus statusToInsert = new()
+                                     {
+                                         Title = newStatus.Title,
+                                         Description = newStatus.Description,
+                                         TrackingLogId = newStatus.TrackingLogId,
+                                         CreatedById = userId,
+                                         CreatedAt = _dateTimeService.UtcNow
+                                     };
+
+        ServiceResponse<TrackingLogEntryStatus> response = new()
+                                                           {
+                                                               Data = await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert)
+                                                           };
+
+        if (response.Data == null)
+        {
+            response.Success = false;
+            response.Message = CouldNotCreateMessage;
+        }
 
         return response;
     }

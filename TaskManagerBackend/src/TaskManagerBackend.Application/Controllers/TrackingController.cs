@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Services.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
 #endregion
 
@@ -67,6 +68,25 @@ public class TrackingController : ControllerBase
     public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> Delete([FromRoute] int id)
     {
         return Ok(await _trackingService.Delete(UserId, id));
+    }
+
+    #endregion
+
+    #region Statuses
+
+    [EnableCors("MyDefaultPolicy")]
+    [Authorize]
+    [HttpPost("statuses")]
+    public async Task<ActionResult<ServiceResponse<TrackingLogEntryStatus>>> Create([FromBody] TrackingLogEntryStatusCreateRequest newStatus)
+    {
+        ServiceResponse<TrackingLogEntryStatus> response = await _trackingService.CreateTrackingLogStatus(UserId, newStatus);
+            
+        if (response.Success)
+        {
+            return CreatedAtAction(nameof(Create), response);
+        }
+        
+        return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
     #endregion

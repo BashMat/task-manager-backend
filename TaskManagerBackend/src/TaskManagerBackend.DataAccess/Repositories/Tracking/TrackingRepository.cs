@@ -269,4 +269,38 @@ where [TrackingLogCreator].[Id] = @UserId",
     #endregion
 
     #endregion
+
+    #region Tracking Log Entry Statuses
+
+    public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
+    {
+        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+
+        int id = await connection.ExecuteScalarAsync<int>(
+                                                          @"insert into [Status] (Title, Description, TrackingLogId, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
+(@Title, @Description, @TrackingLogId, @CreatedById, @CreatedAt, @CreatedById, @CreatedAt); 
+
+select scope_identity();",
+                                                          statusToInsert);
+
+        return await GetTrackingLogEntryStatusByIdInternal(connection, id);
+    }
+
+    private async Task<TrackingLogEntryStatus?> GetTrackingLogEntryStatusByIdInternal(SqlConnection connection, int id)
+    {
+        try
+        {
+            return await connection.QuerySingleAsync<TrackingLogEntryStatus>(@"SELECT [S].[ID], [S].[TrackingLogId], 
+[S].[Title], [S].[Description]
+FROM [Status] as [S]
+WHERE [S].[Id] = @statusId",
+                                                                             param: new { StatusId = id });
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    #endregion
 }
