@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagerBackend.Application.Services.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 
 #endregion
@@ -13,7 +14,12 @@ namespace TaskManagerBackend.Application.Controllers;
 [ApiController]
 public class TrackingController : ControllerBase
 {
-    public TrackingController() { }
+    private readonly ITrackingService _trackingService;
+    
+    public TrackingController(ITrackingService trackingService)
+    {
+        _trackingService = trackingService;
+    }
 
     #region Tracking Logs
 
@@ -22,6 +28,13 @@ public class TrackingController : ControllerBase
     [HttpPost("logs")]
     public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> Create([FromBody] TrackingLogCreateRequest newLog)
     {
+        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.Create(UserId, newLog);
+            
+        if (response.Success)
+        {
+            return CreatedAtAction(nameof(Create), response);
+        }
+        
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
@@ -30,7 +43,7 @@ public class TrackingController : ControllerBase
     [HttpGet("logs")]
     public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> GetAll()
     {
-        return Ok();
+        return Ok(await _trackingService.GetAll(UserId));
     }
 
     [EnableCors("MyDefaultPolicy")]
@@ -38,7 +51,14 @@ public class TrackingController : ControllerBase
     [HttpGet("logs/{id}")]
     public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> GetById([FromRoute] int id)
     {
-        return NotFound();
+        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.GetById(id);
+
+        if (response.Success)
+        {
+            return Ok(response);
+        }
+
+        return NotFound(response);
     }
 
     [EnableCors("MyDefaultPolicy")]
@@ -46,7 +66,7 @@ public class TrackingController : ControllerBase
     [HttpDelete("logs/{id}")]
     public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> Delete([FromRoute] int id)
     {
-        return Ok();
+        return Ok(await _trackingService.Delete(UserId, id));
     }
 
     #endregion

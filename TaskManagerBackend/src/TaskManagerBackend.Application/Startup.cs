@@ -14,9 +14,11 @@ using TaskManagerBackend.Application.Configuration;
 using TaskManagerBackend.Application.Health;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Application.Services.Board;
+using TaskManagerBackend.Application.Services.Tracking;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.Board;
+using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Validators;
 
@@ -179,6 +181,10 @@ public class Startup
         // Boards:
         services.AddScoped<IBoardRepository, BoardRepository>();
         services.AddScoped<IBoardService, BoardService>();
+        
+        // Tracking:
+        services.AddScoped<ITrackingRepository, TrackingRepository>();
+        services.AddScoped<ITrackingService, TrackingService>();
     }
 
     public void ConfigureApp(WebApplication app)
