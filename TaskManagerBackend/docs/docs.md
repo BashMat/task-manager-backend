@@ -20,3 +20,4 @@ All documentation-related files are located in `task-manager-backend/TaskManager
 
 - `project.md` – project description.
 - `features` – a section providing detailed description of app features.
+- `deployment.md` – deployment process description.
