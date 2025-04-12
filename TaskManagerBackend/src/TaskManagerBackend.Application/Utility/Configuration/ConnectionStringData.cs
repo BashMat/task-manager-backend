@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Application.Configuration;
+﻿namespace TaskManagerBackend.Application.Utility.Configuration;
 
 /// <summary>
 ///     Represents data object holding values for Connection String

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Health;
+namespace TaskManagerBackend.Application.Utility.Health;
 
 public class ServiceProcessHealthCheck : IHealthCheck
 {
