@@ -35,7 +35,7 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
             {
                 return Convert.ToInt32(claimValue);
             }
-            catch (Exception e)
+            catch
             {
                 throw new AccessDeniedException(InvalidTokenExceptionMessage);
             }

@@ -296,7 +296,7 @@ FROM [Status] as [S]
 WHERE [S].[Id] = @statusId",
                                                                              param: new { StatusId = id });
         }
-        catch (Exception e)
+        catch (InvalidOperationException)
         {
             return null;
         }
