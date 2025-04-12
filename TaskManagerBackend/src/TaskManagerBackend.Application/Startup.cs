@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Prometheus;
+using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Application.Services.Board;
 using TaskManagerBackend.Application.Services.Tracking;
@@ -27,6 +28,9 @@ using TaskManagerBackend.Domain.Validators;
 
 namespace TaskManagerBackend.Application;
 
+/// <summary>
+/// Represents helping class to configure application.
+/// </summary>
 public class Startup
 {
     private readonly IConfiguration _configuration;
@@ -39,6 +43,8 @@ public class Startup
     public void ConfigureBuilder(WebApplicationBuilder builder)
     {
         BuildConnectionStrings();
+        
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
         // Add services to the container.
         builder.Services.AddControllers();
@@ -190,11 +196,20 @@ public class Startup
 
     public void ConfigureApp(WebApplication app)
     {
+        // TODO: Remove in .NET 9+.
+        // Hack around possible bug:
+        // see PR for ASP.NET Core repo PR at https://github.com/dotnet/aspnetcore/pull/56616
+        app.UseExceptionHandler(_ => { });
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        }
+        else
+        {
+            app.UseHsts();
         }
 
         app.UseHttpsRedirection();
