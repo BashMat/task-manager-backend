@@ -19,6 +19,7 @@ using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.DataAccess;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
@@ -179,6 +180,9 @@ public class Startup
         
         // Domain
         services.AddScoped<IEmailValidator, EmailValidator>();
+        
+        // Data Access
+        services.AddScoped<IDbConnectionProvider, SqlServerDbConnectionProvider>();
         
         // Application
         // Auth and users:

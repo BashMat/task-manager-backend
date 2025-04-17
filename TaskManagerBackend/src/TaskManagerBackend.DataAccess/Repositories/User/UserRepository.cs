@@ -2,9 +2,7 @@
 
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.User;
 using Models = TaskManagerBackend.Domain.Models;
 
@@ -14,21 +12,21 @@ namespace TaskManagerBackend.DataAccess.Repositories.User;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IConfiguration _configuration;
+    private readonly IDbConnectionProvider _dbConnectionProvider;
     private readonly ILogger<UserRepository> _logger;
 
-    public UserRepository(IConfiguration configuration,
+    public UserRepository(IDbConnectionProvider dbConnectionProvider,
                           ILogger<UserRepository> logger)
     {
-        _configuration = configuration;
+        _dbConnectionProvider = dbConnectionProvider;
         _logger = logger;
     }
 
     public async Task<UserPasswordData?> GetUserPasswordData(string logInData)
     {
         _logger.LogInformation("Starting getting user password data");
-        
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+
+        await using SqlConnection connection = (SqlConnection) _dbConnectionProvider.GetConnection();
             
         UserPasswordData? data = await connection.QueryFirstOrDefaultAsync<UserPasswordData>(
                             @"select [Id], [PasswordHash], [PasswordSalt] from [User] 
@@ -44,7 +42,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
     {
         _logger.LogInformation("Starting checking if user exists by ID");
         
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = (SqlConnection) _dbConnectionProvider.GetConnection();
             
         UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
                              "select [UserName], [Email] from [User] where [Id] = @Id",
@@ -59,7 +57,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
     {
         _logger.LogInformation("Starting checking if user exists by user name or email");
         
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = (SqlConnection) _dbConnectionProvider.GetConnection();
 
         UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
                              "select [UserName], [Email] from [User] where [UserName] = @UserName or [Email] = @Email",
@@ -74,7 +72,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
     {
         _logger.LogInformation("Starting inserting user data");
         
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = (SqlConnection) _dbConnectionProvider.GetConnection();
 
         await connection.ExecuteAsync(@"insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values 
 (@UserName, @Email, @CreatedAt, @UpdatedAt, @PasswordHash, @PasswordSalt)",
