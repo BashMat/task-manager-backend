@@ -18,10 +18,12 @@ public class WhenSigningUp : AuthServiceTestBase
         SetUpValidateEmailAddressFormat(false);
         const string TestUserName = "user";
         const string TestEmail = "email";
+        const string TestPassword = "password";
         UserSignUpRequestDto request = new()
                                        {
-                                           UserName = TestUserName,
-                                           Email = TestEmail
+                                           UserName = TestUserName, 
+                                           Email = TestEmail,
+                                           Password = TestPassword
                                        };
 
         ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
@@ -37,10 +39,12 @@ public class WhenSigningUp : AuthServiceTestBase
         SetUpCheckIfUserExistsByUserNameOrEmail(true);
         const string TestUserName = "user";
         const string TestEmail = "email";
+        const string TestPassword = "password";
         UserSignUpRequestDto request = new()
                                        {
-                                           UserName = TestUserName,
-                                           Email = TestEmail
+                                           UserName = TestUserName, 
+                                           Email = TestEmail,
+                                           Password = TestPassword
                                        };
 
         ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
@@ -56,10 +60,12 @@ public class WhenSigningUp : AuthServiceTestBase
         SetUpCheckIfUserExistsByUserNameOrEmail();
         const string TestUserName = "user";
         const string TestEmail = "email";
+        const string TestPassword = "password";
         UserSignUpRequestDto request = new()
                                        {
                                            UserName = TestUserName, 
-                                           Email = TestEmail
+                                           Email = TestEmail,
+                                           Password = TestPassword
                                        };
 
         ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
@@ -81,10 +87,12 @@ public class WhenSigningUp : AuthServiceTestBase
         SetUpCreatePasswordHashAndSalt(passwordHash, passwordSalt);
         const string TestUserName = "user";
         const string TestEmail = "email";
+        const string TestPassword = "password";
         UserSignUpRequestDto request = new()
                                        {
                                            UserName = TestUserName, 
-                                           Email = TestEmail
+                                           Email = TestEmail,
+                                           Password = TestPassword
                                        };
         User userToBeCreated = new(DateTimeServiceMock.Object,
                                    TestUserName,
@@ -101,5 +109,5 @@ public class WhenSigningUp : AuthServiceTestBase
                                                                    userToBeCreated.UpdatedAt == createdUser.UpdatedAt &&
                                                                    userToBeCreated.PasswordSalt == createdUser.PasswordSalt &&
                                                                    userToBeCreated.PasswordHash == createdUser.PasswordHash)));
-    }    
+    }
 }
