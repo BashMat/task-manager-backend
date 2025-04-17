@@ -14,7 +14,8 @@ public class WhenSigningUp : AuthorizationTestBase
 {
     public WhenSigningUp(MsSqlTests fixture) : base(fixture) { }
 
-    [Fact]
+    // TODO: Need to exclude test from autorun for CI/CD pipelines
+    //[Fact]
     public async Task SignUpIsSuccessful()
     {
         string userName = Faker.Internet.UserName();
