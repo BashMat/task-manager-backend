@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
-      <ProjectReference Include="..\TaskManagerBackend.Tests.Common\TaskManagerBackend.Tests.Common.csproj" />
+      <ProjectReference Include="..\..\..\src\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
+      <ProjectReference Include="..\..\TaskManagerBackend.Tests.Common\TaskManagerBackend.Tests.Common.csproj" />
     </ItemGroup>
 
 </Project>
