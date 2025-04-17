@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.Domain.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "tests\integration", "{A842B733-7C4C-41C2-8189-BED78C2DC7D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerBackend.IntegrationTests", "tests\integration\TaskManagerBackend.IntegrationTests\TaskManagerBackend.IntegrationTests.csproj", "{03585524-7BD3-40F0-B78E-F7B567C8835A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
