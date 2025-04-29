@@ -12,7 +12,7 @@ public class AuthorizationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, 
 {
     private readonly WebApplicationFactory<TaskManagerBackend.Application.Program> _webApplicationFactory;
 
-    protected HttpClient HttpClient { get; init; }
+    protected TaskManagerBackendHttpClient HttpClient { get; init; }
 
     protected AuthorizationTestBase(MsSqlTests fixture)
     {

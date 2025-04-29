@@ -18,9 +18,9 @@ public class AuthService : IAuthService
     private readonly IDateTimeService _dateTimeService;
     private readonly ILogger<AuthService> _logger;
 
-    private const string UserAlreadyExistsMessage = "Username and/or Email already exists";
-    private const string IncorrectCredentialsMessage = "Incorrect username/password pair";
-    private const string InvalidEmailAddressMessage = "Email address has invalid format";
+    public const string UserAlreadyExistsMessage = "Username and/or Email already exists";
+    public const string IncorrectCredentialsMessage = "Incorrect username/password pair";
+    public const string InvalidEmailAddressMessage = "Email address has invalid format";
 
     public AuthService(ICryptographyService cryptographyService, 
                        IUserRepository userRepository,
