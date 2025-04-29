@@ -20,8 +20,8 @@ public class TrackingTestBase : IntegrationTestBase,
     {
         HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequestDto() 
                                                               { 
-                                                                  LogInData = "test", 
-                                                                  Password = "test" 
+                                                                  LogInData = UserName, 
+                                                                  Password = Password 
                                                               });
         ServiceResponse<string>? response = await responseMessage.Content.ReadFromJsonAsync<ServiceResponse<string>>();
 

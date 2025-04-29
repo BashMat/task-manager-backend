@@ -10,6 +10,10 @@ namespace TaskManagerBackend.IntegrationTests;
 
 public class IntegrationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, IDisposable
 {
+    public const string UserName = "test";
+    public const string Email = "test@test.dev";
+    public const string Password = "test";
+    
     private readonly WebApplicationFactory<TaskManagerBackend.Application.Program> _webApplicationFactory;
 
     protected TaskManagerBackendHttpClient HttpClient { get; init; }

@@ -20,8 +20,6 @@ public class WhenLoggingIn : AuthorizationTestBase
     //[Fact]
     public async Task LoggingInIsSuccessfulWithUserName()
     {
-        const string UserName = "test";
-        const string Password = "test";
         UserLogInRequestDto request = new()
                                        {
                                            LogInData = UserName, 
@@ -43,8 +41,6 @@ public class WhenLoggingIn : AuthorizationTestBase
     //[Fact]
     public async Task LoggingInIsSuccessfulWithEmail()
     {
-        const string Email = "test@test.dev";
-        const string Password = "test";
         UserLogInRequestDto request = new()
                                       {
                                           LogInData = Email, 
@@ -66,11 +62,11 @@ public class WhenLoggingIn : AuthorizationTestBase
     //[Fact]
     public async Task LoggingInIsUnsuccessfulIfUserDoesNotExist()
     {
-        const string UserName = "TotallyNotExistingUser";
+        const string IncorrectUserName = "TotallyNotExistingUser";
         string password = Faker.Internet.Password();
         UserLogInRequestDto request = new()
                                        {
-                                           LogInData = UserName, 
+                                           LogInData = IncorrectUserName, 
                                            Password = password
                                        };
 
@@ -87,12 +83,11 @@ public class WhenLoggingIn : AuthorizationTestBase
     //[Fact]
     public async Task LoggingInIsUnsuccessfulIfPasswordIsIncorrect()
     {
-        const string UserName = "test";
-        const string Password = "TotallyIncorrectPassword";
+        const string IncorrectPassword = "TotallyIncorrectPassword";
         UserLogInRequestDto request = new()
                                       {
                                           LogInData = UserName, 
-                                          Password = Password
+                                          Password = IncorrectPassword
                                       };
 
         HttpResponseMessage response = await HttpClient.LogIn(request);

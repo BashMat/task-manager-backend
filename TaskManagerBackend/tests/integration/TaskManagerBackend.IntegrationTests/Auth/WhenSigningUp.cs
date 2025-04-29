@@ -46,12 +46,12 @@ public class WhenSigningUp : AuthorizationTestBase
     public async Task SignUpIsUnsuccessfulIfEmailIsInvalid()
     {
         string userName = Faker.Internet.UserName();
-        const string Email = "This is an invalid email";
+        const string IncorrectEmail = "This is an invalid email";
         string password = Faker.Internet.Password();
         UserSignUpRequestDto request = new()
                                        {
                                            UserName = userName, 
-                                           Email = Email,
+                                           Email = IncorrectEmail,
                                            Password = password
                                        };
 
@@ -68,7 +68,6 @@ public class WhenSigningUp : AuthorizationTestBase
     //[Fact]
     public async Task SignUpIsUnsuccessfulIfUserNameAlreadyExists()
     {
-        const string UserName = "test";
         string email = Faker.Internet.Email();
         string password = Faker.Internet.Password();
         UserSignUpRequestDto request = new()
@@ -92,7 +91,6 @@ public class WhenSigningUp : AuthorizationTestBase
     public async Task SignUpIsUnsuccessfulIfEmailAlreadyExists()
     {
         string userName = Faker.Internet.UserName();
-        const string Email = "test@test.dev";
         string password = Faker.Internet.Password();
         UserSignUpRequestDto request = new()
                                        {
