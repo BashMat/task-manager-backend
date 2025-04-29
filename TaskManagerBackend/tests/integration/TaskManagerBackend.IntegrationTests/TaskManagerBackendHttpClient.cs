@@ -42,4 +42,33 @@ public class TaskManagerBackendHttpClient
     }
 
     #endregion
+
+    #region Tracking
+
+    public async Task<HttpResponseMessage> CreateTrackingLog(TrackingLogCreateRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/tracking/logs", request);
+    }
+
+    public async Task<HttpResponseMessage> GetTrackingLogById(int id)
+    {
+        return await _httpClient.GetAsync($"api/tracking/logs/{id}");
+    }
+
+    public async Task<HttpResponseMessage> GetTrackingLogs()
+    {
+        return await _httpClient.GetAsync("api/tracking/logs");
+    }
+
+    public async Task<HttpResponseMessage> DeleteTrackingLogById(int id)
+    {
+        return await _httpClient.DeleteAsync($"api/tracking/logs/{id}");
+    }
+
+    public async Task<HttpResponseMessage> CreateTrackingLogEntryStatus(TrackingLogEntryStatusCreateRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/tracking/statuses", request);
+    }
+
+    #endregion
 }
