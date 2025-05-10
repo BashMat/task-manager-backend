@@ -2,7 +2,7 @@
 
 namespace TaskManagerBackend.DataAccess;
 
-public interface IDbConnectionProvider
+public interface IDbConnectionProvider<out TConnection> where TConnection: IDbConnection 
 {
-    IDbConnection GetConnection();
+    TConnection GetConnection();
 }

@@ -182,7 +182,7 @@ public class Startup
         services.AddScoped<IEmailValidator, EmailValidator>();
         
         // Data Access
-        services.AddScoped<IDbConnectionProvider, SqlServerDbConnectionProvider>();
+        services.AddScoped<IDbConnectionProvider<SqlConnection>, SqlServerDbConnectionProvider>();
         
         // Application
         // Auth and users:

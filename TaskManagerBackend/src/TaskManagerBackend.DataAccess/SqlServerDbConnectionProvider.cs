@@ -1,6 +1,5 @@
 ﻿#region Usings
 
-using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TaskManagerBackend.Common;
@@ -9,7 +8,7 @@ using TaskManagerBackend.Common;
 
 namespace TaskManagerBackend.DataAccess;
 
-public class SqlServerDbConnectionProvider : IDbConnectionProvider
+public class SqlServerDbConnectionProvider : IDbConnectionProvider<SqlConnection>
 {
     private readonly IConfiguration _configuration;
 
@@ -18,7 +17,7 @@ public class SqlServerDbConnectionProvider : IDbConnectionProvider
         _configuration = configuration;
     }
     
-    public IDbConnection GetConnection()
+    public SqlConnection GetConnection()
     {
         return new SqlConnection(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
     }

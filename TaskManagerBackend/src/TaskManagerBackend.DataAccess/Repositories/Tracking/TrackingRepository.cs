@@ -2,8 +2,6 @@
 
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
@@ -15,18 +13,18 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
 public class TrackingRepository : ITrackingRepository
 {
-    private readonly IConfiguration _configuration;
+    private readonly IDbConnectionProvider<SqlConnection> _dbConnectionProvider;
 
-    public TrackingRepository(IConfiguration configuration)
+    public TrackingRepository(IDbConnectionProvider<SqlConnection> dbConnectionProvider)
     {
-        _configuration = configuration;
+        _dbConnectionProvider = dbConnectionProvider;
     }
 
     #region Tracking Log
 
     public async Task<TrackingLogGetResponse?> Insert(NewTrackingLog logToInsert)
     {
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         int id = await connection.ExecuteScalarAsync<int>(
                                                           @"insert into [TrackingLog] (Title, Description, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
@@ -40,21 +38,21 @@ select scope_identity();",
 
     public async Task<List<TrackingLogGetResponse>> GetAll(int userId)
     {
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         return await GetAllInternal(connection, userId);
     }
 
     public async Task<TrackingLogGetResponse?> GetById(int trackingLogId)
     {
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         return await GetByIdInternal(connection, trackingLogId);
     }
 
     public async Task<List<TrackingLogGetResponse>> Delete(int userId, int trackingLogId)
     {
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         await connection.ExecuteAsync("delete from [TrackingLog] where [TrackingLog].[Id]=@trackingLogId",
                                       new { TrackingLogId = trackingLogId });
@@ -274,7 +272,7 @@ where [TrackingLogCreator].[Id] = @UserId",
 
     public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
     {
-        await using SqlConnection connection = new(_configuration.GetConnectionString(ConfigurationKeys.TaskManagerDbConnectionString));
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         int id = await connection.ExecuteScalarAsync<int>(
                                                           @"insert into [Status] (Title, Description, TrackingLogId, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
