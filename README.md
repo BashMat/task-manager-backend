@@ -6,6 +6,14 @@ App supports:
 - creating user profiles (requires username, email and password)
 - managing user kanban-style boards with columns and cards
 
+`master` branch status:
+
+[![Build and Test](https://github.com/BashMat/task-manager-backend/actions/workflows/build-and-test.yaml/badge.svg?branch=master)](https://github.com/BashMat/task-manager-backend/actions/workflows/build-and-test.yaml)
+
+`development` branch status:
+
+[![Build and Test](https://github.com/BashMat/task-manager-backend/actions/workflows/build-and-test.yaml/badge.svg?branch=development)](https://github.com/BashMat/task-manager-backend/actions/workflows/build-and-test.yaml)
+
 ## Stack
 
 Project created using:
