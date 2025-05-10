@@ -32,3 +32,6 @@ jobs:
     - name: Run unit tests
       run: dotnet test --no-build --verbosity normal --filter "Category=Unit"
       working-directory: TaskManagerBackend
+    - name: Run integration tests
+      run: dotnet test --no-build --verbosity normal --filter "Category=Integration"
+      working-directory: TaskManagerBackend
