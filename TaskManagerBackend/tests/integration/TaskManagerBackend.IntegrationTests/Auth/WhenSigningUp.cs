@@ -16,8 +16,7 @@ public class WhenSigningUp : AuthorizationTestBase
 {
     public WhenSigningUp(MsSqlTests fixture) : base(fixture) { }
 
-    // TODO: Need to exclude test from autorun for CI/CD pipelines
-    //[Fact]
+    [Fact]
     public async Task SignUpIsSuccessful()
     {
         string userName = Faker.Internet.UserName();
@@ -42,7 +41,7 @@ public class WhenSigningUp : AuthorizationTestBase
         content.Message.Should().BeNull();
     }
     
-    //[Fact]
+    [Fact]
     public async Task SignUpIsUnsuccessfulIfEmailIsInvalid()
     {
         string userName = Faker.Internet.UserName();
@@ -65,7 +64,7 @@ public class WhenSigningUp : AuthorizationTestBase
         content.Message.Should().Be(AuthService.InvalidEmailAddressMessage);
     }
     
-    //[Fact]
+    [Fact]
     public async Task SignUpIsUnsuccessfulIfUserNameAlreadyExists()
     {
         string email = Faker.Internet.Email();
@@ -87,7 +86,7 @@ public class WhenSigningUp : AuthorizationTestBase
         content.Message.Should().Be(AuthService.UserAlreadyExistsMessage);
     }
     
-    //[Fact]
+    [Fact]
     public async Task SignUpIsUnsuccessfulIfEmailAlreadyExists()
     {
         string userName = Faker.Internet.UserName();

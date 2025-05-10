@@ -16,8 +16,7 @@ public class WhenLoggingIn : AuthorizationTestBase
 {
     public WhenLoggingIn(MsSqlTests fixture) : base(fixture) { }
 
-    // TODO: Need to exclude test from autorun for CI/CD pipelines
-    //[Fact]
+    [Fact]
     public async Task LoggingInIsSuccessfulWithUserName()
     {
         UserLogInRequestDto request = new()
@@ -38,7 +37,7 @@ public class WhenLoggingIn : AuthorizationTestBase
         content.Message.Should().BeNull();
     }
     
-    //[Fact]
+    [Fact]
     public async Task LoggingInIsSuccessfulWithEmail()
     {
         UserLogInRequestDto request = new()
@@ -59,7 +58,7 @@ public class WhenLoggingIn : AuthorizationTestBase
         content.Message.Should().BeNull();
     }
     
-    //[Fact]
+    [Fact]
     public async Task LoggingInIsUnsuccessfulIfUserDoesNotExist()
     {
         const string IncorrectUserName = "TotallyNotExistingUser";
@@ -80,7 +79,7 @@ public class WhenLoggingIn : AuthorizationTestBase
         content.Message.Should().Be(AuthService.IncorrectCredentialsMessage);
     }
     
-    //[Fact]
+    [Fact]
     public async Task LoggingInIsUnsuccessfulIfPasswordIsIncorrect()
     {
         const string IncorrectPassword = "TotallyIncorrectPassword";

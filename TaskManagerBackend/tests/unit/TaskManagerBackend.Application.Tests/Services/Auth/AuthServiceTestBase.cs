@@ -13,7 +13,7 @@ using TaskManagerBackend.Tests.Common;
 
 namespace TaskManagerBackend.Application.Tests.Services.Auth;
 
-public class AuthServiceTestBase : CommonTestBase
+public class AuthServiceTestBase : UnitTestsBase
 {
     private const string DefaultToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzEwNjA2MTUzfQ.Qr4baSoGgjHXUkHQ4ILRJTGBXUA4d_l7fQzV_dLV899n-K2O5hAelYl1zMM3cVEMeAk-4NwRlsJZpfb-dPMnlA";
 

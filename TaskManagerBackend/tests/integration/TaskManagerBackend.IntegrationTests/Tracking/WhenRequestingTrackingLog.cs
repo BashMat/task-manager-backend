@@ -16,8 +16,7 @@ public class WhenRequestingTrackingLog : TrackingTestBase
 {
     public WhenRequestingTrackingLog(MsSqlTests fixture) : base(fixture) { }
 
-    // TODO: Need to exclude test from autorun for CI/CD pipelines
-    //[Fact]
+    [Fact]
     public async Task CreatingTrackingLogIsSuccessful()
     {
         DateTime utcDateTimeBeforeRequest = new DateTimeService().UtcNow;
@@ -43,7 +42,7 @@ public class WhenRequestingTrackingLog : TrackingTestBase
         content.Message.Should().BeNull();
     }
 
-    //[Fact]
+    [Fact]
     public async Task CreatingTrackingLogIsUnsuccessfulIfTitleIsNotSet()
     {
         var request = new { Property = 1 };
@@ -53,7 +52,7 @@ public class WhenRequestingTrackingLog : TrackingTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
     
-    //[Fact]
+    [Fact]
     public async Task GettingTrackingLogByIdIsSuccessful()
     {
         TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
@@ -69,7 +68,7 @@ public class WhenRequestingTrackingLog : TrackingTestBase
         content.Message.Should().BeNull();
     }
     
-    //[Fact]
+    [Fact]
     public async Task GettingTrackingLogsIsSuccessful()
     {
         await CreateTrackingLog();
@@ -85,7 +84,7 @@ public class WhenRequestingTrackingLog : TrackingTestBase
         content.Message.Should().BeNull();
     }
     
-    //[Fact]
+    [Fact]
     public async Task DeletingTrackingLogByIdIsSuccessful()
     {
         TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();

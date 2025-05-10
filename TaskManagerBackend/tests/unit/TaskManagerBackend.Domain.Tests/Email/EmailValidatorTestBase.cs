@@ -9,7 +9,7 @@ using TaskManagerBackend.Tests.Common;
 
 namespace TaskManagerBackend.Domain.Tests.Email;
 
-public class EmailValidatorTestBase : CommonTestBase
+public class EmailValidatorTestBase : UnitTestsBase
 {
     private EmailValidator CreateEmailValidator()
     {

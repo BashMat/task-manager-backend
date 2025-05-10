@@ -8,6 +8,7 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests;
 
+[Trait(CategoryTraitName, CategoryTraitValueIntegrationTests)]
 public class IntegrationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, IDisposable
 {
     public const string UserName = "test";

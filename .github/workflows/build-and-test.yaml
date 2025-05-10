@@ -29,6 +29,6 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       working-directory: TaskManagerBackend
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Run unit tests
+      run: dotnet test --no-build --verbosity normal --filter "Category=Unit"
       working-directory: TaskManagerBackend
