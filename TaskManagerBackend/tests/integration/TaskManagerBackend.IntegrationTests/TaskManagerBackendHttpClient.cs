@@ -28,6 +28,11 @@ public class TaskManagerBackendHttpClient
     {
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessToken);
     }
+    
+    public async Task<HttpResponseMessage> Post(string endpoint, object request)
+    {
+        return await _httpClient.PostAsJsonAsync(endpoint, request);
+    }
 
     #region Auth
 
@@ -44,7 +49,7 @@ public class TaskManagerBackendHttpClient
     #endregion
 
     #region Tracking
-
+    
     public async Task<HttpResponseMessage> CreateTrackingLog(TrackingLogCreateRequest request)
     {
         return await _httpClient.PostAsJsonAsync("api/tracking/logs", request);
