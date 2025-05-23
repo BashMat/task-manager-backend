@@ -26,7 +26,7 @@ public class TrackingService : ITrackingService
     
     #region Tracking Logs
     
-    public async Task<ServiceResponse<TrackingLogGetResponse>> Create(int userId, TrackingLogCreateRequest newLog)
+    public async Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId, TrackingLogCreateRequest newLog)
     {
         NewTrackingLog logToInsert = new()
                                      {
@@ -38,7 +38,7 @@ public class TrackingService : ITrackingService
 
         ServiceResponse<TrackingLogGetResponse> response = new()
                                                            {
-                                                               Data = await _trackingRepository.Insert(logToInsert)
+                                                               Data = await _trackingRepository.InsertTrackingLog(logToInsert)
                                                            };
 
         if (response.Data == null)
@@ -50,21 +50,21 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAll(int userId)
+    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogs(int userId)
     {
         ServiceResponse<List<TrackingLogGetResponse>> response = new()
                                                               {
-                                                                  Data = await _trackingRepository.GetAll(userId)
+                                                                  Data = await _trackingRepository.GetAllTrackingLogs(userId)
                                                               };
 
         return response;
     }
 
-    public async Task<ServiceResponse<TrackingLogGetResponse>> GetById(int id)
+    public async Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id)
     {
         ServiceResponse<TrackingLogGetResponse> response = new()
                                                         {
-                                                            Data = await _trackingRepository.GetById(id)
+                                                            Data = await _trackingRepository.GetTrackingLogById(id)
                                                         };
             
         if (response.Data == null)
@@ -76,11 +76,11 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> Delete(int userId, int boardId)
+    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int boardId)
     {
         ServiceResponse<List<TrackingLogGetResponse>> response = new()
                                                               {
-                                                                  Data = await _trackingRepository.Delete(userId, boardId)
+                                                                  Data = await _trackingRepository.DeleteTrackingLogById(userId, boardId)
                                                               };
 
         return response;

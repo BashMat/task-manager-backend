@@ -27,13 +27,13 @@ public class TrackingController : ControllerBase
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
     [HttpPost("logs")]
-    public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> Create([FromBody] TrackingLogCreateRequest newLog)
+    public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> CreateTrackingLog([FromBody] TrackingLogCreateRequest newLog)
     {
-        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.Create(UserId, newLog);
+        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.CreateTrackingLog(UserId, newLog);
             
         if (response.Success)
         {
-            return CreatedAtAction(nameof(Create), response);
+            return CreatedAtAction(nameof(CreateTrackingLog), response);
         }
         
         return StatusCode(StatusCodes.Status500InternalServerError);
@@ -42,17 +42,17 @@ public class TrackingController : ControllerBase
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
     [HttpGet("logs")]
-    public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> GetAll()
+    public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> GetAllTrackingLogs()
     {
-        return Ok(await _trackingService.GetAll(UserId));
+        return Ok(await _trackingService.GetAllTrackingLogs(UserId));
     }
 
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
     [HttpGet("logs/{id}")]
-    public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> GetById([FromRoute] int id)
+    public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> GetTrackingLogById([FromRoute] int id)
     {
-        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.GetById(id);
+        ServiceResponse<TrackingLogGetResponse> response = await _trackingService.GetTrackingLogById(id);
 
         if (response.Success)
         {
@@ -65,9 +65,9 @@ public class TrackingController : ControllerBase
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
     [HttpDelete("logs/{id}")]
-    public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> Delete([FromRoute] int id)
+    public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> DeleteTrackingLogById([FromRoute] int id)
     {
-        return Ok(await _trackingService.Delete(UserId, id));
+        return Ok(await _trackingService.DeleteTrackingLogById(UserId, id));
     }
 
     #endregion
@@ -77,13 +77,13 @@ public class TrackingController : ControllerBase
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
     [HttpPost("statuses")]
-    public async Task<ActionResult<ServiceResponse<TrackingLogEntryStatus>>> Create([FromBody] TrackingLogEntryStatusCreateRequest newStatus)
+    public async Task<ActionResult<ServiceResponse<TrackingLogEntryStatus>>> CreateTrackingLogEntryStatus([FromBody] TrackingLogEntryStatusCreateRequest newStatus)
     {
         ServiceResponse<TrackingLogEntryStatus> response = await _trackingService.CreateTrackingLogStatus(UserId, newStatus);
             
         if (response.Success)
         {
-            return CreatedAtAction(nameof(Create), response);
+            return CreatedAtAction(nameof(CreateTrackingLog), response);
         }
         
         return StatusCode(StatusCodes.Status500InternalServerError);

@@ -11,10 +11,10 @@ public interface ITrackingService
 {
     #region Tracking Logs
 
-    Task<ServiceResponse<TrackingLogGetResponse>> Create(int userId, TrackingLogCreateRequest newLog);
-    Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAll(int userId);
-    Task<ServiceResponse<TrackingLogGetResponse>> GetById(int id);
-    Task<ServiceResponse<List<TrackingLogGetResponse>>> Delete(int userId, int boardId);
+    Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId, TrackingLogCreateRequest newLog);
+    Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogs(int userId);
+    Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id);
+    Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int boardId);
 
     #endregion
 

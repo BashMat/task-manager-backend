@@ -7,10 +7,10 @@ public interface ITrackingRepository
 {
     #region Tracking Logs
 
-    Task<TrackingLogGetResponse?> Insert(NewTrackingLog logToInsert);
-    Task<List<TrackingLogGetResponse>> GetAll(int userId);
-    Task<TrackingLogGetResponse?> GetById(int trackingLogId);
-    Task<List<TrackingLogGetResponse>> Delete(int userId, int trackingLogId);
+    Task<TrackingLogGetResponse?> InsertTrackingLog(NewTrackingLog logToInsert);
+    Task<List<TrackingLogGetResponse>> GetAllTrackingLogs(int userId);
+    Task<TrackingLogGetResponse?> GetTrackingLogById(int trackingLogId);
+    Task<List<TrackingLogGetResponse>> DeleteTrackingLogById(int userId, int trackingLogId);
 
     #endregion
 

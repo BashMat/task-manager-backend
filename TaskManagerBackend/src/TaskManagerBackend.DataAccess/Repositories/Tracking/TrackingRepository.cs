@@ -22,7 +22,7 @@ public class TrackingRepository : ITrackingRepository
 
     #region Tracking Log
 
-    public async Task<TrackingLogGetResponse?> Insert(NewTrackingLog logToInsert)
+    public async Task<TrackingLogGetResponse?> InsertTrackingLog(NewTrackingLog logToInsert)
     {
         await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
@@ -36,21 +36,21 @@ select scope_identity();",
         return await GetByIdInternal(connection, id);
     }
 
-    public async Task<List<TrackingLogGetResponse>> GetAll(int userId)
+    public async Task<List<TrackingLogGetResponse>> GetAllTrackingLogs(int userId)
     {
         await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         return await GetAllInternal(connection, userId);
     }
 
-    public async Task<TrackingLogGetResponse?> GetById(int trackingLogId)
+    public async Task<TrackingLogGetResponse?> GetTrackingLogById(int trackingLogId)
     {
         await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         return await GetByIdInternal(connection, trackingLogId);
     }
 
-    public async Task<List<TrackingLogGetResponse>> Delete(int userId, int trackingLogId)
+    public async Task<List<TrackingLogGetResponse>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
         await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
