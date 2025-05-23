@@ -61,7 +61,8 @@ public class TrackingTestBase : IntegrationTestBase,
     protected async Task<TrackingLogGetResponse> CreateTrackingLogAndValidateResponse(string? title = null,
                                                                                       string? description = null)
     {
-        var creationResponse = await CreateTrackingLog();
+        var creationResponse = await CreateTrackingLog(title,
+                                                       description);
         ServiceResponse<TrackingLogGetResponse>? creationResponseContent =
             await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogGetResponse>>();
         creationResponseContent.Should().NotBeNull();

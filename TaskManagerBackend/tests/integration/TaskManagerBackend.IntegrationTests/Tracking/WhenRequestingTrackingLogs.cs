@@ -12,9 +12,9 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Tracking;
 
-public class WhenRequestingTrackingLog : TrackingTestBase
+public class WhenRequestingTrackingLogs : TrackingTestBase
 {
-    public WhenRequestingTrackingLog(MsSqlTests fixture) : base(fixture) { }
+    public WhenRequestingTrackingLogs(MsSqlTests fixture) : base(fixture) { }
 
     [Fact]
     public async Task CreatingTrackingLogIsSuccessful()
