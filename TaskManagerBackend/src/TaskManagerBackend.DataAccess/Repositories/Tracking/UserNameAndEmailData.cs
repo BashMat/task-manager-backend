@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Dto.User;
+﻿namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
 public class UserNameAndEmailData
 {

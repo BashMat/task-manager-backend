@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
+﻿namespace TaskManagerBackend.Domain.Tracking;
 
 public class NewTrackingLogEntryStatus
 {

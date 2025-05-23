@@ -3,6 +3,7 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Dto.User;
 
