@@ -1,7 +1,7 @@
 ﻿using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
-namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
+namespace TaskManagerBackend.Domain.Tracking;
 
 public interface ITrackingRepository
 {

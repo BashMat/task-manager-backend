@@ -3,7 +3,7 @@
 using FluentAssertions;
 using Moq;
 using TaskManagerBackend.Common;
-using TaskManagerBackend.Domain.Models;
+using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Dto.User;
 using Xunit;
 
@@ -103,7 +103,7 @@ public class WhenSigningUp : AuthServiceTestBase
 
         await SignUp(request);
 
-        UserRepositoryMock.Verify(o => o.Insert(It.Is<User>(createdUser 
+        UserRepositoryMock.Verify(o => o.InsertUser(It.Is<User>(createdUser 
                                                                 => userToBeCreated.UserName == createdUser.UserName &&
                                                                    userToBeCreated.Email == createdUser.Email &&
                                                                    userToBeCreated.CreatedAt == createdUser.CreatedAt &&

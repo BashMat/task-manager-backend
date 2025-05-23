@@ -2,8 +2,7 @@
 
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.DataAccess.Repositories.User;
-using TaskManagerBackend.Domain.Models;
+using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validators;
 using TaskManagerBackend.Dto.User;
 
@@ -66,7 +65,7 @@ public class AuthService : IAuthService
             _cryptographyService.CreatePasswordHashAndSalt(requestData.Password);
             
         User newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
-        await _userRepository.Insert(newUser);
+        await _userRepository.InsertUser(newUser);
 
         response.Data = new UserSignUpResponseDto 
                         {

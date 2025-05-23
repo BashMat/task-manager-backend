@@ -3,8 +3,8 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Dto.User;
-using Models = TaskManagerBackend.Domain.Models;
 
 #endregion
 
@@ -68,7 +68,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
         return user is not null;
     }
 
-    public async Task Insert(Models.User user)
+    public async Task InsertUser(Domain.Users.User user)
     {
         _logger.LogInformation("Starting inserting user data");
         

@@ -5,7 +5,7 @@ using Moq;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validators;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;

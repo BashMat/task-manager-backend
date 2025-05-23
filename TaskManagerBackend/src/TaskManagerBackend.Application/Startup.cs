@@ -23,6 +23,8 @@ using TaskManagerBackend.DataAccess;
 using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.Tracking;
+using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validators;
 
 #endregion

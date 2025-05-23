@@ -2,6 +2,7 @@
 
 using Dapper;
 using Microsoft.Data.SqlClient;
+using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;

@@ -2,7 +2,7 @@
 
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.DataAccess.Repositories.Tracking;
+using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 

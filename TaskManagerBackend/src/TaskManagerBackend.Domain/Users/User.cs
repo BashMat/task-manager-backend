@@ -4,7 +4,7 @@ using TaskManagerBackend.Common.Services;
 
 #endregion
 
-namespace TaskManagerBackend.Domain.Models;
+namespace TaskManagerBackend.Domain.Users;
 
 public class User
 {
