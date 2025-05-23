@@ -2,6 +2,7 @@
 
 using FluentAssertions;
 using Moq;
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Domain.Models;
 using TaskManagerBackend.Dto.User;
 using Xunit;

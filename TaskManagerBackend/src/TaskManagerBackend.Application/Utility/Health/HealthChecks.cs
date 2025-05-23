@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Common;
+﻿namespace TaskManagerBackend.Application.Utility.Health;
 
 /// <summary>
 ///     Provides constant values for health check diagnostics.

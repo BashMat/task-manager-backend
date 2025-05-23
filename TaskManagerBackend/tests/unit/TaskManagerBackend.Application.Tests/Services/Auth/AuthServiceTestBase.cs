@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Validators;

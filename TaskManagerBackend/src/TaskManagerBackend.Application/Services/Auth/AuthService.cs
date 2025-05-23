@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Models;

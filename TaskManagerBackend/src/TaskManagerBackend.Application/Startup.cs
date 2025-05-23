@@ -228,7 +228,7 @@ public class Startup
 
         app.UseMetricServer();
 
-        app.MapHealthChecks(Common.HealthChecks.DefaultHealthRoute,
+        app.MapHealthChecks(Utility.Health.HealthChecks.DefaultHealthRoute,
                             new HealthCheckOptions
                             {
                                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

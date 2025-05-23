@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Services.Board;
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.Board;
 using TaskManagerBackend.Dto.Card;
 using TaskManagerBackend.Dto.Column;

@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 

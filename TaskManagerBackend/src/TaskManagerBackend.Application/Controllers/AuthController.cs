@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.User;
 
 #endregion

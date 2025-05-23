@@ -21,10 +21,10 @@ public class ServiceProcessHealthCheck : IHealthCheck
         Assembly? assembly = Assembly.GetEntryAssembly();
         if (!string.IsNullOrWhiteSpace(assembly?.FullName))
         {
-            additionalData.Add(Common.HealthChecks.AssemblyName, assembly.FullName);
+            additionalData.Add(HealthChecks.AssemblyName, assembly.FullName);
         }
 
-        additionalData.Add(Common.HealthChecks.Uptime, DateTime.Now - Process.GetCurrentProcess().StartTime);
+        additionalData.Add(HealthChecks.Uptime, DateTime.Now - Process.GetCurrentProcess().StartTime);
 
         return Task.FromResult(HealthCheckResult.Healthy(Description, additionalData));
     }
