@@ -3,7 +3,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Application;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;

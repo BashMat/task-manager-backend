@@ -3,7 +3,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Application;
 using TaskManagerBackend.Application.Services.Auth;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Dto.User;
