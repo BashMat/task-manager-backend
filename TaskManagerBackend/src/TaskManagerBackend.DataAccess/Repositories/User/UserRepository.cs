@@ -69,7 +69,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
         return user is not null;
     }
 
-    public async Task InsertUser(Domain.Users.User user)
+    public async Task InsertUser(NewUser newUser)
     {
         _logger.LogInformation("Starting inserting user data");
         
@@ -77,7 +77,7 @@ where [UserName] = @LogInData or [Email] = @LogInData",
 
         await connection.ExecuteAsync(@"insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values 
 (@UserName, @Email, @CreatedAt, @UpdatedAt, @PasswordHash, @PasswordSalt)",
-                                      user);
+                                      newUser);
         
         _logger.LogInformation("Finishing inserting user data");
     }

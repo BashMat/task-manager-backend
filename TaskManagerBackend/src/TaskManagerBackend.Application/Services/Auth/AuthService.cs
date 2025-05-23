@@ -64,7 +64,7 @@ public class AuthService : IAuthService
         (byte[] passwordHash, byte[] passwordSalt) =
             _cryptographyService.CreatePasswordHashAndSalt(requestData.Password);
             
-        User newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
+        NewUser newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
         await _userRepository.InsertUser(newUser);
 
         response.Data = new UserSignUpResponseDto 

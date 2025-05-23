@@ -11,5 +11,5 @@ public interface IUserRepository
     public Task<UserPasswordData?> GetUserPasswordData(string logInData);
     public Task<bool> CheckIfUserExistsById(int id);
     public Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email);
-    public Task InsertUser(User user);
+    public Task InsertUser(NewUser newUser);
 }
