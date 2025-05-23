@@ -28,7 +28,9 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<TaskMana
         
         builder.ConfigureServices(services =>
                                   {
-                                      services.Remove(services.SingleOrDefault(service => typeof(SqlServerDbConnectionProvider) == service.ServiceType));
+                                      services.Remove(services.SingleOrDefault(service => 
+                                                                                   typeof(SqlServerDbConnectionProvider) == service.ImplementationType)
+                                                      ?? throw new ArgumentNullException());
                                       services.AddScoped<IDbConnectionProvider<SqlConnection>>(_ => dbConnectionProviderMock.Object);
                                   });
     }
