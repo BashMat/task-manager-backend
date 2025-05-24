@@ -45,7 +45,7 @@ public class Startup
 
     public void ConfigureBuilder(WebApplicationBuilder builder)
     {
-        BuildConnectionStrings();
+        SetUpConfiguration(builder);
         
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
@@ -79,21 +79,8 @@ public class Startup
         builder.Services.AddHealthChecks()
                         .AddCheck<ServiceProcessHealthCheck>(ServiceProcessHealthCheck.Name)
                         .ForwardToPrometheus();
-
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-                                                {
-                                                    ValidateIssuerSigningKey = true,
-                                                    IssuerSigningKey =
-                                                        new SymmetricSecurityKey(Encoding.UTF8
-                                                            .GetBytes(_configuration[ConfigurationKeys.Token]!)),
-                                                    ValidateIssuer = false,
-                                                    ValidateAudience = false,
-                                                    ValidateLifetime = true,
-                                                    ClockSkew = TimeSpan.Zero
-                                                };
-        });
+        
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
         builder.Services.AddCors(options =>
                                  {
@@ -105,6 +92,31 @@ public class Startup
                                                                  .AllowAnyMethod();
                                                        });
                                  });
+    }
+
+    private void SetUpConfiguration(WebApplicationBuilder builder)
+    {
+        BuildConnectionStrings();
+        ValidateConfiguration();
+        builder.Services.Configure<TokensConfiguration>(_configuration.GetRequiredSection(ConfigurationKeys.TokensSection));
+        builder.Services.ConfigureOptions<JwtBearerOptionsConfigurator>();
+    }
+
+    private void ValidateConfiguration()
+    {
+        IConfigurationSection configurationSection = _configuration.GetRequiredSection(ConfigurationKeys.TokensSection);
+        
+        if (string.IsNullOrWhiteSpace(configurationSection[ConfigurationKeys.Secret]))
+        {
+            throw new ConfigurationErrorsException("Secret key for token was not specified.");
+        }
+
+        string? accessTokenLifeTime = configurationSection[ConfigurationKeys.AccessTokenLifeTimeInMinutes];
+        if (string.IsNullOrWhiteSpace(accessTokenLifeTime)
+            || !Double.TryParse(accessTokenLifeTime, out double result))
+        {
+            throw new ConfigurationErrorsException("Access token lifetime duration is invalid.");
+        }
     }
 
     private void BuildConnectionStrings()
@@ -177,8 +189,8 @@ public class Startup
     private void RegisterServices(IServiceCollection services)
     {
         // Common
-        services.AddScoped<IDateTimeService, DateTimeService>();
-        services.AddScoped<ICryptographyService, CryptographyService>();
+        services.AddSingleton<ICryptographyService, CryptographyService>();
+        services.AddSingleton<IDateTimeService, DateTimeService>();
         
         // Domain
         services.AddScoped<IEmailValidator, EmailValidator>();

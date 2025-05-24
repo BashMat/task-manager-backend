@@ -5,7 +5,9 @@
 /// </summary>
 public abstract class ConfigurationKeys
 {
-    public const string Token = "Token";
+    public const string TokensSection = "Tokens";
+    public const string Secret = "Secret";
+    public const string AccessTokenLifeTimeInMinutes = "AccessTokenLifeTimeInMinutes";
 
     public const string ConnectionStrings = "ConnectionStrings";
     public const string ConnectionStringsData = "ConnectionStringsData";

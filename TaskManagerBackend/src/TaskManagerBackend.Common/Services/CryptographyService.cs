@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 #endregion
@@ -15,13 +15,13 @@ namespace TaskManagerBackend.Common.Services;
 public class CryptographyService : ICryptographyService
 {
     private readonly IDateTimeService _dateTimeService;
-    private readonly IConfiguration _configuration;
+    private readonly IOptionsMonitor<TokensConfiguration> _tokensConfiguration;
     
     public CryptographyService(IDateTimeService dateTimeService,
-                               IConfiguration configuration)
+                               IOptionsMonitor<TokensConfiguration> tokensConfiguration)
     {
         _dateTimeService = dateTimeService;
-        _configuration = configuration;
+        _tokensConfiguration = tokensConfiguration;
     }
     
     public ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password)
@@ -44,13 +44,27 @@ public class CryptographyService : ICryptographyService
                              {
                                  new Claim(Claims.Sub, userId.ToString())
                              };
-            
-        DateTime expire = _dateTimeService.UtcNow.AddMinutes(30);
-        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration[ConfigurationKeys.Token]!));
-        SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        JwtSecurityToken token = new JwtSecurityToken(null, null, claims, null, expire, signingCredentials);
-        string jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-        return jwt;
+        DateTime expirationDateTime = GetExpirationDateTime();
+        SecurityKey key = GetSigningKey();
+        SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        JwtSecurityToken token = new JwtSecurityToken(null,
+                                                      null,
+                                                      claims,
+                                                      null,
+                                                      expirationDateTime,
+                                                      signingCredentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public SecurityKey GetSigningKey()
+    {
+        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokensConfiguration.CurrentValue.Secret));
+    }
+
+    private DateTime GetExpirationDateTime()
+    {
+        return _dateTimeService.UtcNow.AddMinutes(_tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutesAsDouble);
     }
 }

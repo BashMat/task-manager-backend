@@ -20,11 +20,6 @@ public class Program
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            if (string.IsNullOrWhiteSpace(builder.Configuration[ConfigurationKeys.Token]))
-            {
-                throw new ConfigurationErrorsException("Secret key for token was not specified");
-            }
-
             Startup startup = new(builder.Configuration);
 
             startup.ConfigureBuilder(builder);
@@ -37,7 +32,7 @@ public class Program
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "Error occured during application initialization");
+            logger.Error(ex, "Error occured during application initialization.");
             throw;
         }
         finally
