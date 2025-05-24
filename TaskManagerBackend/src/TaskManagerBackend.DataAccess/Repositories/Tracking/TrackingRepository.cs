@@ -269,6 +269,30 @@ where [TrackingLogCreator].[Id] = @UserId",
 
     #endregion
 
+    #region Tracking Log Entries
+
+    public Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
+
     #region Tracking Log Entry Statuses
 
     public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)

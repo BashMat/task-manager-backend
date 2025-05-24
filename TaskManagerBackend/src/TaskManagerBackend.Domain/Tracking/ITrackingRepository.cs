@@ -1,4 +1,5 @@
 ﻿using TaskManagerBackend.Dto.Tracking.TrackingLog;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
 namespace TaskManagerBackend.Domain.Tracking;
@@ -11,6 +12,15 @@ public interface ITrackingRepository
     Task<List<TrackingLogGetResponse>> GetAllTrackingLogs(int userId);
     Task<TrackingLogGetResponse?> GetTrackingLogById(int trackingLogId);
     Task<List<TrackingLogGetResponse>> DeleteTrackingLogById(int userId, int trackingLogId);
+
+    #endregion
+    
+    #region Tracking Log Entries
+
+    Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert);
+    Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId);
+    Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId);
+    Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId);
 
     #endregion
 

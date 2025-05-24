@@ -45,12 +45,12 @@ public class TrackingController : ControllerBase
     [HttpGet("logs")]
     public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> GetAllTrackingLogs()
     {
-        return Ok(await _trackingService.GetAllTrackingLogs(UserId));
+        return Ok(await _trackingService.GetAllTrackingLogsByUserId(UserId));
     }
 
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
-    [HttpGet("logs/{id}")]
+    [HttpGet("logs/{id:int}")]
     public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> GetTrackingLogById([FromRoute] int id)
     {
         ServiceResponse<TrackingLogGetResponse> response = await _trackingService.GetTrackingLogById(id);
@@ -65,7 +65,7 @@ public class TrackingController : ControllerBase
 
     [EnableCors("MyDefaultPolicy")]
     [Authorize]
-    [HttpDelete("logs/{id}")]
+    [HttpDelete("logs/{id:int}")]
     public async Task<ActionResult<ServiceResponse<List<TrackingLogGetResponse>>>> DeleteTrackingLogById([FromRoute] int id)
     {
         return Ok(await _trackingService.DeleteTrackingLogById(UserId, id));
