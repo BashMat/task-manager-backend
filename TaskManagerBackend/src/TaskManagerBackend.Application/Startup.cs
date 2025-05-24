@@ -105,14 +105,14 @@ public class Startup
     {
         IConfigurationSection configurationSection = _configuration.GetRequiredSection(ConfigurationKeys.TokensSection);
         
-        if (string.IsNullOrWhiteSpace(configurationSection[ConfigurationKeys.Secret]))
+        if (string.IsNullOrWhiteSpace(configurationSection[ConfigurationKeys.SecretKey]))
         {
             throw new ConfigurationErrorsException("Secret key for token was not specified.");
         }
 
-        string? accessTokenLifeTime = configurationSection[ConfigurationKeys.AccessTokenLifeTimeInMinutes];
+        string? accessTokenLifeTime = configurationSection[ConfigurationKeys.AccessTokenLifeTimeInMinutesKey];
         if (string.IsNullOrWhiteSpace(accessTokenLifeTime)
-            || !Double.TryParse(accessTokenLifeTime, out double result))
+            || !Double.TryParse(accessTokenLifeTime, out _))
         {
             throw new ConfigurationErrorsException("Access token lifetime duration is invalid.");
         }
@@ -120,8 +120,8 @@ public class Startup
 
     private void BuildConnectionStrings()
     {
-        IConfigurationSection connectionStringsDataSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsData);
-        IConfigurationSection connectionStringsSection = _configuration.GetSection(ConfigurationKeys.ConnectionStrings);
+        IConfigurationSection connectionStringsDataSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsDataSection);
+        IConfigurationSection connectionStringsSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsSection);
 
         if (!connectionStringsSection.Exists() || !connectionStringsDataSection.Exists())
         {
@@ -160,23 +160,23 @@ public class Startup
         {
             if (!connectionStringData.Exists())
             {
-                throw new ConfigurationErrorsException("ConnectionStringData must not include empty subsections");
+                throw new ConfigurationErrorsException("ConnectionStringData must not include empty subsections.");
             }
             
             if (result.ContainsKey(connectionStringData.Key))
             {
-                throw new ConfigurationErrorsException("Configuration must specify each connection string only once");
+                throw new ConfigurationErrorsException("Configuration must specify each connection string only once.");
             }
 
             ConnectionStringData data = new()
                                         {
-                                            Server = connectionStringData.GetSection("Server").Value,
-                                            Database = connectionStringData.GetSection("Database").Value,
-                                            User = connectionStringData.GetSection("User").Value,
-                                            Password = connectionStringData.GetSection("Password").Value,
-                                            ConnectionTimeout = connectionStringData.GetSection("ConnectionTimeout").Value == null 
+                                            Server = connectionStringData[ConfigurationKeys.ServerKey],
+                                            Database = connectionStringData[ConfigurationKeys.DatabaseKey],
+                                            User = connectionStringData[ConfigurationKeys.UserKey],
+                                            Password = connectionStringData[ConfigurationKeys.PasswordKey],
+                                            ConnectionTimeout = connectionStringData[ConfigurationKeys.ConnectionTimeoutKey] == null 
                                                                     ? null
-                                                                    : int.Parse(connectionStringData.GetSection("ConnectionTimeout").Value!)
+                                                                    : int.Parse(connectionStringData[ConfigurationKeys.ConnectionTimeoutKey]!)
                                         };
 
             result.Add(connectionStringData.Key, data);
