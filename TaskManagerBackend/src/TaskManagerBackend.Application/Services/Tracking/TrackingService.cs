@@ -88,10 +88,12 @@ public class TrackingService : ITrackingService
     {
         NewTrackingLogEntry logEntryToInsert = new()
                                                {
-                                                   TrackingLogId = newLogEntry.TrackingLogId,
                                                    Title = newLogEntry.Title,
                                                    Description = newLogEntry.Description,
+                                                   TrackingLogId = newLogEntry.TrackingLogId,
                                                    StatusId = newLogEntry.StatusId,
+                                                   Priority = newLogEntry.Priority,
+                                                   OrderIndex = newLogEntry.OrderIndex,
                                                    CreatedById = userId,
                                                    CreatedAt = _dateTimeService.UtcNow
                                                };
@@ -113,9 +115,18 @@ public class TrackingService : ITrackingService
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id)
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id)
     {
-        throw new NotImplementedException();
+        ServiceResponse<TrackingLogEntryGetResponse> response = 
+            await _trackingRepository.GetTrackingLogEntryById(id);
+
+        if (response.Data is null)
+        {
+            response.Success = false;
+            response.Message = ResourceDoesNotExist;
+        }
+
+        return response;
     }
 
     public Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(

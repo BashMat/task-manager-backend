@@ -331,9 +331,18 @@ where [TrackingLogCreator].[Id] = @UserId",
 
     #region Tracking Log Entries
 
-    public Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert)
+    public async Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert)
     {
-        throw new NotImplementedException();
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        int id = await connection.ExecuteScalarAsync<int>(
+                                                          @"insert into [TrackingLogEntry] (Title, Description, TrackingLogId, StatusId, Priority, OrderIndex, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
+(@Title, @Description, @TrackingLogId, @StatusId, @Priority, @OrderIndex, @CreatedById, @CreatedAt, @CreatedById, @CreatedAt); 
+
+select scope_identity();",
+                                                          logEntryToInsert);
+
+        return await GetTrackingLogEntryByIdInternal(connection, id);
     }
 
     public Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId)
@@ -341,15 +350,78 @@ where [TrackingLogCreator].[Id] = @UserId",
         throw new NotImplementedException();
     }
 
-    public Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId)
+    public async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId)
     {
-        throw new NotImplementedException();
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        return await GetTrackingLogEntryByIdInternal(connection, trackingLogEntryId);
     }
 
     public Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId)
     {
         throw new NotImplementedException();
     }
+
+    #region Internal
+
+    private async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryByIdInternal(SqlConnection connection, int id)
+    {
+        try
+        {
+            string sql =
+                @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
+[TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedBy], [TLE].[CreatedAt], [TLE].[UpdatedBy], [TLE].[UpdatedAt],
+[S].[Id], [S].[Title], [S].[Description],
+[Creator].[Id], [Creator].[UserName], [Creator].[Email],
+[Updater].[Id], [Updater].[UserName], [Updater].[Email]
+FROM [TrackingLogEntry] as [TLE]
+INNER JOIN [Status] as [S]
+    ON [TLE].[StatusId] = [S].[Id]
+INNER JOIN [User] as [Creator]
+    ON [TLE].[CreatedBy] = [Creator].[Id]
+INNER JOIN [User] as [Updater]
+    ON [TLE].[UpdatedBy] = [Updater].[Id]
+WHERE [TLE].[Id] = @Id";
+
+            IEnumerable<TrackingLogEntryGetResponse> logEntryData =
+                await connection.QueryAsync<TrackingLogEntryData,
+                    TrackingLogEntryStatus,
+                    UserInfoDto,
+                    UserInfoDto,
+                    TrackingLogEntryGetResponse>(
+                                                 sql,
+                                                 (logEntry,
+                                                  status,
+                                                  creator,
+                                                  updater) => new TrackingLogEntryGetResponse()
+                                                              {
+                                                                  Id = logEntry.Id,
+                                                                  Title = logEntry.Title,
+                                                                  Description = logEntry.Description,
+                                                                  TrackingLogId = logEntry.TrackingLogId,
+                                                                  Status = status,
+                                                                  Priority = logEntry.Priority,
+                                                                  OrderIndex = logEntry.OrderIndex,
+                                                                  CreatedBy = creator,
+                                                                  CreatedAt = logEntry.CreatedAt,
+                                                                  UpdatedBy = updater,
+                                                                  UpdatedAt = logEntry.UpdatedAt,
+                                                              },
+                                                 splitOn: "Id, Id, Id",
+                                                 param: new
+                                                        {
+                                                            Id = id
+                                                        });
+
+            return logEntryData.FirstOrDefault();
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+
+    #endregion
 
     #endregion
 

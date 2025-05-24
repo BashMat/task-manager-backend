@@ -84,12 +84,14 @@ public class TrackingController : ControllerBase
     public async Task<ActionResult<ServiceResponse<TrackingLogGetResponse>>> CreateTrackingLogEntry(
         [FromBody] TrackingLogEntryCreateRequest newLogEntry)
     {
-        ServiceResponse<TrackingLogEntryGetResponse> response = await _trackingService.CreateTrackingLogEntry(UserId,
-                                                                                                         newLogEntry);
+        ServiceResponse<TrackingLogEntryGetResponse> response = 
+            await _trackingService.CreateTrackingLogEntry(UserId, newLogEntry);
             
-        if (response.Success)
+        if (response.Data is not null && response.Success)
         {
-            return CreatedAtAction(nameof(CreateTrackingLog), response);
+            return CreatedAtAction(nameof(GetTrackingLogEntryById),
+                                   new { id = response.Data.Id },
+                                   response);
         }
         
         return StatusCode(StatusCodes.Status500InternalServerError);
