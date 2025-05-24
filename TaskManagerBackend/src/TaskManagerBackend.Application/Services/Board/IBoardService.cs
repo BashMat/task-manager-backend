@@ -1,6 +1,6 @@
 ﻿#region Usings
 
-using TaskManagerBackend.Common;
+using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Dto.Board;
 using TaskManagerBackend.Dto.Card;
 using TaskManagerBackend.Dto.Column;

@@ -2,7 +2,7 @@
 
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Common;
+using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 using Xunit;

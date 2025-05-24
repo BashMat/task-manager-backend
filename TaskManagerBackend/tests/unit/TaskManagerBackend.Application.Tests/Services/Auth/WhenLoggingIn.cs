@@ -1,7 +1,7 @@
 #region Usings
 
 using FluentAssertions;
-using TaskManagerBackend.Common;
+using TaskManagerBackend.Application.Utility;
 using Xunit;
 
 #endregion

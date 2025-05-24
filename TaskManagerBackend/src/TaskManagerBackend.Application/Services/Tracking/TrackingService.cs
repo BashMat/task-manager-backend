@@ -1,6 +1,6 @@
 ﻿#region Usings
 
-using TaskManagerBackend.Common;
+using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;

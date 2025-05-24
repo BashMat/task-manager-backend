@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using TaskManagerBackend.Application.Services.Auth;
-using TaskManagerBackend.Common;
+using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Dto.User;
 using Xunit;
 
