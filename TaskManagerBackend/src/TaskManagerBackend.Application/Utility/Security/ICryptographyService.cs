@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace TaskManagerBackend.Common.Services;
+namespace TaskManagerBackend.Application.Utility.Security;
 
 /// <summary>
 ///     Represents service for executing cryptography operations.

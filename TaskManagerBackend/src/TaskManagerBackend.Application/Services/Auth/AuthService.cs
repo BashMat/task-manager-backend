@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;

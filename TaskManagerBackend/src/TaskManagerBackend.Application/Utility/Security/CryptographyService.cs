@@ -6,10 +6,11 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TaskManagerBackend.Common.Services;
 
 #endregion
 
-namespace TaskManagerBackend.Common.Services;
+namespace TaskManagerBackend.Application.Utility.Security;
 
 /// <inheritdoc/>
 public class CryptographyService : ICryptographyService

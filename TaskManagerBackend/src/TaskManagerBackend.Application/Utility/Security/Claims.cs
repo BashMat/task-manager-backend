@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Common;
+﻿namespace TaskManagerBackend.Application.Utility.Security;
 
 /// <summary>
 ///     Provides constant values for Claims.

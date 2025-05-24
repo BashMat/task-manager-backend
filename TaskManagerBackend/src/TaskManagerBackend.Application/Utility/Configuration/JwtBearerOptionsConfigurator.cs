@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Application.Utility.Security;
 
 #endregion
 

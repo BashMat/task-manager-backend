@@ -1,12 +1,10 @@
 ﻿#region Usings
 
 using System.Configuration;
-using System.Text;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Prometheus;
@@ -17,6 +15,7 @@ using TaskManagerBackend.Application.Services.Tracking;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
+using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess;
