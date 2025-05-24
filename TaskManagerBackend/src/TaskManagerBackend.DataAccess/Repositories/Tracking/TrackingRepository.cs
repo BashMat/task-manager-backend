@@ -71,44 +71,53 @@ select scope_identity();",
         {
             return trackingLog;
         }
-        
+
         List<TrackingLogEntryStatus> trackingLogStatuses = await GetTrackingLogStatusesById(connection, trackingLogId);
-        
+
         trackingLog.TrackingLogEntriesStatuses = trackingLogStatuses;
         return trackingLog;
     }
 
-    private async Task<List<TrackingLogEntryStatus>> GetTrackingLogStatusesById(SqlConnection connection, int trackingLogId)
+    private async Task<List<TrackingLogEntryStatus>> GetTrackingLogStatusesById(SqlConnection connection,
+                                                                                int trackingLogId)
     {
         IEnumerable<TrackingLogEntryStatus> trackingLogs = await connection.QueryAsync<TrackingLogEntryStatus>(
-                                                            @"select [S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description]
+                                                                                                               @"select [S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description]
 from [TrackingLog] as [TL] 
 inner join [Status] as [S] on [S].[TrackingLogId] = [TL].[Id] 
 where [TL].[Id] = @trackingLogId",
-                                                            param: new { TrackingLogId = trackingLogId });
+                                                                                                               param:
+                                                                                                               new
+                                                                                                               {
+                                                                                                                   TrackingLogId =
+                                                                                                                       trackingLogId
+                                                                                                               });
 
         return trackingLogs.ToList();
     }
 
-    private async Task<TrackingLogGetResponse?> GetTrackingLogWithEntriesById(SqlConnection connection, int trackingLogId)
+    private async Task<TrackingLogGetResponse?> GetTrackingLogWithEntriesById(SqlConnection connection,
+                                                                              int trackingLogId)
     {
         Dictionary<int, TrackingLogGetResponse> historyTrackingLogs = new();
         Dictionary<int, TrackingLogEntryGetResponse> historyTrackingLogEntries = new();
-        Type[] types = {
-                           typeof(TrackingLogGetResponse),
-                           typeof(UserInfoDto),
-                           typeof(UserInfoDto),
-                           typeof(TrackingLogEntryGetResponse),
-                           typeof(UserInfoDto),
-                           typeof(UserInfoDto),
-                           typeof(TrackingLogEntryStatus)
-                       };
+        Type[] types =
+        {
+            typeof(TrackingLogGetResponse),
+            typeof(UserInfoDto),
+            typeof(UserInfoDto),
+            typeof(TrackingLogEntryGetResponse),
+            typeof(UserInfoDto),
+            typeof(UserInfoDto),
+            typeof(TrackingLogEntryStatus)
+        };
 
-        IEnumerable<TrackingLogGetResponse> trackingLogs = await connection.QueryAsync<TrackingLogGetResponse>(
-                                                   @"select [TL].[Id], [TL].[Title], [TL].[Description], [TL].[CreatedAt], [TL].[UpdatedAt], 
+        IEnumerable<TrackingLogGetResponse> trackingLogs =
+            await connection.QueryAsync<TrackingLogGetResponse>(
+                                                                @"select [TL].[Id], [TL].[Title], [TL].[Description], [TL].[CreatedAt], [TL].[UpdatedAt], 
 [TrackingLogCreator].[Id], [TrackingLogCreator].[UserName], [TrackingLogCreator].[FirstName], [TrackingLogCreator].[LastName], [TrackingLogCreator].[Email], 
 [TrackingLogUpdater].[Id], [TrackingLogUpdater].[UserName], [TrackingLogUpdater].[FirstName], [TrackingLogUpdater].[LastName], [TrackingLogUpdater].[Email], 
-[TLE].[Id], [TLE].[TrackingLogId], [TLE].[StatusId], [TLE].[Title], [TLE].[Description], [TLE].[CreatedAt], [TLE].[UpdatedAt], 
+[TLE].[Id], [TLE].[TrackingLogId], [TLE].[StatusId], [TLE].[Title], [TLE].[Description], [TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedAt], [TLE].[UpdatedAt], 
 [TLECreator].[Id], [TLECreator].[UserName], [TLECreator].[FirstName], [TLECreator].[LastName], [TLECreator].[Email], 
 [TLEUpdater].[Id], [TLEUpdater].[UserName], [TLEUpdater].[FirstName], [TLEUpdater].[LastName], [TLEUpdater].[Email],
 [S].[Id], [S].[Title], [S].[Description]
@@ -120,24 +129,45 @@ left join [User] as [TLECreator] on [TLE].[CreatedBy] = [TLECreator].[Id]
 left join [User] as [TLEUpdater] on [TLE].[UpdatedBy] = [TLEUpdater].[Id]
 left join [Status] as [S] on [TLE].[StatusId] = [S].[Id] 
 where [TL].[Id] = @trackingLogId",
-                                                   types,
-                                                   typesArg =>
-                                                       ToDto(historyTrackingLogs,
-                                                             historyTrackingLogEntries,
-                                                             (TrackingLogGetResponse)typesArg[0],
-                                                             (UserInfoDto)typesArg[1],
-                                                             (UserInfoDto)typesArg[2],
-                                                             (TrackingLogEntryGetResponse?)typesArg[3],
-                                                             (UserInfoDto?)typesArg[4],
-                                                             (UserInfoDto?)typesArg[5],
-                                                             (TrackingLogEntryStatus?)typesArg[6]),
-                                                   param: new { TrackingLogId = trackingLogId },
-                                                   splitOn: "Id, Id, Id, Id, Id");
+                                                                types,
+                                                                typesArg =>
+                                                                    ToDto(historyTrackingLogs,
+                                                                          historyTrackingLogEntries,
+                                                                          (TrackingLogGetResponse)
+                                                                          typesArg
+                                                                              [0],
+                                                                          (UserInfoDto)
+                                                                          typesArg
+                                                                              [1],
+                                                                          (UserInfoDto)
+                                                                          typesArg
+                                                                              [2],
+                                                                          (TrackingLogEntryGetResponse
+                                                                              ?)
+                                                                          typesArg
+                                                                              [3],
+                                                                          (UserInfoDto
+                                                                              ?)
+                                                                          typesArg
+                                                                              [4],
+                                                                          (UserInfoDto
+                                                                              ?)
+                                                                          typesArg
+                                                                              [5],
+                                                                          (TrackingLogEntryStatus
+                                                                              ?)
+                                                                          typesArg
+                                                                              [6]),
+                                                                param:
+                                                                new
+                                                                {
+                                                                    TrackingLogId =
+                                                                        trackingLogId
+                                                                },
+                                                                splitOn:
+                                                                "Id, Id, Id, Id, Id");
 
-        List<TrackingLogGetResponse> listBoards = trackingLogs.Distinct().ToList();
-        return listBoards.Count == 0
-                   ? null 
-                   : listBoards[0];
+        return trackingLogs.Distinct().FirstOrDefault();
     }
 
     private async Task<List<TrackingLogGetResponse>> GetAllInternal(SqlConnection connection, int userId)
@@ -148,26 +178,30 @@ where [TL].[Id] = @trackingLogId",
         {
             return trackingLogs;
         }
-        
+
         List<TrackingLogEntryStatus> trackingLogStatuses = await GetAllTrackingLogsStatusesByUserId(connection, userId);
-        
+
         trackingLogs.ForEach(log => log.TrackingLogEntriesStatuses =
-                                                   trackingLogStatuses.Where(status =>
-                                                       status.TrackingLogId == log.Id).ToList());
+                                        trackingLogStatuses.Where(status =>
+                                                                      status.TrackingLogId == log.Id)
+                                                           .ToList());
         return trackingLogs;
     }
 
-    private async Task<List<TrackingLogEntryStatus>> GetAllTrackingLogsStatusesByUserId(SqlConnection connection, int userId)
+    private async Task<List<TrackingLogEntryStatus>> GetAllTrackingLogsStatusesByUserId(SqlConnection connection,
+                                                                                        int userId)
     {
-        var sql = @"select [S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description], [TL].[Id]
+        string sql = @"select [S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description], [TL].[Id]
 from [TrackingLog] as [TL] 
 inner join [Status] as [S] on [S].[TrackingLogId] = [TL].[Id] 
 where [TL].[CreatedBy] = @UserId";
-				
+
         IEnumerable<TrackingLogEntryStatus> statuses = await connection.QueryAsync<TrackingLogEntryStatus,
                                                            TrackingLogGetResponse,
-                                                           TrackingLogEntryStatus>(sql, (status, log) => {
-                                                                                            status.TrackingLogId = log.Id;
+                                                           TrackingLogEntryStatus>(sql, (status, log) =>
+                                                                                        {
+                                                                                            status.TrackingLogId =
+                                                                                                log.Id;
                                                                                             return status;
                                                                                         },
                                                                                    splitOn: "Id",
@@ -176,25 +210,28 @@ where [TL].[CreatedBy] = @UserId";
         return statuses.ToList();
     }
 
-    private async Task<List<TrackingLogGetResponse>> GetAllTrackingLogsWithEntriesByUserId(SqlConnection connection, int userId)
+    private async Task<List<TrackingLogGetResponse>> GetAllTrackingLogsWithEntriesByUserId(SqlConnection connection,
+                                                                                           int userId)
     {
-        Dictionary<int, TrackingLogGetResponse> historyBoards = new();
+        Dictionary<int, TrackingLogGetResponse> historyTrackingLogs = new();
         Dictionary<int, TrackingLogEntryGetResponse> historyTrackingLogEntries = new();
-        Type[] types = {
-                           typeof(TrackingLogGetResponse),
-                           typeof(UserInfoDto),
-                           typeof(UserInfoDto),
-                           typeof(TrackingLogEntryGetResponse),
-                           typeof(UserInfoDto),
-                           typeof(UserInfoDto),
-                           typeof(TrackingLogEntryStatus)
-                       };
+        Type[] types =
+        {
+            typeof(TrackingLogGetResponse),
+            typeof(UserInfoDto),
+            typeof(UserInfoDto),
+            typeof(TrackingLogEntryGetResponse),
+            typeof(UserInfoDto),
+            typeof(UserInfoDto),
+            typeof(TrackingLogEntryStatus)
+        };
 
-        IEnumerable<TrackingLogGetResponse> boards = await connection.QueryAsync<TrackingLogGetResponse>(
-                                                          @"select [TL].[Id], [TL].[Title], [TL].[Description], [TL].[CreatedAt], [TL].[UpdatedAt], 
+        IEnumerable<TrackingLogGetResponse> logs =
+            await connection.QueryAsync<TrackingLogGetResponse>(
+                                                                @"select [TL].[Id], [TL].[Title], [TL].[Description], [TL].[CreatedAt], [TL].[UpdatedAt], 
 [TrackingLogCreator].[Id], [TrackingLogCreator].[UserName], [TrackingLogCreator].[FirstName], [TrackingLogCreator].[LastName], [TrackingLogCreator].[Email], 
 [TrackingLogUpdater].[Id], [TrackingLogUpdater].[UserName], [TrackingLogUpdater].[FirstName], [TrackingLogUpdater].[LastName], [TrackingLogUpdater].[Email], 
-[TLE].[Id], [TLE].[TrackingLogId], [TLE].[StatusId], [TLE].[Title], [TLE].[Description], [TLE].[CreatedAt], [TLE].[UpdatedAt], 
+[TLE].[Id], [TLE].[TrackingLogId], [TLE].[StatusId], [TLE].[Title], [TLE].[Description], [TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedAt], [TLE].[UpdatedAt], 
 [TLECreator].[Id], [TLECreator].[UserName], [TLECreator].[FirstName], [TLECreator].[LastName], [TLECreator].[Email], 
 [TLEUpdater].[Id], [TLEUpdater].[UserName], [TLEUpdater].[FirstName], [TLEUpdater].[LastName], [TLEUpdater].[Email], 
 [S].[Id], [S].[Title], [S].[Description] 
@@ -206,30 +243,53 @@ left join [User] as [TLECreator] on [TLE].[CreatedBy] = [TLECreator].[Id]
 left join [User] as [TLEUpdater] on [TLE].[UpdatedBy] = [TLEUpdater].[Id] 
 left join [Status] as [S] on [TLE].[StatusId] = [S].[Id] 
 where [TrackingLogCreator].[Id] = @UserId",
-                                                          types,
-                                                          typesArg =>
-                                                              ToDto(historyBoards,
-                                                                    historyTrackingLogEntries,
-                                                                    (TrackingLogGetResponse)typesArg[0],
-                                                                    (UserInfoDto)typesArg[1],
-                                                                    (UserInfoDto)typesArg[2],
-                                                                    (TrackingLogEntryGetResponse?)typesArg[3],
-                                                                    (UserInfoDto?)typesArg[4],
-                                                                    (UserInfoDto?)typesArg[5],
-                                                                    (TrackingLogEntryStatus?)typesArg[6]),
-                                                          param: new { UserId = userId },
-                                                          splitOn: "Id, Id, Id, Id, Id");
+                                                                types,
+                                                                typesArg =>
+                                                                    ToDto(historyTrackingLogs,
+                                                                          historyTrackingLogEntries,
+                                                                          (TrackingLogGetResponse)
+                                                                          typesArg
+                                                                              [0],
+                                                                          (UserInfoDto)
+                                                                          typesArg
+                                                                              [1],
+                                                                          (UserInfoDto)
+                                                                          typesArg
+                                                                              [2],
+                                                                          (TrackingLogEntryGetResponse
+                                                                              ?)
+                                                                          typesArg
+                                                                              [3],
+                                                                          (UserInfoDto
+                                                                              ?)
+                                                                          typesArg
+                                                                              [4],
+                                                                          (UserInfoDto
+                                                                              ?)
+                                                                          typesArg
+                                                                              [5],
+                                                                          (TrackingLogEntryStatus
+                                                                              ?)
+                                                                          typesArg
+                                                                              [6]),
+                                                                param: new
+                                                                       {
+                                                                           UserId =
+                                                                               userId
+                                                                       },
+                                                                splitOn:
+                                                                "Id, Id, Id, Id, Id");
 
-        return boards.Distinct().ToList();
+        return logs.Distinct().ToList();
     }
 
-    private TrackingLogGetResponse ToDto(Dictionary<int, TrackingLogGetResponse> historyTrackingLogs, 
-                                         Dictionary<int, TrackingLogEntryGetResponse> historyTrackingLogEntries, 
-                                         TrackingLogGetResponse trackingLog, 
-                                         UserInfoDto trackingLogCreator, 
-                                         UserInfoDto trackingLogUpdater, 
-                                         TrackingLogEntryGetResponse? trackingLogEntry, 
-                                         UserInfoDto? trackingLogEntryCreator, 
+    private TrackingLogGetResponse ToDto(Dictionary<int, TrackingLogGetResponse> historyTrackingLogs,
+                                         Dictionary<int, TrackingLogEntryGetResponse> historyTrackingLogEntries,
+                                         TrackingLogGetResponse trackingLog,
+                                         UserInfoDto trackingLogCreator,
+                                         UserInfoDto trackingLogUpdater,
+                                         TrackingLogEntryGetResponse? trackingLogEntry,
+                                         UserInfoDto? trackingLogEntryCreator,
                                          UserInfoDto? trackingLogEntryUpdater,
                                          TrackingLogEntryStatus? trackingLogEntryStatus)
     {
