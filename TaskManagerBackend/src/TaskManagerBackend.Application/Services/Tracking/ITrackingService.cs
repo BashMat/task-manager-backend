@@ -26,6 +26,9 @@ public interface ITrackingService
                                                                               TrackingLogEntryCreateRequest newLog);
     Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId);
     Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id);
+    Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
+                                                                              int id,
+                                                                              UpdateTrackingLogEntryRequest request);
     Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId,
                                                                                         int trackingLogEntryId);
 

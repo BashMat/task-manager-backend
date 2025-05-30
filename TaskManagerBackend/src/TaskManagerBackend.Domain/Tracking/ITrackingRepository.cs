@@ -20,6 +20,8 @@ public interface ITrackingRepository
     Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert);
     Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId);
     Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId);
+    Task<TrackingLogEntryGetResponse?> UpdateTrackingLogEntryById(int id, 
+                                                                  UpdatableTrackingLogEntry updatableTrackingLogEntry);
     Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId);
 
     #endregion

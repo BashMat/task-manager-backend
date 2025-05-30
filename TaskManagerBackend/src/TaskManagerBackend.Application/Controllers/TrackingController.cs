@@ -111,7 +111,28 @@ public class TrackingController : ControllerBase
     public async Task<ActionResult<ServiceResponse<TrackingLogEntryGetResponse>>> GetTrackingLogEntryById(
         [FromRoute] int id)
     {
-        ServiceResponse<TrackingLogEntryGetResponse> response = await _trackingService.GetTrackingLogEntryById(id);
+        ServiceResponse<TrackingLogEntryGetResponse> response = 
+            await _trackingService.GetTrackingLogEntryById(id);
+
+        if (response.Success)
+        {
+            return Ok(response);
+        }
+
+        return NotFound(response);
+    }
+    
+    [EnableCors("MyDefaultPolicy")]
+    [Authorize]
+    [HttpPut("log-entries/{id:int}")]
+    public async Task<ActionResult<ServiceResponse<TrackingLogEntryGetResponse>>> UpdateTrackingLogEntryById(
+        [FromRoute] int id,
+        [FromBody] UpdateTrackingLogEntryRequest updatedTrackingLogEntry)
+    {
+        ServiceResponse<TrackingLogEntryGetResponse> response = 
+            await _trackingService.UpdateTrackingLogEntry(UserId,
+                                                          id,
+                                                          updatedTrackingLogEntry);
 
         if (response.Success)
         {

@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System.Diagnostics;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using TaskManagerBackend.Domain.Tracking;
@@ -357,6 +358,51 @@ select scope_identity();",
         await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
         return await GetTrackingLogEntryByIdInternal(connection, trackingLogEntryId);
+    }
+
+    public async Task<TrackingLogEntryGetResponse?> UpdateTrackingLogEntryById(int id, 
+                                                                               UpdatableTrackingLogEntry updatableTrackingLogEntry)
+    {
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        string sql = @"UPDATE [TrackingLogEntry]
+SET
+    [TrackingLogEntry].[Title] = @Title,
+    [TrackingLogEntry].[Description] = @Description,
+    [TrackingLogEntry].[TrackingLogId] = @TrackingLogId,
+    [TrackingLogEntry].[StatusId] = @StatusId,
+    [TrackingLogEntry].[Priority] = @Priority,
+    [TrackingLogEntry].[OrderIndex] = @OrderIndex,
+    [TrackingLogEntry].[UpdatedBy] = @UpdatedBy,
+    [TrackingLogEntry].[UpdatedAt] = @UpdatedAt
+WHERE
+    [TrackingLogEntry].[Id] = @Id";
+
+        int result = await connection.ExecuteAsync(sql, 
+                                                   param: new 
+                                                          {
+                                                              Id = id, 
+                                                              updatableTrackingLogEntry.Title, 
+                                                              updatableTrackingLogEntry.Description,
+                                                              updatableTrackingLogEntry.TrackingLogId,
+                                                              updatableTrackingLogEntry.StatusId,
+                                                              updatableTrackingLogEntry.Priority,
+                                                              updatableTrackingLogEntry.OrderIndex,
+                                                              updatableTrackingLogEntry.UpdatedBy,
+                                                              updatableTrackingLogEntry.UpdatedAt
+                                                          });
+
+        if (result == 0)
+        {
+            return null;
+        }
+
+        if (result == 1)
+        {
+            return await GetTrackingLogEntryByIdInternal(connection, id); 
+        }
+
+        throw new UnreachableException("Inconsistent data. For unique entity multiple rows were changed.");
     }
 
     public async Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId,

@@ -18,6 +18,7 @@ public class TrackingService : ITrackingService
 
     private const string CouldNotCreateMessage = "Could not create resource";
     private const string ResourceDoesNotExist = "Resource does not exist";
+    private const string UpdateConflict = "Resource was updated";
 
     public TrackingService(ITrackingRepository trackingRepository,
                            IDateTimeService dateTimeService)
@@ -128,6 +129,56 @@ public class TrackingService : ITrackingService
             response.Message = ResourceDoesNotExist;
         }
 
+        return response;
+    }
+
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
+                                                                                           int id, 
+                                                                                           UpdateTrackingLogEntryRequest request)
+    {
+        ServiceResponse<TrackingLogEntryGetResponse> response = new();
+        
+        TrackingLogEntryGetResponse? trackingLogEntry = await _trackingRepository.GetTrackingLogEntryById(id);
+
+        if (trackingLogEntry is null)
+        {
+            response.Success = false;
+            response.Message = ResourceDoesNotExist;
+            return response;
+        }
+
+        if (trackingLogEntry.UpdatedAt >= request.UpdatedAt)
+        {
+            response.Success = false;
+            response.Message = UpdateConflict;
+            return response;
+        }
+
+        UpdatableTrackingLogEntry updatableTrackingLogEntry = new()
+                                                              {
+                                                                  Title = request.Title,
+                                                                  Description = request.Description,
+                                                                  TrackingLogId = request.TrackingLogId,
+                                                                  StatusId = request.StatusId,
+                                                                  Priority = request.Priority,
+                                                                  OrderIndex = request.OrderIndex,
+                                                              };
+
+        updatableTrackingLogEntry.SetUpdatedData(userId,
+                                                 _dateTimeService);
+
+        TrackingLogEntryGetResponse? updatedEntry = 
+            await _trackingRepository.UpdateTrackingLogEntryById(id, 
+                                                                 updatableTrackingLogEntry);
+        
+        if (updatedEntry is null)
+        {
+            response.Success = false;
+            response.Message = ResourceDoesNotExist;
+            return response;
+        }
+
+        response.Data = updatedEntry;
         return response;
     }
 
