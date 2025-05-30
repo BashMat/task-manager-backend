@@ -3,6 +3,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 using TaskManagerBackend.Dto.User;
 
@@ -68,6 +69,11 @@ public class TaskManagerBackendHttpClient
     public async Task<HttpResponseMessage> DeleteTrackingLogById(int id)
     {
         return await _httpClient.DeleteAsync($"api/tracking/logs/{id}");
+    }
+    
+    public async Task<HttpResponseMessage> CreateTrackingLogEntry(TrackingLogEntryCreateRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/tracking/log-entries", request);
     }
 
     public async Task<HttpResponseMessage> CreateTrackingLogEntryStatus(TrackingLogEntryStatusCreateRequest request)

@@ -83,8 +83,7 @@ public class TrackingService : ITrackingService
     #region Tracking Log Entries
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(int userId,
-                                                                                           TrackingLogEntryCreateRequest 
-                                                                                               newLogEntry)
+                                                                                           TrackingLogEntryCreateRequest newLogEntry)
     {
         NewTrackingLogEntry logEntryToInsert = new()
                                                {
@@ -110,9 +109,12 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId)
+    public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId)
     {
-        throw new NotImplementedException();
+        ServiceResponse<List<TrackingLogEntryGetResponse>> response =
+            await _trackingRepository.GetAllTrackingLogEntries(userId);
+
+        return response;
     }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id)
@@ -129,11 +131,13 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(
-        int userId,
-        int trackingLogEntryId)
+    public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId, 
+                                                                                                     int trackingLogEntryId)
     {
-        throw new NotImplementedException();
+        ServiceResponse<List<TrackingLogEntryGetResponse>> response = 
+            await _trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId);
+
+        return response;
     }
 
     #endregion

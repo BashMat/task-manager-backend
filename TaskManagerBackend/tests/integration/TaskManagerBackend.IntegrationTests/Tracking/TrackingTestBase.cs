@@ -4,6 +4,8 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 using TaskManagerBackend.Dto.User;
 using Xunit;
 
@@ -29,7 +31,8 @@ public class TrackingTestBase : IntegrationTestBase,
                                                                          LogInData = UserName,
                                                                          Password = Password
                                                                      });
-        ServiceResponse<string>? response = await responseMessage.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        ServiceResponse<string>? response = 
+            await responseMessage.Content.ReadFromJsonAsync<ServiceResponse<string>>();
 
         if (response is null || response.Data is null)
         {
@@ -61,10 +64,70 @@ public class TrackingTestBase : IntegrationTestBase,
     protected async Task<TrackingLogGetResponse> CreateTrackingLogAndValidateResponse(string? title = null,
                                                                                       string? description = null)
     {
-        var creationResponse = await CreateTrackingLog(title,
-                                                       description);
-        ServiceResponse<TrackingLogGetResponse>? creationResponseContent =
+        HttpResponseMessage creationResponse = await CreateTrackingLog(title,
+                                                                       description);
+        ServiceResponse<TrackingLogGetResponse>? creationResponseContent = 
             await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogGetResponse>>();
+        creationResponseContent.Should().NotBeNull();
+        creationResponseContent.Data.Should().NotBeNull();
+        return creationResponseContent.Data;
+    }
+
+    protected async Task<HttpResponseMessage> CreateTrackingLogEntryStatus(int trackingLogId,
+                                                                         string? title = null,
+                                                                         string? description = null)
+    {
+        var request = new TrackingLogEntryStatusCreateRequest()
+                      {
+                          TrackingLogId = trackingLogId,
+                          Title = title ?? Faker.Lorem.Word(),
+                          Description = description ?? Faker.Lorem.Text()
+                      };
+
+        return await HttpClient.CreateTrackingLogEntryStatus(request);
+    }
+
+    protected async Task<TrackingLogEntryStatus> CreateTrackingLogEntryStatusAndValidateResponse(int trackingLogId, 
+                                                                                                 string? title = null, 
+                                                                                                 string? description = null)
+    {
+        var creationResponse = await CreateTrackingLogEntryStatus(trackingLogId,
+                                                                  title,
+                                                                  description);
+        var creationResponseContent =
+            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatus>>();
+        creationResponseContent.Should().NotBeNull();
+        creationResponseContent.Data.Should().NotBeNull();
+        return creationResponseContent.Data;
+    }
+    
+    protected async Task<HttpResponseMessage> CreateTrackingLogEntry(int trackingLogId, 
+                                                                     int trackingLogEntryStatusId, 
+                                                                     string? title = null, 
+                                                                     string? description = null)
+    {
+        var request = new TrackingLogEntryCreateRequest()
+                      {
+                          TrackingLogId = trackingLogId,
+                          StatusId = trackingLogEntryStatusId,
+                          Title = title ?? Faker.Lorem.Word(),
+                          Description = description ?? Faker.Lorem.Text()
+                      };
+
+        return await HttpClient.CreateTrackingLogEntry(request);
+    }
+    
+    protected async Task<TrackingLogEntryGetResponse> CreateTrackingLogEntryAndValidateResponse(int trackingLogId, 
+                                                                                                int trackingLogEntryStatusId, 
+                                                                                                string? title = null, 
+                                                                                                string? description = null)
+    {
+        var creationResponse = await CreateTrackingLogEntry(trackingLogId,
+                                                            trackingLogEntryStatusId,
+                                                            title,
+                                                            description);
+        var creationResponseContent =
+            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryGetResponse>>();
         creationResponseContent.Should().NotBeNull();
         creationResponseContent.Data.Should().NotBeNull();
         return creationResponseContent.Data;

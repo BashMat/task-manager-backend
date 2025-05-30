@@ -345,9 +345,11 @@ select scope_identity();",
         return await GetTrackingLogEntryByIdInternal(connection, id);
     }
 
-    public Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId)
+    public async Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId)
     {
-        throw new NotImplementedException();
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        return await GetAllTrackingLogEntriesInternal(connection, userId);
     }
 
     public async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId)
@@ -357,68 +359,114 @@ select scope_identity();",
         return await GetTrackingLogEntryByIdInternal(connection, trackingLogEntryId);
     }
 
-    public Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId)
+    public async Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId,
+                                                                                    int trackingLogEntryId)
     {
-        throw new NotImplementedException();
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        string sql = "delete from [TrackingLogEntry] where [TrackingLogEntry].[Id]=@TrackingLogEntryId";
+        await connection.ExecuteAsync(sql,
+                                      new { TrackingLogEntryId = trackingLogEntryId });
+
+        return await GetAllTrackingLogEntriesInternal(connection, userId);
     }
 
     #region Internal
 
-    private async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryByIdInternal(SqlConnection connection, int id)
+    private async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryByIdInternal(SqlConnection connection,
+                                                                                     int id)
     {
-        try
-        {
-            string sql =
-                @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
+        string sql =
+            @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
 [TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedBy], [TLE].[CreatedAt], [TLE].[UpdatedBy], [TLE].[UpdatedAt],
-[S].[Id], [S].[Title], [S].[Description],
+[S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description],
 [Creator].[Id], [Creator].[UserName], [Creator].[Email],
 [Updater].[Id], [Updater].[UserName], [Updater].[Email]
 FROM [TrackingLogEntry] as [TLE]
 INNER JOIN [Status] as [S]
-    ON [TLE].[StatusId] = [S].[Id]
+ON [TLE].[StatusId] = [S].[Id]
 INNER JOIN [User] as [Creator]
-    ON [TLE].[CreatedBy] = [Creator].[Id]
+ON [TLE].[CreatedBy] = [Creator].[Id]
 INNER JOIN [User] as [Updater]
-    ON [TLE].[UpdatedBy] = [Updater].[Id]
+ON [TLE].[UpdatedBy] = [Updater].[Id]
 WHERE [TLE].[Id] = @Id";
 
-            IEnumerable<TrackingLogEntryGetResponse> logEntryData =
-                await connection.QueryAsync<TrackingLogEntryData,
-                    TrackingLogEntryStatus,
-                    UserInfoDto,
-                    UserInfoDto,
-                    TrackingLogEntryGetResponse>(
-                                                 sql,
-                                                 (logEntry,
-                                                  status,
-                                                  creator,
-                                                  updater) => new TrackingLogEntryGetResponse()
-                                                              {
-                                                                  Id = logEntry.Id,
-                                                                  Title = logEntry.Title,
-                                                                  Description = logEntry.Description,
-                                                                  TrackingLogId = logEntry.TrackingLogId,
-                                                                  Status = status,
-                                                                  Priority = logEntry.Priority,
-                                                                  OrderIndex = logEntry.OrderIndex,
-                                                                  CreatedBy = creator,
-                                                                  CreatedAt = logEntry.CreatedAt,
-                                                                  UpdatedBy = updater,
-                                                                  UpdatedAt = logEntry.UpdatedAt,
-                                                              },
-                                                 splitOn: "Id, Id, Id",
-                                                 param: new
-                                                        {
-                                                            Id = id
-                                                        });
+        IEnumerable<TrackingLogEntryGetResponse> logEntryData =
+            await connection.QueryAsync<TrackingLogEntryData, 
+                                        TrackingLogEntryStatus, 
+                                        UserInfoDto, 
+                                        UserInfoDto, 
+                                        TrackingLogEntryGetResponse>(sql,
+                                                                     (logEntry, status, creator, updater) => 
+                                                                         new TrackingLogEntryGetResponse()
+                                                                         {
+                                                                             Id = logEntry.Id,
+                                                                             Title = logEntry.Title,
+                                                                             Description = logEntry.Description,
+                                                                             TrackingLogId = logEntry.TrackingLogId,
+                                                                             Status = status,
+                                                                             Priority = logEntry.Priority,
+                                                                             OrderIndex = logEntry.OrderIndex,
+                                                                             CreatedBy = creator,
+                                                                             CreatedAt = logEntry.CreatedAt,
+                                                                             UpdatedBy = updater,
+                                                                             UpdatedAt = logEntry.UpdatedAt,
+                                                                         },
+                                                                     splitOn: "Id, Id, Id",
+                                                                     param: new { Id = id });
 
-            return logEntryData.FirstOrDefault();
-        }
-        catch (InvalidOperationException)
-        {
-            return null;
-        }
+        return logEntryData.FirstOrDefault();
+    }
+
+    private async Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntriesInternal(SqlConnection connection,
+                                                                                           int userId)
+    {
+        string sql =
+            @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
+[TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedBy], [TLE].[CreatedAt], [TLE].[UpdatedBy], [TLE].[UpdatedAt],
+[S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description],
+[Creator].[Id], [Creator].[UserName], [Creator].[Email],
+[Updater].[Id], [Updater].[UserName], [Updater].[Email]
+FROM [TrackingLogEntry] as [TLE]
+INNER JOIN [Status] as [S]
+ON [TLE].[StatusId] = [S].[Id]
+INNER JOIN [User] as [Creator]
+ON [TLE].[CreatedBy] = [Creator].[Id]
+INNER JOIN [User] as [Updater]
+ON [TLE].[UpdatedBy] = [Updater].[Id]
+where [TLE].[CreatedBy] = @UserId";
+
+        IEnumerable<TrackingLogEntryGetResponse> logEntryData =
+            await connection.QueryAsync<TrackingLogEntryData,
+                TrackingLogEntryStatus,
+                UserInfoDto,
+                UserInfoDto,
+                TrackingLogEntryGetResponse>(
+                                             sql,
+                                             (logEntry,
+                                              status,
+                                              creator,
+                                              updater) => new TrackingLogEntryGetResponse()
+                                                          {
+                                                              Id = logEntry.Id,
+                                                              Title = logEntry.Title,
+                                                              Description = logEntry.Description,
+                                                              TrackingLogId = logEntry.TrackingLogId,
+                                                              Status = status,
+                                                              Priority = logEntry.Priority,
+                                                              OrderIndex = logEntry.OrderIndex,
+                                                              CreatedBy = creator,
+                                                              CreatedAt = logEntry.CreatedAt,
+                                                              UpdatedBy = updater,
+                                                              UpdatedAt = logEntry.UpdatedAt,
+                                                          },
+                                             splitOn: "Id, Id, Id",
+                                             param: new
+                                                    {
+                                                        Id = userId
+                                                    });
+
+        return logEntryData.Distinct().ToList();
     }
 
     #endregion
