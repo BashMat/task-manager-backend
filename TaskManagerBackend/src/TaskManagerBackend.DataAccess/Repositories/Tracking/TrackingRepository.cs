@@ -509,7 +509,7 @@ where [TLE].[CreatedBy] = @UserId";
                                              splitOn: "Id, Id, Id",
                                              param: new
                                                     {
-                                                        Id = userId
+                                                        UserId = userId
                                                     });
 
         return logEntryData.Distinct().ToList();
