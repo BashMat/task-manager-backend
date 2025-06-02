@@ -75,6 +75,27 @@ public class TaskManagerBackendHttpClient
     {
         return await _httpClient.PostAsJsonAsync("api/tracking/log-entries", request);
     }
+    
+    public async Task<HttpResponseMessage> GetTrackingLogEntryById(int id)
+    {
+        return await _httpClient.GetAsync($"api/tracking/log-entries/{id}");
+    }
+
+    public async Task<HttpResponseMessage> GetTrackingLogEntries()
+    {
+        return await _httpClient.GetAsync("api/tracking/log-entries");
+    }
+    
+    public async Task<HttpResponseMessage> UpdateTrackingLogEntry(int id, 
+                                                                  UpdateTrackingLogEntryRequest request)
+    {
+        return await _httpClient.PutAsJsonAsync($"api/tracking/log-entries/{id}", request);
+    }
+
+    public async Task<HttpResponseMessage> DeleteTrackingLogEntryById(int id)
+    {
+        return await _httpClient.DeleteAsync($"api/tracking/log-entries/{id}");
+    }
 
     public async Task<HttpResponseMessage> CreateTrackingLogEntryStatus(TrackingLogEntryStatusCreateRequest request)
     {

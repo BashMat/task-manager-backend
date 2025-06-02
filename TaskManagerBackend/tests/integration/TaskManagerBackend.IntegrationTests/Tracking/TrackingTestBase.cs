@@ -24,7 +24,7 @@ public class TrackingTestBase : IntegrationTestBase,
 
     #region IAsyncLifetime Members
 
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequestDto
                                                                      {

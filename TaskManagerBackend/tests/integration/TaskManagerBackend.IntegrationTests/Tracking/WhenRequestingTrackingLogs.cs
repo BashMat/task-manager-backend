@@ -32,9 +32,9 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
         content.Data.Should().NotBeNull();
         content.Data.Title.Should().Be(Title);
         content.Data.Description.Should().Be(Description);
-        content.Data.CreatedBy.UserName.Should().Be("test");
+        content.Data.CreatedBy.UserName.Should().Be(UserName);
         content.Data.CreatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
-        content.Data.UpdatedBy.UserName.Should().Be("test");
+        content.Data.UpdatedBy.UserName.Should().Be(UserName);
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.TrackingLogEntries.Should().BeEmpty();
         content.Data.TrackingLogEntriesStatuses.Should().BeEmpty();
@@ -95,7 +95,7 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
 
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();
-        content.Data.Should().NotContain(createdTrackingLog);
+        content.Data.Should().NotContainEquivalentOf(createdTrackingLog);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
