@@ -147,7 +147,10 @@ public class TrackingService : ITrackingService
             return response;
         }
 
-        if (trackingLogEntry.UpdatedAt >= request.UpdatedAt)
+        // TODO: when resource is created and updated locally immediately,
+        // DateTime value is considered equal.
+        // Perhaps some sort of more accurate timestamp should be used
+        if (trackingLogEntry.UpdatedAt > request.UpdatedAt)
         {
             response.Success = false;
             response.Message = UpdateConflict;
