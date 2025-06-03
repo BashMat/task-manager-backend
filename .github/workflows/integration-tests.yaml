@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      Token: ${{ secrets.TEST_TOKEN }}
+      Tokens__Secret: ${{ secrets.TEST_TOKEN }}
     
     steps:
       - uses: actions/checkout@v4
