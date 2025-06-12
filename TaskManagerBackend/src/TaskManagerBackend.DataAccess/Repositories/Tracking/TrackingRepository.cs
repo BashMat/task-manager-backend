@@ -73,7 +73,8 @@ select scope_identity();",
             return trackingLog;
         }
 
-        List<TrackingLogEntryStatus> trackingLogStatuses = await GetTrackingLogStatusesById(connection, trackingLogId);
+        List<TrackingLogEntryStatus> trackingLogStatuses = 
+            await GetTrackingLogStatusesById(connection, trackingLogId);
 
         trackingLog.TrackingLogEntriesStatuses = trackingLogStatuses;
         return trackingLog;
@@ -533,6 +534,26 @@ select scope_identity();",
                                                           statusToInsert);
 
         return await GetTrackingLogEntryStatusByIdInternal(connection, id);
+    }
+
+    public async Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
+    {
+        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+
+        TrackingLogEntryStatus? trackingLogEntryStatus = 
+            await GetTrackingLogEntryStatusByIdInternal(connection, 
+                                                        trackingLogEntryStatusId);
+
+        if (trackingLogEntryStatus is null)
+        {
+            return new List<TrackingLogEntryStatus>();
+        }
+
+        string sql = "delete from [Status] where [Status].[Id]=@TrackingLogEntryStatusId";
+        await connection.ExecuteAsync(sql,
+                                      new { TrackingLogEntryStatusId = trackingLogEntryStatusId });
+
+        return await GetTrackingLogStatusesById(connection, trackingLogEntryStatus.TrackingLogId);
     }
 
     private async Task<TrackingLogEntryStatus?> GetTrackingLogEntryStatusByIdInternal(SqlConnection connection, int id)

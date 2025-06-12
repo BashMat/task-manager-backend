@@ -29,6 +29,7 @@ public interface ITrackingRepository
     #region Tracking Log Entry Statuses
 
     Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert);
+    Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId);
 
     #endregion
 }
