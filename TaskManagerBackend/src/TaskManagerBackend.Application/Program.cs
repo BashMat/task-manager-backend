@@ -1,9 +1,7 @@
 #region Usings
 
-using System.Configuration;
 using NLog;
 using NLog.Web;
-using TaskManagerBackend.Common;
 
 #endregion
 

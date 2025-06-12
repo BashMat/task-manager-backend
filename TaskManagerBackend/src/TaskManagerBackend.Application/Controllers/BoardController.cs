@@ -27,7 +27,7 @@ public class BoardController : ControllerBase
 
     #region Board
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Create([FromBody] BoardCreateRequestDto newBoard)
@@ -43,7 +43,7 @@ public class BoardController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet]
     public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> GetAll()
@@ -52,7 +52,7 @@ public class BoardController : ControllerBase
         return Ok(await _boardService.GetAll(userId));
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> GetById([FromRoute] int id)
@@ -66,7 +66,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult<ServiceResponse<BoardGetResponseDto>>> Update([FromRoute] int id,
@@ -83,7 +83,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<ServiceResponse<List<BoardGetResponseDto>>>> Delete([FromRoute] int id)
@@ -96,7 +96,7 @@ public class BoardController : ControllerBase
 
     #region Column
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPost("columns")]
     public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> CreateColumn([FromBody] ColumnCreateRequestDto newColumn)
@@ -112,7 +112,7 @@ public class BoardController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet("columns")]
     public async Task<ActionResult<ServiceResponse<List<ColumnGetResponseDto>>>> GetAllColumns()
@@ -121,7 +121,7 @@ public class BoardController : ControllerBase
         return Ok(await _boardService.GetAllColumns(userId));
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet("columns/{id}")]
     public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> GetColumnById([FromRoute] int id)
@@ -135,7 +135,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPut("columns/{id}")]
     public async Task<ActionResult<ServiceResponse<ColumnGetResponseDto>>> UpdateColumn([FromRoute] int id,
@@ -152,7 +152,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpDelete("columns/{id}")]
     public async Task<ActionResult<ServiceResponse<List<ColumnGetResponseDto>>>> DeleteColumn([FromRoute] int id)
@@ -165,7 +165,7 @@ public class BoardController : ControllerBase
 
     #region Card
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPost("cards")]
     public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> CreateCard([FromBody] CardCreateRequestDto newCard)
@@ -181,7 +181,7 @@ public class BoardController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet("cards")]
     public async Task<ActionResult<ServiceResponse<List<CardGetResponseDto>>>> GetAllCards()
@@ -190,7 +190,7 @@ public class BoardController : ControllerBase
         return Ok(await _boardService.GetAllCards(userId));
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpGet("cards/{id}")]
     public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> GetCardById([FromRoute] int id)
@@ -204,7 +204,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpPut("cards/{id}")]
     public async Task<ActionResult<ServiceResponse<CardGetResponseDto>>> UpdateCard([FromRoute] int id,
@@ -221,7 +221,7 @@ public class BoardController : ControllerBase
         return NotFound(response);
     }
 
-    [EnableCors("MyDefaultPolicy")]
+    [EnableCors]
     [Authorize]
     [HttpDelete("cards/{id}")]
     public async Task<ActionResult<ServiceResponse<List<CardGetResponseDto>>>> DeleteCard([FromRoute] int id)

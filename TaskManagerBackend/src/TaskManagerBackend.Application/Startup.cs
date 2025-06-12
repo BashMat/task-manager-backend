@@ -83,13 +83,12 @@ public class Startup
 
         builder.Services.AddCors(options =>
                                  {
-                                     options.AddPolicy("MyDefaultPolicy",
-                                                       policy =>
-                                                       {
-                                                           policy.AllowAnyOrigin()
-                                                                 .AllowAnyHeader()
-                                                                 .AllowAnyMethod();
-                                                       });
+                                     options.AddDefaultPolicy(policy =>
+                                                              {
+                                                                  policy.AllowAnyOrigin()
+                                                                        .AllowAnyHeader()
+                                                                        .AllowAnyMethod();
+                                                              });
                                  });
     }
 

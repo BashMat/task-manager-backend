@@ -10,8 +10,9 @@ using TaskManagerBackend.Dto.User;
 
 namespace TaskManagerBackend.Application.Controllers;
 
-[Route("api/auth")]
 [ApiController]
+[Route("api/auth")]
+[EnableCors]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -23,10 +24,9 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
-
-    [EnableCors("MyDefaultPolicy")]
+    
     [HttpPost("signup")]
-    public async Task<ActionResult<ServiceResponse<UserSignUpResponseDto>>> SignUp([FromBody] UserSignUpRequestDto requestData)
+    public async Task<IActionResult> SignUp([FromBody] UserSignUpRequestDto requestData)
     {
         _logger.LogTrace("Start processing POST /api/auth/signup request");
             
@@ -40,10 +40,9 @@ public class AuthController : ControllerBase
         }
         return BadRequest(response);
     }
-
-    [EnableCors("MyDefaultPolicy")]
+    
     [HttpPost("login")]
-    public async Task<ActionResult<ServiceResponse<string>>> LogIn([FromBody] UserLogInRequestDto requestData)
+    public async Task<IActionResult> LogIn([FromBody] UserLogInRequestDto requestData)
     {
         _logger.LogTrace("Start POST /api/auth/login request processing");
             
