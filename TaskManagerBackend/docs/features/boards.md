@@ -1,5 +1,9 @@
 ﻿# Boards
 
+> ⚠️ **Warning**
+>
+> This functionality is deprecated. It will be removed in future versions. See `Tracking` functionality.
+
 ## About
 
 This article describes `Boards` feature.

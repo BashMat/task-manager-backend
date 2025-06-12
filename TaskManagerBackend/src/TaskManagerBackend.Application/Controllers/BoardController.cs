@@ -16,6 +16,7 @@ namespace TaskManagerBackend.Application.Controllers;
 
 [Route("api/boards")]
 [ApiController]
+[Obsolete("API will be removed. Use api/tracking endpoints.")]
 public class BoardController : ControllerBase
 {
     private readonly IBoardService _boardService;
