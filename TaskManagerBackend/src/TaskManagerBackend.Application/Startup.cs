@@ -10,7 +10,6 @@ using NLog.Web;
 using Prometheus;
 using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Services.Auth;
-using TaskManagerBackend.Application.Services.Board;
 using TaskManagerBackend.Application.Services.Tracking;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
@@ -19,7 +18,6 @@ using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess;
-using TaskManagerBackend.DataAccess.Repositories.Board;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Tracking;
@@ -200,10 +198,6 @@ public class Startup
         // Auth and users:
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
-        
-        // Boards:
-        services.AddScoped<IBoardRepository, BoardRepository>();
-        services.AddScoped<IBoardService, BoardService>();
         
         // Tracking:
         services.AddScoped<ITrackingRepository, TrackingRepository>();

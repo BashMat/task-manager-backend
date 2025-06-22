@@ -71,10 +71,10 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int boardId)
+    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
         ServiceResponse<List<TrackingLogGetResponse>> response = 
-            await _trackingRepository.DeleteTrackingLogById(userId, boardId);
+            await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
 
         return response;
     }
