@@ -5,6 +5,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Prometheus;
@@ -18,6 +19,7 @@ using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess;
+using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
 using TaskManagerBackend.Domain.Tracking;
@@ -71,6 +73,11 @@ public class Startup
 
         builder.Host.UseNLog();
 
+        builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+                                                                options.UseSqlServer(_configuration
+                                                                                     .GetConnectionString(ConfigurationKeys
+                                                                                                              .TaskManagerDbConnectionString)));
+        
         RegisterServices(builder.Services);
 
         builder.Services.AddHealthChecks()
@@ -222,7 +229,7 @@ public class Startup
             app.UseHsts();
         }
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
         app.UseCors();
 
