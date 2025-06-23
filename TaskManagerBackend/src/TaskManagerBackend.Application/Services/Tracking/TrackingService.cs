@@ -222,8 +222,8 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogEntryStatus>>> DeleteTrackingLogStatus(int userId,
-                                                                                       int trackingLogEntryStatusId)
+    public async Task<ServiceResponse<List<TrackingLogEntryStatus>>> DeleteTrackingLogStatus(int userId, 
+                                                                                             int trackingLogEntryStatusId)
     {
         ServiceResponse<List<TrackingLogEntryStatus>> response = 
             await _trackingRepository.DeleteTrackingLogEntryStatusById(trackingLogEntryStatusId);

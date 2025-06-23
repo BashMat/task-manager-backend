@@ -3,6 +3,9 @@
 using System.Diagnostics;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
@@ -15,10 +18,13 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
 public class TrackingRepository : ITrackingRepository
 {
+    private readonly TaskManagerDbContext _dbContext;
     private readonly IDbConnectionProvider<SqlConnection> _dbConnectionProvider;
 
-    public TrackingRepository(IDbConnectionProvider<SqlConnection> dbConnectionProvider)
+    public TrackingRepository(TaskManagerDbContext dbContext,
+                              IDbConnectionProvider<SqlConnection> dbConnectionProvider)
     {
+        _dbContext = dbContext;
         _dbConnectionProvider = dbConnectionProvider;
     }
 
@@ -524,52 +530,61 @@ where [TLE].[CreatedBy] = @UserId";
 
     public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+        try
+        {
+            Status status = new()
+                            {
+                                Title = statusToInsert.Title,
+                                Description = statusToInsert.Description,
+                                TrackingLogId = statusToInsert.TrackingLogId,
+                                CreatedBy = statusToInsert.CreatedById,
+                                CreatedAt = statusToInsert.CreatedAt,
+                                UpdatedBy = statusToInsert.CreatedById,
+                                UpdatedAt = statusToInsert.CreatedAt
+                            };
+            _dbContext.Statuses.Add(status);
+            await _dbContext.SaveChangesAsync();
 
-        int id = await connection.ExecuteScalarAsync<int>(
-                                                          @"insert into [Status] (Title, Description, TrackingLogId, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
-(@Title, @Description, @TrackingLogId, @CreatedById, @CreatedAt, @CreatedById, @CreatedAt); 
-
-select scope_identity();",
-                                                          statusToInsert);
-
-        return await GetTrackingLogEntryStatusByIdInternal(connection, id);
+            return new TrackingLogEntryStatus
+                   {
+                       Id = status.Id,
+                       Title = status.Title,
+                       Description = status.Description,
+                       TrackingLogId = status.TrackingLogId
+                   };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null;
+        }
     }
 
     public async Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+        Status? status = await _dbContext.Statuses
+                                         .AsNoTracking()
+                                         .Where(s => s.Id == trackingLogEntryStatusId)
+                                         .FirstOrDefaultAsync();
 
-        TrackingLogEntryStatus? trackingLogEntryStatus = 
-            await GetTrackingLogEntryStatusByIdInternal(connection, 
-                                                        trackingLogEntryStatusId);
-
-        if (trackingLogEntryStatus is null)
+        if (status is null)
         {
             return new List<TrackingLogEntryStatus>();
         }
 
-        string sql = "delete from [Status] where [Status].[Id]=@TrackingLogEntryStatusId";
-        await connection.ExecuteAsync(sql,
-                                      new { TrackingLogEntryStatusId = trackingLogEntryStatusId });
+        _dbContext.Remove(status);
+        await _dbContext.SaveChangesAsync();
 
-        return await GetTrackingLogStatusesById(connection, trackingLogEntryStatus.TrackingLogId);
-    }
-
-    private async Task<TrackingLogEntryStatus?> GetTrackingLogEntryStatusByIdInternal(SqlConnection connection, int id)
-    {
-        try
-        {
-            return await connection.QuerySingleAsync<TrackingLogEntryStatus>(@"SELECT [S].[ID], [S].[TrackingLogId], 
-[S].[Title], [S].[Description]
-FROM [Status] as [S]
-WHERE [S].[Id] = @statusId",
-                                                                             param: new { StatusId = id });
-        }
-        catch (InvalidOperationException)
-        {
-            return null;
-        }
+        return await _dbContext.Statuses.AsNoTracking()
+                                        .Where(s => s.TrackingLogId == status.TrackingLogId)
+                                        .Select(s => new TrackingLogEntryStatus
+                                                     {
+                                                         Id = s.Id,
+                                                         Title = s.Title,
+                                                         Description = s.Description,
+                                                         TrackingLogId = s.TrackingLogId
+                                                     })
+                                        .ToListAsync();
     }
 
     #endregion
