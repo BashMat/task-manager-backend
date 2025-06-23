@@ -1,9 +1,8 @@
 ﻿#region Usings
 
-using Dapper;
-using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TaskManagerBackend.DataAccess.Repositories.Tracking;
+using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Dto.User;
 
@@ -13,13 +12,13 @@ namespace TaskManagerBackend.DataAccess.Repositories.User;
 
 public class UserRepository : IUserRepository
 {
-    private readonly IDbConnectionProvider<SqlConnection> _dbConnectionProvider;
+    private readonly TaskManagerDbContext _dbContext;
     private readonly ILogger<UserRepository> _logger;
 
-    public UserRepository(IDbConnectionProvider<SqlConnection> dbConnectionProvider,
+    public UserRepository(TaskManagerDbContext dbContext,
                           ILogger<UserRepository> logger)
     {
-        _dbConnectionProvider = dbConnectionProvider;
+        _dbContext = dbContext;
         _logger = logger;
     }
 
@@ -27,12 +26,15 @@ public class UserRepository : IUserRepository
     {
         _logger.LogInformation("Starting getting user password data");
 
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
-            
-        UserPasswordData? data = await connection.QueryFirstOrDefaultAsync<UserPasswordData>(
-                            @"select [Id], [PasswordHash], [PasswordSalt] from [User] 
-where [UserName] = @LogInData or [Email] = @LogInData",
-                            new { LogInData = logInData });
+        UserPasswordData? data = await _dbContext.Users.Where(u => u.UserName == logInData ||
+                                                                   u.Email == logInData)
+                                                       .Select(u => new UserPasswordData()
+                                                                    {
+                                                                        Id = u.Id,
+                                                                        PasswordHash = u.PasswordHash,
+                                                                        PasswordSalt = u.PasswordSalt
+                                                                    })
+                                                       .FirstOrDefaultAsync();
 
         _logger.LogInformation("Finishing getting user password data");
         
@@ -43,41 +45,40 @@ where [UserName] = @LogInData or [Email] = @LogInData",
     {
         _logger.LogInformation("Starting checking if user exists by ID");
         
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
-            
-        UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
-                             "select [UserName], [Email] from [User] where [Id] = @Id",
-                             new { Id = id });
+        bool result = await _dbContext.Users.AnyAsync(u => u.Id == id);
         
         _logger.LogInformation("Finishing checking if user exists by ID");
 
-        return user is not null;
+        return result;
     }
 
     public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
     {
         _logger.LogInformation("Starting checking if user exists by user name or email");
-        
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
-        UserNameAndEmailData? user = await connection.QueryFirstOrDefaultAsync<UserNameAndEmailData>(
-                             "select [UserName], [Email] from [User] where [UserName] = @UserName or [Email] = @Email",
-                             new { UserName = userName, Email = email });
-        
+        bool result = await _dbContext.Users.AnyAsync(u => u.UserName == userName ||
+                                                           u.Email == email);
+
         _logger.LogInformation("Finishing checking if user exists by user name or email");
             
-        return user is not null;
+        return result;
     }
 
     public async Task InsertUser(NewUser newUser)
     {
         _logger.LogInformation("Starting inserting user data");
-        
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
 
-        await connection.ExecuteAsync(@"insert into [User] (UserName, Email, CreatedAt, UpdatedAt, PasswordHash, PasswordSalt) values 
-(@UserName, @Email, @CreatedAt, @UpdatedAt, @PasswordHash, @PasswordSalt)",
-                                      newUser);
+        Database.Models.User user = new()
+                                    {
+                                        UserName = newUser.UserName,
+                                        Email = newUser.Email,
+                                        PasswordHash = newUser.PasswordHash,
+                                        PasswordSalt = newUser.PasswordSalt,
+                                        CreatedAt = newUser.CreatedAt,
+                                        UpdatedAt = newUser.UpdatedAt
+                                    };
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
         
         _logger.LogInformation("Finishing inserting user data");
     }

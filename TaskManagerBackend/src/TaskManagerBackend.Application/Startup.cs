@@ -203,7 +203,7 @@ public class Startup
         
         // Application
         // Auth and users:
-        services.AddScoped<IUserRepository, UserRepositoryEntityFrameworkCore>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
         
         // Tracking:
