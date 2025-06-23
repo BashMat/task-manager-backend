@@ -3,9 +3,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using TaskManagerBackend.DataAccess;
+using TaskManagerBackend.DataAccess.Database;
 
 #endregion
 
@@ -30,8 +32,12 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<TaskMana
                                   {
                                       services.Remove(services.SingleOrDefault(service => 
                                                                                    typeof(SqlServerDbConnectionProvider) == service.ImplementationType)
-                                                      ?? throw new ArgumentNullException());
+                                                      ?? throw new ArgumentNullException($"Could not remove {typeof(SqlServerDbConnectionProvider)}"));
                                       services.AddScoped<IDbConnectionProvider<SqlConnection>>(_ => dbConnectionProviderMock.Object);
+                                      services.Remove(services.SingleOrDefault(service => 
+                                                                                   typeof(DbContextOptions<TaskManagerDbContext>) == service.ServiceType)
+                                                      ?? throw new ArgumentNullException($"Could not remove {typeof(DbContextOptions<TaskManagerDbContext>)}"));
+                                      services.AddDbContext<TaskManagerDbContext>((_, option) => option.UseSqlServer(_connectionString));
                                   });
     }
 }
