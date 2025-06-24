@@ -29,8 +29,8 @@ public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
                                                       };
 
         HttpResponseMessage response = await HttpClient.CreateTrackingLogEntryStatus(request);
-        ServiceResponse<TrackingLogEntryStatus>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatus>>();
+        ServiceResponse<TrackingLogEntryStatusGetResponse>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatusGetResponse>>();
 
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();
@@ -55,8 +55,8 @@ public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
                                                           Description = Description
                                                       };
         HttpResponseMessage creationResponse = await HttpClient.CreateTrackingLogEntryStatus(request);
-        ServiceResponse<TrackingLogEntryStatus>? creationResponseContent = 
-            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatus>>();
+        ServiceResponse<TrackingLogEntryStatusGetResponse>? creationResponseContent = 
+            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatusGetResponse>>();
         creationResponse.EnsureSuccessStatusCode();
         creationResponseContent.Should().NotBeNull();
         creationResponseContent.Data.Should().NotBeNull();
@@ -72,8 +72,8 @@ public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
         
         HttpResponseMessage response = 
             await HttpClient.DeleteTrackingLogEntryStatus(creationResponseContent.Data.Id);
-        ServiceResponse<List<TrackingLogEntryStatus>>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<List<TrackingLogEntryStatus>>>();
+        ServiceResponse<List<TrackingLogEntryStatusGetResponse>>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>>();
 
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();

@@ -101,7 +101,7 @@ public class TrackingRepository : ITrackingRepository
                                                   .FilterByCreator(userId)
                                                   .Include(entry => entry.CreatedByNavigation)
                                                   .Include(entry => entry.UpdatedByNavigation)
-                                                  .Include(entry => entry.Status)
+                                                  .Include(entry => entry.TrackingLogEntryStatus)
                                                   .Select(entry => entry.ToTrackingLogEntryGetResponse())
                                                   .ToListAsync();
     }
@@ -112,7 +112,7 @@ public class TrackingRepository : ITrackingRepository
                                                   .FilterById(trackingLogEntryId)
                                                   .Include(entry => entry.CreatedByNavigation)
                                                   .Include(entry => entry.UpdatedByNavigation)
-                                                  .Include(entry => entry.Status)
+                                                  .Include(entry => entry.TrackingLogEntryStatus)
                                                   .Select(entry => entry.ToTrackingLogEntryGetResponse())
                                                   .FirstOrDefaultAsync();
     }
@@ -159,9 +159,9 @@ public class TrackingRepository : ITrackingRepository
 
     #region Tracking Log Entry Statuses
 
-    public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
+    public async Task<TrackingLogEntryStatusGetResponse?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
     {
-        Status status = new()
+        TrackingLogEntryStatus trackingLogEntryStatus = new()
                         {
                             Title = statusToInsert.Title,
                             Description = statusToInsert.Description,
@@ -171,37 +171,36 @@ public class TrackingRepository : ITrackingRepository
                             UpdatedBy = statusToInsert.CreatedById,
                             UpdatedAt = statusToInsert.CreatedAt
                         };
-        _dbContext.Statuses.Add(status);
+        _dbContext.TrackingLogEntryStatuses.Add(trackingLogEntryStatus);
         await _dbContext.SaveChangesAsync();
 
-        return new TrackingLogEntryStatus
+        return new TrackingLogEntryStatusGetResponse
                {
-                   Id = status.Id,
-                   Title = status.Title,
-                   Description = status.Description,
-                   TrackingLogId = status.TrackingLogId
+                   Id = trackingLogEntryStatus.Id,
+                   Title = trackingLogEntryStatus.Title,
+                   Description = trackingLogEntryStatus.Description,
+                   TrackingLogId = trackingLogEntryStatus.TrackingLogId
                };
     }
 
-    public async Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
+    public async Task<List<TrackingLogEntryStatusGetResponse>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
     {
-        Status? status = await _dbContext.Statuses
-                                         .AsNoTracking()
-                                         .FilterById(trackingLogEntryStatusId)
-                                         .FirstOrDefaultAsync();
+        TrackingLogEntryStatus? status = await _dbContext.TrackingLogEntryStatuses.AsNoTracking()
+                                                                                  .FilterById(trackingLogEntryStatusId)
+                                                                                  .FirstOrDefaultAsync();
 
         if (status is null)
         {
-            return new List<TrackingLogEntryStatus>();
+            return new List<TrackingLogEntryStatusGetResponse>();
         }
 
         _dbContext.Remove(status);
         await _dbContext.SaveChangesAsync();
 
-        return await _dbContext.Statuses.AsNoTracking()
-                                        .Where(s => s.TrackingLogId == status.TrackingLogId)
-                                        .Select(s => s.ToTrackingLogEntryStatus())
-                                        .ToListAsync();
+        return await _dbContext.TrackingLogEntryStatuses.AsNoTracking()
+                                                        .Where(s => s.TrackingLogId == status.TrackingLogId)
+                                                        .Select(s => s.ToTrackingLogEntryStatus())
+                                                        .ToListAsync();
     }
 
     #endregion

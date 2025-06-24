@@ -198,7 +198,7 @@ public class TrackingService : ITrackingService
 
     #region Tracking Log Entry Statuses
 
-    public async Task<ServiceResponse<TrackingLogEntryStatus>> CreateTrackingLogStatus(int userId,
+    public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId,
                                                                                        TrackingLogEntryStatusCreateRequest newStatus)
     {
         NewTrackingLogEntryStatus statusToInsert = new()
@@ -210,7 +210,7 @@ public class TrackingService : ITrackingService
                                                        CreatedAt = _dateTimeService.UtcNow
                                                    };
 
-        ServiceResponse<TrackingLogEntryStatus> response = 
+        ServiceResponse<TrackingLogEntryStatusGetResponse> response = 
             await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
 
         if (response.Data == null)
@@ -222,10 +222,10 @@ public class TrackingService : ITrackingService
         return response;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogEntryStatus>>> DeleteTrackingLogStatus(int userId, 
+    public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
                                                                                              int trackingLogEntryStatusId)
     {
-        ServiceResponse<List<TrackingLogEntryStatus>> response = 
+        ServiceResponse<List<TrackingLogEntryStatusGetResponse>> response = 
             await _trackingRepository.DeleteTrackingLogEntryStatusById(trackingLogEntryStatusId);
 
         return response;

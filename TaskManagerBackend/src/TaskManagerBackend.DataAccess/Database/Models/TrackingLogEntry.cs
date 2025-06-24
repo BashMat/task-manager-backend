@@ -24,7 +24,7 @@ public class TrackingLogEntry : IAuditedEntity
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 
-    public virtual Status Status { get; set; } = null!;
+    public virtual TrackingLogEntryStatus TrackingLogEntryStatus { get; set; } = null!;
 
     public virtual TrackingLog TrackingLog { get; set; } = null!;
 

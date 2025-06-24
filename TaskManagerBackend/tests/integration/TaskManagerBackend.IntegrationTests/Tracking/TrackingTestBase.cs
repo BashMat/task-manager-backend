@@ -87,7 +87,7 @@ public class TrackingTestBase : IntegrationTestBase,
         return await HttpClient.CreateTrackingLogEntryStatus(request);
     }
 
-    protected async Task<TrackingLogEntryStatus> CreateTrackingLogEntryStatusAndValidateResponse(int trackingLogId, 
+    protected async Task<TrackingLogEntryStatusGetResponse> CreateTrackingLogEntryStatusAndValidateResponse(int trackingLogId, 
                                                                                                  string? title = null, 
                                                                                                  string? description = null)
     {
@@ -95,7 +95,7 @@ public class TrackingTestBase : IntegrationTestBase,
                                                                   title,
                                                                   description);
         var creationResponseContent =
-            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatus>>();
+            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatusGetResponse>>();
         creationResponseContent.Should().NotBeNull();
         creationResponseContent.Data.Should().NotBeNull();
         return creationResponseContent.Data;

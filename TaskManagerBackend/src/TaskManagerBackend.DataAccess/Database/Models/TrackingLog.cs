@@ -18,7 +18,7 @@ public partial class TrackingLog : IAuditedEntity
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 
-    public virtual ICollection<Status> Statuses { get; set; } = new List<Status>();
+    public virtual ICollection<TrackingLogEntryStatus> TrackingLogEntryStatuses { get; set; } = new List<TrackingLogEntryStatus>();
 
     public virtual ICollection<TrackingLogEntry> TrackingLogEntries { get; set; } = new List<TrackingLogEntry>();
 

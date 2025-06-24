@@ -18,7 +18,7 @@ public partial class TaskManagerDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Status> Statuses { get; set; }
+    public virtual DbSet<TrackingLogEntryStatus> TrackingLogEntryStatuses { get; set; }
 
     public virtual DbSet<TrackingLog> TrackingLogs { get; set; }
 
@@ -28,29 +28,29 @@ public partial class TaskManagerDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Status>(entity =>
+        modelBuilder.Entity<TrackingLogEntryStatus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Status__3214EC07A5C436E6");
+            entity.HasKey(e => e.Id).HasName("PK__TrackingLogEntryStatus__3214EC07A5C436E6");
 
-            entity.ToTable("Status");
+            entity.ToTable("TrackingLogEntryStatus");
 
             entity.Property(e => e.Description).HasMaxLength(512);
             entity.Property(e => e.Title).HasMaxLength(256);
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.StatusCreatedByNavigations)
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.TrackingLogEntryStatusCreatedByNavigations)
                 .HasForeignKey(d => d.CreatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Status_CreatedBy_FK");
+                .HasConstraintName("TrackingLogEntryStatus_CreatedBy_FK");
 
-            entity.HasOne(d => d.TrackingLog).WithMany(p => p.Statuses)
+            entity.HasOne(d => d.TrackingLog).WithMany(p => p.TrackingLogEntryStatuses)
                 .HasForeignKey(d => d.TrackingLogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Status_TrackingLogId_FK");
+                .HasConstraintName("TrackingLogEntryStatus_TrackingLogId_FK");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.StatusUpdatedByNavigations)
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TrackingLogEntryStatusUpdatedByNavigations)
                 .HasForeignKey(d => d.UpdatedBy)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Status_UpdatedBy_FK");
+                .HasConstraintName("TrackingLogEntryStatus_UpdatedBy_FK");
         });
 
         modelBuilder.Entity<TrackingLog>(entity =>
@@ -88,7 +88,7 @@ public partial class TaskManagerDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("TrackingLogEntry_CreatedBy_FK");
 
-            entity.HasOne(d => d.Status).WithMany(p => p.TrackingLogEntries)
+            entity.HasOne(d => d.TrackingLogEntryStatus).WithMany(p => p.TrackingLogEntries)
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("TrackingLogEntry_StatusId_FK");

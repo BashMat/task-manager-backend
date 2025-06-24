@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
-public class TrackingLogEntryStatus
+public class TrackingLogEntryStatusGetResponse
 {
     public int Id { get; set; }
     public int TrackingLogId { get; set; }

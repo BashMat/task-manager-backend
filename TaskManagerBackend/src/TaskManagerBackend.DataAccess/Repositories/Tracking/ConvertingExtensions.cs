@@ -24,14 +24,14 @@ public static class ConvertingExtensions
                };
     }
 
-    public static TrackingLogEntryStatus ToTrackingLogEntryStatus(this Status trackingLogEntryStatus)
+    public static TrackingLogEntryStatusGetResponse ToTrackingLogEntryStatus(this TrackingLogEntryStatus trackingLogEntryTrackingLogEntryStatus)
     {
-        return new TrackingLogEntryStatus
+        return new TrackingLogEntryStatusGetResponse
                {
-                   Id = trackingLogEntryStatus.Id,
-                   Title = trackingLogEntryStatus.Title,
-                   Description = trackingLogEntryStatus.Description,
-                   TrackingLogId = trackingLogEntryStatus.TrackingLogId
+                   Id = trackingLogEntryTrackingLogEntryStatus.Id,
+                   Title = trackingLogEntryTrackingLogEntryStatus.Title,
+                   Description = trackingLogEntryTrackingLogEntryStatus.Description,
+                   TrackingLogId = trackingLogEntryTrackingLogEntryStatus.TrackingLogId
                };
     }
 
@@ -43,7 +43,7 @@ public static class ConvertingExtensions
                    Title = trackingLogEntry.Title,
                    Description = trackingLogEntry.Description,
                    TrackingLogId = trackingLogEntry.TrackingLogId,
-                   Status = trackingLogEntry.Status.ToTrackingLogEntryStatus(),
+                   StatusGetResponse = trackingLogEntry.TrackingLogEntryStatus.ToTrackingLogEntryStatus(),
                    Priority = trackingLogEntry.Priority,
                    OrderIndex = (double)trackingLogEntry.OrderIndex,
                    CreatedAt = trackingLogEntry.CreatedAt,
@@ -67,8 +67,8 @@ public static class ConvertingExtensions
                    TrackingLogEntries = trackingLog.TrackingLogEntries
                                                    .Select(entry => entry.ToTrackingLogEntryGetResponse())
                                                    .ToList(),
-                   TrackingLogEntriesStatuses = trackingLog.Statuses.Select(s => s.ToTrackingLogEntryStatus())
-                                                           .ToList()
+                   TrackingLogEntriesStatuses = trackingLog.TrackingLogEntryStatuses.Select(s => s.ToTrackingLogEntryStatus())
+                                                                                    .ToList()
                };
     }
 }

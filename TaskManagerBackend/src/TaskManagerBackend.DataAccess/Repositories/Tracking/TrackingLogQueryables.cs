@@ -26,10 +26,10 @@ public static class TrackingLogQueryables
                    .Include(log => log.TrackingLogEntries)
                    .ThenInclude(entry => entry.UpdatedByNavigation)
                    .Include(log => log.TrackingLogEntries)
-                   .ThenInclude(entry => entry.Status)
-                   .Include(log => log.Statuses)
+                   .ThenInclude(entry => entry.TrackingLogEntryStatus)
+                   .Include(log => log.TrackingLogEntryStatuses)
                    .ThenInclude(entry => entry.CreatedByNavigation)
-                   .Include(log => log.Statuses)
+                   .Include(log => log.TrackingLogEntryStatuses)
                    .ThenInclude(entry => entry.UpdatedByNavigation);
     }
 }

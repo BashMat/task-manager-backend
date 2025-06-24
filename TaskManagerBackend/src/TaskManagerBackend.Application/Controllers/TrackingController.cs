@@ -136,7 +136,7 @@ public class TrackingController : ControllerBase
     [HttpPost("statuses")]
     public async Task<IActionResult> CreateTrackingLogEntryStatus([FromBody] TrackingLogEntryStatusCreateRequest newStatus)
     {
-        ServiceResponse<TrackingLogEntryStatus> response = await _trackingService.CreateTrackingLogStatus(UserId, 
+        ServiceResponse<TrackingLogEntryStatusGetResponse> response = await _trackingService.CreateTrackingLogStatus(UserId, 
                                                                                                           newStatus);
             
         if (response.Success)

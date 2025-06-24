@@ -17,7 +17,7 @@ namespace TaskManagerBackend.IntegrationTests.Tracking;
 public class WhenRequestingTrackingLogEntries : TrackingTestBase
 {
     private TrackingLogGetResponse? _defaultTrackingLog;
-    private TrackingLogEntryStatus? _defaultTrackingLogEntryStatus;
+    private TrackingLogEntryStatusGetResponse? _defaultTrackingLogEntryStatus;
     
     public WhenRequestingTrackingLogEntries(MsSqlTests fixture) : base(fixture) { }
 
@@ -54,7 +54,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.UpdatedBy.UserName.Should().Be(UserName);
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.TrackingLogId.Should().Be(_defaultTrackingLog.Id);
-        content.Data.Status.Should().BeEquivalentTo(_defaultTrackingLogEntryStatus);
+        content.Data.StatusGetResponse.Should().BeEquivalentTo(_defaultTrackingLogEntryStatus);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
@@ -118,7 +118,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
                                                     Title = Title,
                                                     Description = Description,
                                                     TrackingLogId = createdTrackingLogEntry.TrackingLogId,
-                                                    StatusId = createdTrackingLogEntry.Status.Id,
+                                                    StatusId = createdTrackingLogEntry.StatusGetResponse.Id,
                                                     OrderIndex = createdTrackingLogEntry.OrderIndex,
                                                     Priority = createdTrackingLogEntry.Priority,
                                                     UpdatedAt = createdTrackingLogEntry.UpdatedAt
@@ -141,7 +141,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.UpdatedAt.Should().NotBe(createdTrackingLogEntry.UpdatedAt);
         content.Data.TrackingLogId.Should().Be(createdTrackingLogEntry.TrackingLogId);
-        content.Data.Status.Should().BeEquivalentTo(createdTrackingLogEntry.Status);
+        content.Data.StatusGetResponse.Should().BeEquivalentTo(createdTrackingLogEntry.StatusGetResponse);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

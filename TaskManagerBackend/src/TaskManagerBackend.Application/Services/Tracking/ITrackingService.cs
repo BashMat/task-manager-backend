@@ -36,8 +36,8 @@ public interface ITrackingService
 
     #region Tracking Log Entry Statuses
 
-    Task<ServiceResponse<TrackingLogEntryStatus>> CreateTrackingLogStatus(int userId, TrackingLogEntryStatusCreateRequest newStatus);
-    Task<ServiceResponse<List<TrackingLogEntryStatus>>> DeleteTrackingLogStatus(int userId,
+    Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, TrackingLogEntryStatusCreateRequest newStatus);
+    Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId,
                                                                                 int trackingLogEntryStatusId);
 
     #endregion

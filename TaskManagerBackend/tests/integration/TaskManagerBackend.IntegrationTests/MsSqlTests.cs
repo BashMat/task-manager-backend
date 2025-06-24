@@ -54,7 +54,7 @@ create table [TrackingLog]
     foreign key ([UpdatedBy]) references [User] ([Id]),
 )
 
-create table [Status]
+create table [TrackingLogEntryStatus]
 (
     [Id] int primary key identity(1, 1),
     [Title] nvarchar(256) not null,
@@ -65,11 +65,11 @@ create table [Status]
     [UpdatedBy] int not null,
     [UpdatedAt] datetime2 not null,
 
-    constraint [Status_TrackingLogId_FK]
+    constraint [TrackingLogEntryStatus_TrackingLogId_FK]
     foreign key ([TrackingLogId]) references [TrackingLog] ([Id]),
-    constraint [Status_CreatedBy_FK]
+    constraint [TrackingLogEntryStatus_CreatedBy_FK]
     foreign key ([CreatedBy]) references [User] ([Id]),
-    constraint [Status_UpdatedBy_FK]
+    constraint [TrackingLogEntryStatus_UpdatedBy_FK]
     foreign key ([UpdatedBy]) references [User] ([Id]),
 )
 
@@ -90,7 +90,7 @@ create table [TrackingLogEntry]
     constraint [TrackingLogEntry_TrackingLogId_FK] 
     foreign key ([TrackingLogId]) references [TrackingLog] ([Id]),
     constraint [TrackingLogEntry_StatusId_FK]
-    foreign key ([StatusId]) references [Status] ([Id]),
+    foreign key ([StatusId]) references [TrackingLogEntryStatus] ([Id]),
     constraint [TrackingLogEntry_CreatedBy_FK] 
     foreign key ([CreatedBy]) references [User] ([Id]),
     constraint [TrackingLogEntry_UpdatedBy_FK]

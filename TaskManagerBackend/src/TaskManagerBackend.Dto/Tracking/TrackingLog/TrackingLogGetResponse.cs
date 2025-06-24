@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 using TaskManagerBackend.Dto.User;
 
 #endregion
@@ -17,5 +18,5 @@ public class TrackingLogGetResponse
     public required UserInfoDto UpdatedBy { get; set; }
     public DateTime UpdatedAt { get; set; }
     public required List<TrackingLogEntryGetResponse> TrackingLogEntries { get; set; }
-    public required List<TrackingLogEntryStatus.TrackingLogEntryStatus> TrackingLogEntriesStatuses { get; set; }
+    public required List<TrackingLogEntryStatusGetResponse> TrackingLogEntriesStatuses { get; set; }
 }

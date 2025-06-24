@@ -20,9 +20,9 @@ public partial class User : IEntity
 
     public byte[] PasswordSalt { get; set; } = null!;
 
-    public virtual ICollection<Status> StatusCreatedByNavigations { get; set; } = new List<Status>();
+    public virtual ICollection<TrackingLogEntryStatus> TrackingLogEntryStatusCreatedByNavigations { get; set; } = new List<TrackingLogEntryStatus>();
 
-    public virtual ICollection<Status> StatusUpdatedByNavigations { get; set; } = new List<Status>();
+    public virtual ICollection<TrackingLogEntryStatus> TrackingLogEntryStatusUpdatedByNavigations { get; set; } = new List<TrackingLogEntryStatus>();
 
     public virtual ICollection<TrackingLog> TrackingLogCreatedByNavigations { get; set; } = new List<TrackingLog>();
 

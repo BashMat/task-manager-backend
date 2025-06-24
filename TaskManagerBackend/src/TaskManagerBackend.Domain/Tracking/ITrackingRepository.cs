@@ -31,8 +31,8 @@ public interface ITrackingRepository
     #region Tracking Log Entry Statuses
 
     // TODO: Perhaps nullability is excessive
-    Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert);
-    Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId);
+    Task<TrackingLogEntryStatusGetResponse?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert);
+    Task<List<TrackingLogEntryStatusGetResponse>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId);
 
     #endregion
 }
