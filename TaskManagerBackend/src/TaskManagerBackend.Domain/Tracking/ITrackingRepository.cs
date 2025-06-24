@@ -8,6 +8,7 @@ public interface ITrackingRepository
 {
     #region Tracking Logs
 
+    // TODO: Perhaps nullability is excessive
     Task<TrackingLogGetResponse?> InsertTrackingLog(NewTrackingLog logToInsert);
     Task<List<TrackingLogGetResponse>> GetAllTrackingLogs(int userId);
     Task<TrackingLogGetResponse?> GetTrackingLogById(int trackingLogId);
@@ -17,6 +18,7 @@ public interface ITrackingRepository
     
     #region Tracking Log Entries
 
+    // TODO: Perhaps nullability is excessive
     Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert);
     Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId);
     Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId);
@@ -28,6 +30,7 @@ public interface ITrackingRepository
 
     #region Tracking Log Entry Statuses
 
+    // TODO: Perhaps nullability is excessive
     Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert);
     Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId);
 
