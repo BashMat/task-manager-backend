@@ -30,7 +30,7 @@ public partial class TaskManagerDbContext : DbContext
     {
         modelBuilder.Entity<TrackingLogEntryStatus>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TrackingLogEntryStatus__3214EC07A5C436E6");
+            entity.HasKey(e => e.Id).HasName("TrackingLogEntryStatus_PK");
 
             entity.ToTable("TrackingLogEntryStatus");
 
@@ -55,7 +55,7 @@ public partial class TaskManagerDbContext : DbContext
 
         modelBuilder.Entity<TrackingLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tracking__3214EC07683BD94B");
+            entity.HasKey(e => e.Id).HasName("TrackingLog_PK");
 
             entity.ToTable("TrackingLog");
 
@@ -75,7 +75,7 @@ public partial class TaskManagerDbContext : DbContext
 
         modelBuilder.Entity<TrackingLogEntry>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tracking__3214EC07628C810A");
+            entity.HasKey(e => e.Id).HasName("TrackingLogEntry_PK");
 
             entity.ToTable("TrackingLogEntry");
 
@@ -106,7 +106,7 @@ public partial class TaskManagerDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07AA793C03");
+            entity.HasKey(e => e.Id).HasName("User_PK");
 
             entity.ToTable("User");
 
