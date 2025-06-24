@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public partial class Status
+public partial class Status : IEntity
 {
     public int Id { get; set; }
 

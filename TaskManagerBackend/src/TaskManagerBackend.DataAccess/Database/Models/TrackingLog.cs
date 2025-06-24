@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public partial class TrackingLog
+public partial class TrackingLog : IEntity
 {
     public int Id { get; set; }
 

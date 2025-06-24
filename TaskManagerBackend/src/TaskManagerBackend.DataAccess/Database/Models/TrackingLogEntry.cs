@@ -1,9 +1,7 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public partial class TrackingLogEntry
+public class TrackingLogEntry : IEntity
 {
-    public int Id { get; set; }
-
     public string Title { get; set; } = null!;
 
     public string? Description { get; set; }
@@ -31,4 +29,10 @@ public partial class TrackingLogEntry
     public virtual TrackingLog TrackingLog { get; set; } = null!;
 
     public virtual User UpdatedByNavigation { get; set; } = null!;
+
+    #region IEntity Members
+
+    public int Id { get; set; }
+
+    #endregion
 }

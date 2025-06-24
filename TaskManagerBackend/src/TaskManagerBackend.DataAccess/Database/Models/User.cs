@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public partial class User
+public partial class User : IEntity
 {
     public int Id { get; set; }
 
