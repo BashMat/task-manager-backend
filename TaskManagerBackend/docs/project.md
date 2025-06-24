@@ -20,7 +20,7 @@ Project uses following technologies:
     - `ASP.NET Core 8`
     - Different libraries for:
       - core application logic and infrastructure:
-        - `Dapper`
+        - `Entity Framework Core 8`
         - `NLog`
         - `prometheus-net`
         - `Swagger`
