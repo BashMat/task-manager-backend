@@ -32,204 +32,42 @@ public class TrackingRepository : ITrackingRepository
 
     public async Task<TrackingLogGetResponse?> InsertTrackingLog(NewTrackingLog logToInsert)
     {
-        try
-        {
-            TrackingLog trackingLog = new()
-                                      {
-                                          Title = logToInsert.Title,
-                                          Description = logToInsert.Description,
-                                          CreatedBy = logToInsert.CreatedById,
-                                          CreatedAt = logToInsert.CreatedAt,
-                                          UpdatedBy = logToInsert.CreatedById,
-                                          UpdatedAt = logToInsert.CreatedAt
-                                      };
-            _dbContext.TrackingLogs.Add(trackingLog);
-            await _dbContext.SaveChangesAsync();
+        TrackingLog trackingLog = new()
+                                  {
+                                      Title = logToInsert.Title,
+                                      Description = logToInsert.Description,
+                                      CreatedBy = logToInsert.CreatedById,
+                                      CreatedAt = logToInsert.CreatedAt,
+                                      UpdatedBy = logToInsert.CreatedById,
+                                      UpdatedAt = logToInsert.CreatedAt
+                                  };
+        _dbContext.TrackingLogs.Add(trackingLog);
+        await _dbContext.SaveChangesAsync();
 
-            return await GetTrackingLogById(trackingLog.Id);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            return null;
-        }
+        return await GetTrackingLogById(trackingLog.Id);
     }
 
     public async Task<List<TrackingLogGetResponse>> GetAllTrackingLogs(int userId)
     {
-        return await _dbContext.TrackingLogs.Where(log => log.CreatedBy == userId)
-                            .Select(log => new TrackingLogGetResponse
-                                           {
-                                               Id = log.Id,
-                                               Title = log.Title,
-                                               Description = log.Description,
-                                               CreatedAt = log.CreatedAt,
-                                               CreatedBy = new UserInfoDto()
-                                                           {
-                                                               Id = log.CreatedByNavigation.Id,
-                                                               UserName = log.CreatedByNavigation.UserName,
-                                                               Email = log.CreatedByNavigation.Email
-                                                           },
-                                               UpdatedAt = log.UpdatedAt,
-                                               UpdatedBy = new UserInfoDto()
-                                                           {
-                                                               Id = log.UpdatedByNavigation.Id,
-                                                               UserName = log.UpdatedByNavigation.UserName,
-                                                               Email = log.UpdatedByNavigation.Email
-                                                           },
-                                               TrackingLogEntries = log
-                                                                    .TrackingLogEntries
-                                                                    .Select(entry => new TrackingLogEntryGetResponse
-                                                                                     {
-                                                                                         Id = entry.Id,
-                                                                                         Title = entry.Title,
-                                                                                         Description = entry.Description,
-                                                                                         TrackingLogId = entry.TrackingLogId,
-                                                                                         Status = new TrackingLogEntryStatus
-                                                                                                  {
-                                                                                                      Id = entry.Status.Id,
-                                                                                                      Title = entry.Status.Title,
-                                                                                                      Description = entry.Status
-                                                                                                                         .Description,
-                                                                                                      TrackingLogId = entry.TrackingLogId
-                                                                                                  },
-                                                                                         Priority = entry.Priority,
-                                                                                         OrderIndex = (double)entry.OrderIndex,
-                                                                                         CreatedAt = entry.CreatedAt,
-                                                                                         CreatedBy = new UserInfoDto
-                                                                                                     {
-                                                                                                         Id = entry
-                                                                                                              .CreatedByNavigation
-                                                                                                              .Id,
-                                                                                                         UserName = entry
-                                                                                                                    .CreatedByNavigation
-                                                                                                                    .UserName,
-                                                                                                         Email = entry
-                                                                                                                 .CreatedByNavigation
-                                                                                                                 .Email
-                                                                                                     },
-                                                                                         UpdatedAt = entry.UpdatedAt,
-                                                                                         UpdatedBy = new UserInfoDto
-                                                                                                     {
-                                                                                                         Id = entry
-                                                                                                              .UpdatedByNavigation
-                                                                                                              .Id,
-                                                                                                         UserName = entry
-                                                                                                                    .UpdatedByNavigation
-                                                                                                                    .UserName,
-                                                                                                         Email = entry
-                                                                                                                 .UpdatedByNavigation
-                                                                                                                 .Email
-                                                                                                     },
-
-                                                                                     })
-                                                                    .ToList(),
-                                               TrackingLogEntriesStatuses = log.Statuses.Select(s => new TrackingLogEntryStatus()
-                                                                                                     {
-                                                                                                         Id = s.Id,
-                                                                                                         Title = s.Title,
-                                                                                                         Description = s.Description,
-                                                                                                         TrackingLogId =
-                                                                                                             s.TrackingLogId
-                                                                                                     })
-                                                                               .ToList()
-                                           })
-                            .ToListAsync();
+        return await _dbContext.TrackingLogs.AsNoTracking()
+                                            .FilterByCreator(userId)
+                                            .SelectEagerly()
+                                            .Select(log => log.ToTrackingLogGetResponse())
+                                            .ToListAsync();
     }
 
     public async Task<TrackingLogGetResponse?> GetTrackingLogById(int trackingLogId)
     {
-        try
-        {
-            return await _dbContext.TrackingLogs.Where(log => log.Id == trackingLogId)
-                            .Select(log => new TrackingLogGetResponse
-                                           {
-                                               Id = log.Id,
-                                               Title = log.Title,
-                                               Description = log.Description,
-                                               CreatedAt = log.CreatedAt,
-                                               CreatedBy = new UserInfoDto()
-                                                           {
-                                                               Id = log.CreatedByNavigation.Id,
-                                                               UserName = log.CreatedByNavigation.UserName,
-                                                               Email = log.CreatedByNavigation.Email
-                                                           },
-                                               UpdatedAt = log.UpdatedAt,
-                                               UpdatedBy = new UserInfoDto()
-                                                           {
-                                                               Id = log.UpdatedByNavigation.Id,
-                                                               UserName = log.UpdatedByNavigation.UserName,
-                                                               Email = log.UpdatedByNavigation.Email
-                                                           },
-                                               TrackingLogEntries = log
-                                                                    .TrackingLogEntries
-                                                                    .Select(entry => new TrackingLogEntryGetResponse
-                                                                                     {
-                                                                                         Id = entry.Id,
-                                                                                         Title = entry.Title,
-                                                                                         Description = entry.Description,
-                                                                                         TrackingLogId = entry.TrackingLogId,
-                                                                                         Status = new TrackingLogEntryStatus
-                                                                                                  {
-                                                                                                      Id = entry.Status.Id,
-                                                                                                      Title = entry.Status.Title,
-                                                                                                      Description = entry.Status
-                                                                                                                         .Description,
-                                                                                                      TrackingLogId = trackingLogId
-                                                                                                  },
-                                                                                         Priority = entry.Priority,
-                                                                                         OrderIndex = (double)entry.OrderIndex,
-                                                                                         CreatedAt = entry.CreatedAt,
-                                                                                         CreatedBy = new UserInfoDto
-                                                                                                     {
-                                                                                                         Id = entry
-                                                                                                              .CreatedByNavigation
-                                                                                                              .Id,
-                                                                                                         UserName = entry
-                                                                                                                    .CreatedByNavigation
-                                                                                                                    .UserName,
-                                                                                                         Email = entry
-                                                                                                                 .CreatedByNavigation
-                                                                                                                 .Email
-                                                                                                     },
-                                                                                         UpdatedAt = entry.UpdatedAt,
-                                                                                         UpdatedBy = new UserInfoDto
-                                                                                                     {
-                                                                                                         Id = entry
-                                                                                                              .UpdatedByNavigation
-                                                                                                              .Id,
-                                                                                                         UserName = entry
-                                                                                                                    .UpdatedByNavigation
-                                                                                                                    .UserName,
-                                                                                                         Email = entry
-                                                                                                                 .UpdatedByNavigation
-                                                                                                                 .Email
-                                                                                                     },
-
-                                                                                     })
-                                                                    .ToList(),
-                                               TrackingLogEntriesStatuses = log.Statuses.Select(s => new TrackingLogEntryStatus()
-                                                                                                     {
-                                                                                                         Id = s.Id,
-                                                                                                         Title = s.Title,
-                                                                                                         Description = s.Description,
-                                                                                                         TrackingLogId =
-                                                                                                             trackingLogId
-                                                                                                     })
-                                                                               .ToList()
-                                           })
-                            .FirstOrDefaultAsync();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return null;
-        }
+        return await _dbContext.TrackingLogs.AsNoTracking()
+                                            .FilterById(trackingLogId)
+                                            .SelectEagerly()
+                                            .Select(log => log.ToTrackingLogGetResponse())
+                                            .FirstOrDefaultAsync();
     }
 
     public async Task<List<TrackingLogGetResponse>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
-        await _dbContext.TrackingLogs.Where(log => log.Id == trackingLogId).ExecuteDeleteAsync();
+        await _dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync();
 
         return await GetAllTrackingLogs(userId);
     }
@@ -429,41 +267,33 @@ where [TLE].[CreatedBy] = @UserId";
 
     public async Task<TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
     {
-        try
-        {
-            Status status = new()
-                            {
-                                Title = statusToInsert.Title,
-                                Description = statusToInsert.Description,
-                                TrackingLogId = statusToInsert.TrackingLogId,
-                                CreatedBy = statusToInsert.CreatedById,
-                                CreatedAt = statusToInsert.CreatedAt,
-                                UpdatedBy = statusToInsert.CreatedById,
-                                UpdatedAt = statusToInsert.CreatedAt
-                            };
-            _dbContext.Statuses.Add(status);
-            await _dbContext.SaveChangesAsync();
+        Status status = new()
+                        {
+                            Title = statusToInsert.Title,
+                            Description = statusToInsert.Description,
+                            TrackingLogId = statusToInsert.TrackingLogId,
+                            CreatedBy = statusToInsert.CreatedById,
+                            CreatedAt = statusToInsert.CreatedAt,
+                            UpdatedBy = statusToInsert.CreatedById,
+                            UpdatedAt = statusToInsert.CreatedAt
+                        };
+        _dbContext.Statuses.Add(status);
+        await _dbContext.SaveChangesAsync();
 
-            return new TrackingLogEntryStatus
-                   {
-                       Id = status.Id,
-                       Title = status.Title,
-                       Description = status.Description,
-                       TrackingLogId = status.TrackingLogId
-                   };
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            return null;
-        }
+        return new TrackingLogEntryStatus
+               {
+                   Id = status.Id,
+                   Title = status.Title,
+                   Description = status.Description,
+                   TrackingLogId = status.TrackingLogId
+               };
     }
 
     public async Task<List<TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
     {
         Status? status = await _dbContext.Statuses
                                          .AsNoTracking()
-                                         .Where(s => s.Id == trackingLogEntryStatusId)
+                                         .FilterById(trackingLogEntryStatusId)
                                          .FirstOrDefaultAsync();
 
         if (status is null)
@@ -476,13 +306,7 @@ where [TLE].[CreatedBy] = @UserId";
 
         return await _dbContext.Statuses.AsNoTracking()
                                         .Where(s => s.TrackingLogId == status.TrackingLogId)
-                                        .Select(s => new TrackingLogEntryStatus
-                                                     {
-                                                         Id = s.Id,
-                                                         Title = s.Title,
-                                                         Description = s.Description,
-                                                         TrackingLogId = s.TrackingLogId
-                                                     })
+                                        .Select(s => s.ToTrackingLogEntryStatus())
                                         .ToListAsync();
     }
 
