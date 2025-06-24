@@ -67,7 +67,12 @@ public class TrackingRepository : ITrackingRepository
 
     public async Task<List<TrackingLogGetResponse>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
-        await _dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync();
+        int deletedCount = await _dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync();
+
+        if (deletedCount == 0)
+        {
+            return new List<TrackingLogGetResponse>();
+        }
 
         return await GetAllTrackingLogs(userId);
     }
