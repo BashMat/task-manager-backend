@@ -24,16 +24,8 @@ public sealed class CustomWebApplicationFactory : WebApplicationFactory<TaskMana
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        Mock<IDbConnectionProvider<SqlConnection>> dbConnectionProviderMock = new();
-        dbConnectionProviderMock.Setup(o => o.GetConnection())
-                                .Returns(() => new SqlConnection(_connectionString));
-        
         builder.ConfigureServices(services =>
                                   {
-                                      services.Remove(services.SingleOrDefault(service => 
-                                                                                   typeof(SqlServerDbConnectionProvider) == service.ImplementationType)
-                                                      ?? throw new ArgumentNullException($"Could not remove {typeof(SqlServerDbConnectionProvider)}"));
-                                      services.AddScoped<IDbConnectionProvider<SqlConnection>>(_ => dbConnectionProviderMock.Object);
                                       services.Remove(services.SingleOrDefault(service => 
                                                                                    typeof(DbContextOptions<TaskManagerDbContext>) == service.ServiceType)
                                                       ?? throw new ArgumentNullException($"Could not remove {typeof(DbContextOptions<TaskManagerDbContext>)}"));

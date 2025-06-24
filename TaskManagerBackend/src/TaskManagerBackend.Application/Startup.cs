@@ -191,17 +191,14 @@ public class Startup
 
     private void RegisterServices(IServiceCollection services)
     {
-        // Common
+        // Common and Application
         services.AddSingleton<ICryptographyService, CryptographyService>();
         services.AddSingleton<IDateTimeService, DateTimeService>();
         
         // Domain
         services.AddScoped<IEmailValidator, EmailValidator>();
         
-        // Data Access
-        services.AddScoped<IDbConnectionProvider<SqlConnection>, SqlServerDbConnectionProvider>();
-        
-        // Application
+        // Vertical feature slice
         // Auth and users:
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
