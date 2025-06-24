@@ -2,11 +2,8 @@
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using TaskManagerBackend.DataAccess;
 using TaskManagerBackend.DataAccess.Database;
 
 #endregion

@@ -1,7 +1,5 @@
 #region Usings
 
-using Dapper;
-using Microsoft.Data.SqlClient;
 using Testcontainers.MsSql;
 using Xunit;
 
