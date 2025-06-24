@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public partial class Status : IEntity
+public partial class Status : IAuditedEntity
 {
     public int Id { get; set; }
 

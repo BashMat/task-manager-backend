@@ -1,8 +1,5 @@
 ﻿#region Usings
 
-using System.Diagnostics;
-using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
@@ -10,7 +7,6 @@ using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Dto.User;
 
 #endregion
 
@@ -19,13 +15,10 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 public class TrackingRepository : ITrackingRepository
 {
     private readonly TaskManagerDbContext _dbContext;
-    private readonly IDbConnectionProvider<SqlConnection> _dbConnectionProvider;
 
-    public TrackingRepository(TaskManagerDbContext dbContext,
-                              IDbConnectionProvider<SqlConnection> dbConnectionProvider)
+    public TrackingRepository(TaskManagerDbContext dbContext)
     {
         _dbContext = dbContext;
-        _dbConnectionProvider = dbConnectionProvider;
     }
 
     #region Tracking Log
@@ -83,188 +76,84 @@ public class TrackingRepository : ITrackingRepository
 
     public async Task<TrackingLogEntryGetResponse?> InsertTrackingLogEntry(NewTrackingLogEntry logEntryToInsert)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+        TrackingLogEntry entry = new()
+                                 {
+                                     Title = logEntryToInsert.Title,
+                                     Description = logEntryToInsert.Description,
+                                     TrackingLogId = logEntryToInsert.TrackingLogId,
+                                     StatusId = logEntryToInsert.StatusId,
+                                     Priority = logEntryToInsert.Priority,
+                                     OrderIndex = (decimal) logEntryToInsert.OrderIndex,
+                                     CreatedBy = logEntryToInsert.CreatedById,
+                                     CreatedAt = logEntryToInsert.CreatedAt,
+                                     UpdatedBy = logEntryToInsert.CreatedById,
+                                     UpdatedAt = logEntryToInsert.CreatedAt
+                                 };
+        _dbContext.TrackingLogEntries.Add(entry);
+        await _dbContext.SaveChangesAsync();
 
-        int id = await connection.ExecuteScalarAsync<int>(
-                                                          @"insert into [TrackingLogEntry] (Title, Description, TrackingLogId, StatusId, Priority, OrderIndex, CreatedBy, CreatedAt, UpdatedBy, UpdatedAt) values 
-(@Title, @Description, @TrackingLogId, @StatusId, @Priority, @OrderIndex, @CreatedById, @CreatedAt, @CreatedById, @CreatedAt); 
-
-select scope_identity();",
-                                                          logEntryToInsert);
-
-        return await GetTrackingLogEntryByIdInternal(connection, id);
+        return await GetTrackingLogEntryById(entry.Id);
     }
 
     public async Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntries(int userId)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
-
-        return await GetAllTrackingLogEntriesInternal(connection, userId);
+        return await _dbContext.TrackingLogEntries.AsNoTracking()
+                                                  .FilterByCreator(userId)
+                                                  .Include(entry => entry.CreatedByNavigation)
+                                                  .Include(entry => entry.UpdatedByNavigation)
+                                                  .Include(entry => entry.Status)
+                                                  .Select(entry => entry.ToTrackingLogEntryGetResponse())
+                                                  .ToListAsync();
     }
 
     public async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryById(int trackingLogEntryId)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
-
-        return await GetTrackingLogEntryByIdInternal(connection, trackingLogEntryId);
+        return await _dbContext.TrackingLogEntries.AsNoTracking()
+                                                  .FilterById(trackingLogEntryId)
+                                                  .Include(entry => entry.CreatedByNavigation)
+                                                  .Include(entry => entry.UpdatedByNavigation)
+                                                  .Include(entry => entry.Status)
+                                                  .Select(entry => entry.ToTrackingLogEntryGetResponse())
+                                                  .FirstOrDefaultAsync();
     }
 
     public async Task<TrackingLogEntryGetResponse?> UpdateTrackingLogEntryById(int id, 
                                                                                UpdatableTrackingLogEntry updatableTrackingLogEntry)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+        TrackingLogEntry? entry = await _dbContext.TrackingLogEntries.FilterById(id)
+                                                                     .FirstOrDefaultAsync();
 
-        string sql = @"UPDATE [TrackingLogEntry]
-SET
-    [TrackingLogEntry].[Title] = @Title,
-    [TrackingLogEntry].[Description] = @Description,
-    [TrackingLogEntry].[TrackingLogId] = @TrackingLogId,
-    [TrackingLogEntry].[StatusId] = @StatusId,
-    [TrackingLogEntry].[Priority] = @Priority,
-    [TrackingLogEntry].[OrderIndex] = @OrderIndex,
-    [TrackingLogEntry].[UpdatedBy] = @UpdatedBy,
-    [TrackingLogEntry].[UpdatedAt] = @UpdatedAt
-WHERE
-    [TrackingLogEntry].[Id] = @Id";
-
-        int result = await connection.ExecuteAsync(sql, 
-                                                   param: new 
-                                                          {
-                                                              Id = id, 
-                                                              updatableTrackingLogEntry.Title, 
-                                                              updatableTrackingLogEntry.Description,
-                                                              updatableTrackingLogEntry.TrackingLogId,
-                                                              updatableTrackingLogEntry.StatusId,
-                                                              updatableTrackingLogEntry.Priority,
-                                                              updatableTrackingLogEntry.OrderIndex,
-                                                              updatableTrackingLogEntry.UpdatedBy,
-                                                              updatableTrackingLogEntry.UpdatedAt
-                                                          });
-
-        if (result == 0)
+        if (entry is null)
         {
             return null;
         }
 
-        if (result == 1)
-        {
-            return await GetTrackingLogEntryByIdInternal(connection, id); 
-        }
+        entry.Title = updatableTrackingLogEntry.Title;
+        entry.Description = updatableTrackingLogEntry.Description;
+        entry.TrackingLogId = updatableTrackingLogEntry.TrackingLogId;
+        entry.StatusId = updatableTrackingLogEntry.StatusId;
+        entry.Priority = updatableTrackingLogEntry.Priority;
+        entry.OrderIndex = (decimal)updatableTrackingLogEntry.OrderIndex;
+        entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
+        entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
+        await _dbContext.SaveChangesAsync();
 
-        throw new UnreachableException("Inconsistent data. For unique entity multiple rows were changed.");
+        return await GetTrackingLogEntryById(id);
     }
 
     public async Task<List<TrackingLogEntryGetResponse>> DeleteTrackingLogEntryById(int userId,
                                                                                     int trackingLogEntryId)
     {
-        await using SqlConnection connection = _dbConnectionProvider.GetConnection();
+        int deletedCount = await _dbContext.TrackingLogEntries.FilterById(trackingLogEntryId)
+                                                              .ExecuteDeleteAsync();
 
-        string sql = "delete from [TrackingLogEntry] where [TrackingLogEntry].[Id]=@TrackingLogEntryId";
-        await connection.ExecuteAsync(sql,
-                                      new { TrackingLogEntryId = trackingLogEntryId });
+        if (deletedCount == 0)
+        {
+            return new List<TrackingLogEntryGetResponse>();
+        }
 
-        return await GetAllTrackingLogEntriesInternal(connection, userId);
+        return await GetAllTrackingLogEntries(userId);
     }
-
-    #region Internal
-
-    private async Task<TrackingLogEntryGetResponse?> GetTrackingLogEntryByIdInternal(SqlConnection connection,
-                                                                                     int id)
-    {
-        string sql =
-            @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
-[TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedBy], [TLE].[CreatedAt], [TLE].[UpdatedBy], [TLE].[UpdatedAt],
-[S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description],
-[Creator].[Id], [Creator].[UserName], [Creator].[Email],
-[Updater].[Id], [Updater].[UserName], [Updater].[Email]
-FROM [TrackingLogEntry] as [TLE]
-INNER JOIN [Status] as [S]
-ON [TLE].[StatusId] = [S].[Id]
-INNER JOIN [User] as [Creator]
-ON [TLE].[CreatedBy] = [Creator].[Id]
-INNER JOIN [User] as [Updater]
-ON [TLE].[UpdatedBy] = [Updater].[Id]
-WHERE [TLE].[Id] = @Id";
-
-        IEnumerable<TrackingLogEntryGetResponse> logEntryData =
-            await connection.QueryAsync<TrackingLogEntryData, 
-                                        TrackingLogEntryStatus, 
-                                        UserInfoDto, 
-                                        UserInfoDto, 
-                                        TrackingLogEntryGetResponse>(sql,
-                                                                     (logEntry, status, creator, updater) => 
-                                                                         new TrackingLogEntryGetResponse()
-                                                                         {
-                                                                             Id = logEntry.Id,
-                                                                             Title = logEntry.Title,
-                                                                             Description = logEntry.Description,
-                                                                             TrackingLogId = logEntry.TrackingLogId,
-                                                                             Status = status,
-                                                                             Priority = logEntry.Priority,
-                                                                             OrderIndex = logEntry.OrderIndex,
-                                                                             CreatedBy = creator,
-                                                                             CreatedAt = logEntry.CreatedAt,
-                                                                             UpdatedBy = updater,
-                                                                             UpdatedAt = logEntry.UpdatedAt,
-                                                                         },
-                                                                     splitOn: "Id, Id, Id",
-                                                                     param: new { Id = id });
-
-        return logEntryData.FirstOrDefault();
-    }
-
-    private async Task<List<TrackingLogEntryGetResponse>> GetAllTrackingLogEntriesInternal(SqlConnection connection,
-                                                                                           int userId)
-    {
-        string sql =
-            @"SELECT [TLE].[Id], [TLE].[Title], [TLE].[Description], [TLE].[TrackingLogId], [TLE].[StatusId],
-[TLE].[Priority], [TLE].[OrderIndex], [TLE].[CreatedBy], [TLE].[CreatedAt], [TLE].[UpdatedBy], [TLE].[UpdatedAt],
-[S].[Id], [S].[TrackingLogId], [S].[Title], [S].[Description],
-[Creator].[Id], [Creator].[UserName], [Creator].[Email],
-[Updater].[Id], [Updater].[UserName], [Updater].[Email]
-FROM [TrackingLogEntry] as [TLE]
-INNER JOIN [Status] as [S]
-ON [TLE].[StatusId] = [S].[Id]
-INNER JOIN [User] as [Creator]
-ON [TLE].[CreatedBy] = [Creator].[Id]
-INNER JOIN [User] as [Updater]
-ON [TLE].[UpdatedBy] = [Updater].[Id]
-where [TLE].[CreatedBy] = @UserId";
-
-        IEnumerable<TrackingLogEntryGetResponse> logEntryData =
-            await connection.QueryAsync<TrackingLogEntryData,
-                TrackingLogEntryStatus,
-                UserInfoDto,
-                UserInfoDto,
-                TrackingLogEntryGetResponse>(
-                                             sql,
-                                             (logEntry,
-                                              status,
-                                              creator,
-                                              updater) => new TrackingLogEntryGetResponse()
-                                                          {
-                                                              Id = logEntry.Id,
-                                                              Title = logEntry.Title,
-                                                              Description = logEntry.Description,
-                                                              TrackingLogId = logEntry.TrackingLogId,
-                                                              Status = status,
-                                                              Priority = logEntry.Priority,
-                                                              OrderIndex = logEntry.OrderIndex,
-                                                              CreatedBy = creator,
-                                                              CreatedAt = logEntry.CreatedAt,
-                                                              UpdatedBy = updater,
-                                                              UpdatedAt = logEntry.UpdatedAt,
-                                                          },
-                                             splitOn: "Id, Id, Id",
-                                             param: new
-                                                    {
-                                                        UserId = userId
-                                                    });
-
-        return logEntryData.Distinct().ToList();
-    }
-
-    #endregion
 
     #endregion
 

@@ -6,9 +6,9 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
 public static class TrackingLogQueryables
 {
-    public static IQueryable<TrackingLog> FilterByCreator(this IQueryable<TrackingLog> logs, int userId)
+    public static IQueryable<T> FilterByCreator<T>(this IQueryable<T> query, int userId) where T : IAuditedEntity
     {
-        return logs.Where(log => log.CreatedBy == userId);
+        return query.Where(item => item.CreatedBy == userId);
     }
     
     public static IQueryable<T> FilterById<T>(this IQueryable<T> query, int id) where T : IEntity

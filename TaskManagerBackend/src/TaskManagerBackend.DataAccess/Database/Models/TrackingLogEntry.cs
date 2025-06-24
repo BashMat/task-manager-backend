@@ -1,6 +1,6 @@
 ﻿namespace TaskManagerBackend.DataAccess.Database.Models;
 
-public class TrackingLogEntry : IEntity
+public class TrackingLogEntry : IAuditedEntity
 {
     public string Title { get; set; } = null!;
 
