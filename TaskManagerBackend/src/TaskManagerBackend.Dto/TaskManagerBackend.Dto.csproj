@@ -4,4 +4,8 @@
         <RootNamespace>TaskManagerBackend.Dto</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

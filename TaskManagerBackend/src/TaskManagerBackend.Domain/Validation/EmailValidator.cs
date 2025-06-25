@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 #endregion
 
-namespace TaskManagerBackend.Domain.Validators;
+namespace TaskManagerBackend.Domain.Validation;
 
 public class EmailValidator : IEmailValidator
 {
@@ -16,7 +16,7 @@ public class EmailValidator : IEmailValidator
         _logger = logger;
     }
     
-    public bool ValidateEmailAddressFormat(string emailAddress)
+    public bool Validate(string emailAddress)
     {
         try
         {

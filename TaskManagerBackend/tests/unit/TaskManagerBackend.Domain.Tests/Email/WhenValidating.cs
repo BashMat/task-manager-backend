@@ -7,7 +7,7 @@ using Xunit;
 
 namespace TaskManagerBackend.Domain.Tests.Email;
 
-public class WhenValidatingEmailAddressFormat : EmailValidatorTestBase
+public class WhenValidating : EmailValidatorTestBase
 {
     [Theory]
     [InlineData("test@test.com", true)]
@@ -22,6 +22,6 @@ public class WhenValidatingEmailAddressFormat : EmailValidatorTestBase
     public void ValidationIsCorrectForVariousAddresses(string emailAddress, 
                                                        bool isEmailAddressFormatCorrect)
     {
-        ValidateEmailAddressFormat(emailAddress).Should().Be(isEmailAddressFormatCorrect);
+        Validate(emailAddress).Should().Be(isEmailAddressFormatCorrect);
     }
 }

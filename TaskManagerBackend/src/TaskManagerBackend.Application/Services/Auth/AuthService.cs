@@ -4,7 +4,7 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Domain.Validators;
+using TaskManagerBackend.Domain.Validation;
 using TaskManagerBackend.Dto.User;
 
 #endregion
@@ -41,7 +41,7 @@ public class AuthService : IAuthService
         ServiceResponse<UserSignUpResponse> response = new();
 
         // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
-        if (!_emailValidator.ValidateEmailAddressFormat(requestData.Email))
+        if (!_emailValidator.Validate(requestData.Email))
         {
             _logger.LogTrace("Invalid email address format");
                 

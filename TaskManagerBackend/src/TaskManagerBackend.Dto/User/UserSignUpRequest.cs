@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagerBackend.Domain.Validation;
 
 namespace TaskManagerBackend.Dto.User;
 
@@ -11,7 +12,6 @@ public class UserSignUpRequest
     [EmailAddress]
     public required string Email { get; init; }
 
-    // TODO: Create custom attribute with length and regex
-    [MinLength(8)]
+    [Password]
     public required string Password { get; init; }
 }

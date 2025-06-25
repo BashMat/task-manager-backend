@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagerBackend.Domain.Validation;
 
 namespace TaskManagerBackend.Dto.User;
 
@@ -8,7 +9,6 @@ public class UserLogInRequest
     [MaxLength(256)]
     public required string LogInData { get; init; }
 
-    // TODO: Create custom attribute with length and regex
-    [MinLength(8)]
+    [Password]
     public required string Password { get; init; }
 }

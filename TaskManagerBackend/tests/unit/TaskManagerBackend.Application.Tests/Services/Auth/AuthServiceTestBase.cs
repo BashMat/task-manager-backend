@@ -7,7 +7,7 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Domain.Validators;
+using TaskManagerBackend.Domain.Validation;
 using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;
 
@@ -43,7 +43,7 @@ public class AuthServiceTestBase : UnitTestsBase
 
     protected void SetUpValidateEmailAddressFormat(bool isEmailAddressFormatCorrect = true)
     {
-        EmailServiceMock.Setup(o => o.ValidateEmailAddressFormat(It.IsAny<string>()))
+        EmailServiceMock.Setup(o => o.Validate(It.IsAny<string>()))
                         .Returns(isEmailAddressFormatCorrect);
     }
         

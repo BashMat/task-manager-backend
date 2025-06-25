@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
-using TaskManagerBackend.Domain.Validators;
+using TaskManagerBackend.Domain.Validation;
 using TaskManagerBackend.Tests.Common;
 
 #endregion
@@ -16,8 +16,8 @@ public class EmailValidatorTestBase : UnitTestsBase
         return new EmailValidator(Mock.Of<ILogger<EmailValidator>>());
     }
 
-    protected bool ValidateEmailAddressFormat(string emailAddress)
+    protected bool Validate(string emailAddress)
     {
-        return CreateEmailValidator().ValidateEmailAddressFormat(emailAddress);
+        return CreateEmailValidator().Validate(emailAddress);
     }
 }
