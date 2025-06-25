@@ -12,6 +12,7 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Tracking;
 
+// TODO: Add tests for problem details responses
 public class WhenRequestingTrackingLogs : TrackingTestBase
 {
     public WhenRequestingTrackingLogs(MsSqlTests fixture) : base(fixture) { }

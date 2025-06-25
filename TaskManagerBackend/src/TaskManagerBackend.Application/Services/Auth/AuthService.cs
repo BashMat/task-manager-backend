@@ -40,6 +40,7 @@ public class AuthService : IAuthService
     {
         ServiceResponse<UserSignUpResponse> response = new();
 
+        // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
         if (!_emailValidator.ValidateEmailAddressFormat(requestData.Email))
         {
             _logger.LogTrace("Invalid email address format");

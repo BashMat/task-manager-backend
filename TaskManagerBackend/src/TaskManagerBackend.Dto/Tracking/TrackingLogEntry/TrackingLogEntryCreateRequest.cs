@@ -1,11 +1,18 @@
-﻿namespace TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
 
 public class TrackingLogEntryCreateRequest
 {
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public int TrackingLogId { get; set; }
-    public int StatusId { get; set; }
-    public int? Priority { get; set; }
-    public double OrderIndex { get; set; }
+    [Required]
+    [MaxLength(256)]
+    public required string Title { get; init; }
+    
+    [MaxLength(512)]
+    public string? Description { get; init; }
+    
+    public int TrackingLogId { get; init; }
+    public int StatusId { get; init; }
+    public int? Priority { get; init; }
+    public double OrderIndex { get; init; }
 }

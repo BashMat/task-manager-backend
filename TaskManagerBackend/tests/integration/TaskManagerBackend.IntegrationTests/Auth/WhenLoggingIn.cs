@@ -12,6 +12,7 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Auth;
 
+// TODO: Add tests for problem details responses
 public class WhenLoggingIn : AuthorizationTestBase
 {
     public WhenLoggingIn(MsSqlTests fixture) : base(fixture) { }

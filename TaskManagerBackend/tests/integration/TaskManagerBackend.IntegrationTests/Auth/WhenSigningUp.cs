@@ -12,6 +12,7 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Auth;
 
+// TODO: Add tests for problem details responses
 public class WhenSigningUp : AuthorizationTestBase
 {
     public WhenSigningUp(MsSqlTests fixture) : base(fixture) { }
@@ -42,10 +43,10 @@ public class WhenSigningUp : AuthorizationTestBase
     }
     
     [Fact]
-    public async Task SignUpIsUnsuccessfulIfEmailIsInvalid()
+    public async Task SignUpIsUnsuccessfulIfEmailIsInvalidAndStandardValidationIsPassed()
     {
         string userName = Faker.Internet.UserName();
-        const string IncorrectEmail = "This is an invalid email";
+        const string IncorrectEmail = "This is an invalid email@This is an invalid email?";
         string password = Faker.Internet.Password();
         UserSignUpRequest request = new()
                                        {
