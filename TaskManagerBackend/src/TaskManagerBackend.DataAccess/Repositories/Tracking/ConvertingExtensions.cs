@@ -43,7 +43,7 @@ public static class ConvertingExtensions
                    Title = trackingLogEntry.Title,
                    Description = trackingLogEntry.Description,
                    TrackingLogId = trackingLogEntry.TrackingLogId,
-                   StatusGetResponse = trackingLogEntry.TrackingLogEntryStatus.ToTrackingLogEntryStatus(),
+                   Status = trackingLogEntry.TrackingLogEntryStatus.ToTrackingLogEntryStatus(),
                    Priority = trackingLogEntry.Priority,
                    OrderIndex = (double)trackingLogEntry.OrderIndex,
                    CreatedAt = trackingLogEntry.CreatedAt,

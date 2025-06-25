@@ -13,7 +13,7 @@ public class TrackingLogEntryGetResponse
     public required string Title { get; set; }
     public string? Description { get; set; }
     public int TrackingLogId { get; set; }
-    public required TrackingLogEntryStatusGetResponse StatusGetResponse { get; set; }
+    public required TrackingLogEntryStatusGetResponse Status { get; set; }
     public int? Priority { get; set; }
     public double OrderIndex { get; set; }
     public required UserInfoDto CreatedBy { get; set; }

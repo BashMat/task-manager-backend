@@ -54,7 +54,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.UpdatedBy.UserName.Should().Be(UserName);
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.TrackingLogId.Should().Be(_defaultTrackingLog.Id);
-        content.Data.StatusGetResponse.Should().BeEquivalentTo(_defaultTrackingLogEntryStatus);
+        content.Data.Status.Should().BeEquivalentTo(_defaultTrackingLogEntryStatus);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
@@ -118,7 +118,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
                                                     Title = Title,
                                                     Description = Description,
                                                     TrackingLogId = createdTrackingLogEntry.TrackingLogId,
-                                                    StatusId = createdTrackingLogEntry.StatusGetResponse.Id,
+                                                    StatusId = createdTrackingLogEntry.Status.Id,
                                                     OrderIndex = createdTrackingLogEntry.OrderIndex,
                                                     Priority = createdTrackingLogEntry.Priority,
                                                     UpdatedAt = createdTrackingLogEntry.UpdatedAt
@@ -141,7 +141,7 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.UpdatedAt.Should().NotBe(createdTrackingLogEntry.UpdatedAt);
         content.Data.TrackingLogId.Should().Be(createdTrackingLogEntry.TrackingLogId);
-        content.Data.StatusGetResponse.Should().BeEquivalentTo(createdTrackingLogEntry.StatusGetResponse);
+        content.Data.Status.Should().BeEquivalentTo(createdTrackingLogEntry.Status);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
