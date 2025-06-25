@@ -8,7 +8,7 @@ public class UserLogInRequest
     [MaxLength(256)]
     public required string LogInData { get; init; }
 
-    // TODO: Make min length 8, do not forget to update integration tests
-    [MinLength(4)]
+    // TODO: Create custom attribute with length and regex
+    [MinLength(8)]
     public required string Password { get; init; }
 }

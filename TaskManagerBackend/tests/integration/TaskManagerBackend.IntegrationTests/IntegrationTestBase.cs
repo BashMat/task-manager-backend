@@ -12,8 +12,8 @@ namespace TaskManagerBackend.IntegrationTests;
 public class IntegrationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, IDisposable
 {
     public const string UserName = "test";
-    public const string Email = "test@test.dev";
-    public const string Password = "test";
+    public const string Email = "test@test.test";
+    public const string Password = "test-1234";
     
     private readonly WebApplicationFactory<TaskManagerBackend.Application.Program> _webApplicationFactory;
 
