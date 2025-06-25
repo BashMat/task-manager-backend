@@ -1,14 +1,14 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Features.Auth.Dtos;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Dto.Tracking.TrackingLog;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Dto.User;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Services;
+namespace TaskManagerBackend.Application.Features;
 
 public static class ConvertingExtensions
 {

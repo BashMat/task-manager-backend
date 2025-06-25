@@ -3,9 +3,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Dto.Tracking.TrackingLog;
 using Xunit;
 
 #endregion

@@ -3,9 +3,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Application.Features.Auth;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Dto.User;
 using Xunit;
 
 #endregion

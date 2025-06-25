@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManagerBackend.Dto.Tracking.TrackingLog;
+namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 
 public class TrackingLogCreateRequest
 {

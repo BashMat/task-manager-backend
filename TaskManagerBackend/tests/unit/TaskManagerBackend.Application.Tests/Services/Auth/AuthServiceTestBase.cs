@@ -2,13 +2,13 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
-using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Application.Features.Auth;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
-using TaskManagerBackend.Dto.User;
 using TaskManagerBackend.Tests.Common;
 
 #endregion

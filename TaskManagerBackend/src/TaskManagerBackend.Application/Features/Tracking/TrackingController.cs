@@ -3,15 +3,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerBackend.Application.Services.Tracking;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Dto.Tracking.TrackingLog;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Controllers;
+namespace TaskManagerBackend.Application.Features.Tracking;
 
 [ApiController]
 [Route("api/tracking")]

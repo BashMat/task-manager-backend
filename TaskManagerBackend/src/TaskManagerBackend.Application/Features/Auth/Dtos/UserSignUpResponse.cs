@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Dto.User;
+﻿namespace TaskManagerBackend.Application.Features.Auth.Dtos;
 
 public class UserSignUpResponse
 {

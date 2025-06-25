@@ -1,15 +1,15 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
-using TaskManagerBackend.Dto.User;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Services.Auth;
+namespace TaskManagerBackend.Application.Features.Auth;
 
 public class AuthService : IAuthService
 {

@@ -2,10 +2,10 @@
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TaskManagerBackend.Dto.Tracking.TrackingLog;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Dto.User;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 
 #endregion
 

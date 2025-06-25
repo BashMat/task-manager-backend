@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TaskManagerBackend.Domain.Validation;
 
-namespace TaskManagerBackend.Dto.User;
+namespace TaskManagerBackend.Application.Features.Auth.Dtos;
 
 public class UserLogInRequest
 {

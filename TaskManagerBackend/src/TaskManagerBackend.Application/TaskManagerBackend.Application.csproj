@@ -24,7 +24,6 @@
     <ProjectReference Include="..\TaskManagerBackend.Common\TaskManagerBackend.Common.csproj" />
     <ProjectReference Include="..\TaskManagerBackend.DataAccess\TaskManagerBackend.DataAccess.csproj" />
     <ProjectReference Include="..\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
-    <ProjectReference Include="..\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj" />
   </ItemGroup>
 
 </Project>

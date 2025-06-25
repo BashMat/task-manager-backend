@@ -1,11 +1,11 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Dto.User;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Services.Auth;
+namespace TaskManagerBackend.Application.Features.Auth;
 
 public interface IAuthService
 {

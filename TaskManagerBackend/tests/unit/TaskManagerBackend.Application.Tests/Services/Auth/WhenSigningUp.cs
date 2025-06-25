@@ -2,9 +2,9 @@
 
 using FluentAssertions;
 using Moq;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Dto.User;
 using Xunit;
 
 #endregion

@@ -1,11 +1,11 @@
 ﻿#region Usings
 
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Dto.User;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
+using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 
 #endregion
 
-namespace TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
+namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 
 public class TrackingLogEntryGetResponse
 {

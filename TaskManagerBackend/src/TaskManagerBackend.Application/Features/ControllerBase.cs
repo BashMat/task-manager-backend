@@ -5,7 +5,7 @@ using TaskManagerBackend.Application.Exceptions;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Controllers;
+namespace TaskManagerBackend.Application.Features;
 
 /// <summary>
 ///     Represents abstract base Controller with common functionality for other Controllers.

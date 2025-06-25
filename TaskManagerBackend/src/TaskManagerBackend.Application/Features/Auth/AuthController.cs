@@ -2,13 +2,12 @@
 
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerBackend.Application.Services.Auth;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Dto.User;
 
 #endregion
 
-namespace TaskManagerBackend.Application.Controllers;
+namespace TaskManagerBackend.Application.Features.Auth;
 
 [ApiController]
 [Route("api/auth")]
