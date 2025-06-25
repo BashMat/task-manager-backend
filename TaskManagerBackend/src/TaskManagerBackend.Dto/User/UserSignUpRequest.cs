@@ -1,6 +1,8 @@
-﻿namespace TaskManagerBackend.Dto.User;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class UserSignUpRequestDto
+namespace TaskManagerBackend.Dto.User;
+
+public class UserSignUpRequest
 {
     public required string UserName { get; init; }
     public required string Email { get; init; }

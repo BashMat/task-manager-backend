@@ -37,12 +37,12 @@ public class TaskManagerBackendHttpClient
 
     #region Auth
 
-    public async Task<HttpResponseMessage> SignUp(UserSignUpRequestDto request)
+    public async Task<HttpResponseMessage> SignUp(UserSignUpRequest request)
     {
         return await _httpClient.PostAsJsonAsync("api/auth/signup", request);
     }
 
-    public async Task<HttpResponseMessage> LogIn(UserLogInRequestDto request)
+    public async Task<HttpResponseMessage> LogIn(UserLogInRequest request)
     {
         return await _httpClient.PostAsJsonAsync("api/auth/login", request);
     }

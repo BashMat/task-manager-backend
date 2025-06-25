@@ -26,7 +26,7 @@ public class TrackingTestBase : IntegrationTestBase,
 
     public virtual async Task InitializeAsync()
     {
-        HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequestDto
+        HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequest
                                                                      {
                                                                          LogInData = UserName,
                                                                          Password = Password

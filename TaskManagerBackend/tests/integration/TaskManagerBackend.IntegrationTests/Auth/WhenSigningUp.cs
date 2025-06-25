@@ -22,7 +22,7 @@ public class WhenSigningUp : AuthorizationTestBase
         string userName = Faker.Internet.UserName();
         string email = Faker.Internet.Email();
         string password = Faker.Internet.Password();
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = userName, 
                                            Email = email,
@@ -30,7 +30,7 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponseDto>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponseDto>>();
+        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
 
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();
@@ -47,7 +47,7 @@ public class WhenSigningUp : AuthorizationTestBase
         string userName = Faker.Internet.UserName();
         const string IncorrectEmail = "This is an invalid email";
         string password = Faker.Internet.Password();
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = userName, 
                                            Email = IncorrectEmail,
@@ -55,7 +55,7 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponseDto>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponseDto>>();
+        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
@@ -69,7 +69,7 @@ public class WhenSigningUp : AuthorizationTestBase
     {
         string email = Faker.Internet.Email();
         string password = Faker.Internet.Password();
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = UserName, 
                                            Email = email,
@@ -77,7 +77,7 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponseDto>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponseDto>>();
+        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
@@ -91,7 +91,7 @@ public class WhenSigningUp : AuthorizationTestBase
     {
         string userName = Faker.Internet.UserName();
         string password = Faker.Internet.Password();
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = userName, 
                                            Email = Email,
@@ -99,7 +99,7 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponseDto>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponseDto>>();
+        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();

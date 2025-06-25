@@ -20,14 +20,14 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
                                            Email = TestEmail,
                                            Password = TestPassword
                                        };
 
-        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
+        ServiceResponse<UserSignUpResponse> response = await SignUp(request);
 
         response.Data.Should().BeNull();
         response.Success.Should().BeFalse();
@@ -41,14 +41,14 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
                                            Email = TestEmail,
                                            Password = TestPassword
                                        };
 
-        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
+        ServiceResponse<UserSignUpResponse> response = await SignUp(request);
 
         response.Data.Should().BeNull();
         response.Success.Should().BeFalse();
@@ -62,14 +62,14 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
                                            Email = TestEmail,
                                            Password = TestPassword
                                        };
 
-        ServiceResponse<UserSignUpResponseDto> response = await SignUp(request);
+        ServiceResponse<UserSignUpResponse> response = await SignUp(request);
 
         response.Data!.UserName.Should().Be(TestUserName);
         response.Data!.Email.Should().Be(TestEmail);
@@ -89,7 +89,7 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        UserSignUpRequestDto request = new()
+        UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
                                            Email = TestEmail,

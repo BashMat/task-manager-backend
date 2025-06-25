@@ -36,9 +36,9 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto requestData)
+    public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest requestData)
     {
-        ServiceResponse<UserSignUpResponseDto> response = new();
+        ServiceResponse<UserSignUpResponse> response = new();
 
         if (!_emailValidator.ValidateEmailAddressFormat(requestData.Email))
         {
@@ -68,7 +68,7 @@ public class AuthService : IAuthService
         NewUser newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
         await _userRepository.InsertUser(newUser);
 
-        response.Data = new UserSignUpResponseDto 
+        response.Data = new UserSignUpResponse 
                         {
                             UserName = requestData.UserName,
                             Email = requestData.Email
@@ -79,7 +79,7 @@ public class AuthService : IAuthService
         return response;
     }
 
-    public async Task<ServiceResponse<string>> LogIn(UserLogInRequestDto requestData)
+    public async Task<ServiceResponse<string>> LogIn(UserLogInRequest requestData)
     {
         ServiceResponse<string> response = new();
 

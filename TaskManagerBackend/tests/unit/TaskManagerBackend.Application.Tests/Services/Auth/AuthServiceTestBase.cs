@@ -66,7 +66,7 @@ public class AuthServiceTestBase : UnitTestsBase
                         .Returns((passwordHash, passwordSalt));
     }
 
-    protected Task<ServiceResponse<UserSignUpResponseDto>> SignUp(UserSignUpRequestDto request)
+    protected Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request)
     {
         return CreateAuthService().SignUp(request);
     }
@@ -99,9 +99,9 @@ public class AuthServiceTestBase : UnitTestsBase
                         .Returns(token);
     }
 
-    protected Task<ServiceResponse<string>> LogIn(UserLogInRequestDto? request = null)
+    protected Task<ServiceResponse<string>> LogIn(UserLogInRequest? request = null)
     {
-        request ??= new UserLogInRequestDto()
+        request ??= new UserLogInRequest()
                     {
                         LogInData = Faker.Internet.UserName(),
                         Password = Faker.Internet.Password()

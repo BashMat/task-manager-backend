@@ -26,11 +26,11 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromBody] UserSignUpRequestDto requestData)
+    public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest requestData)
     {
         _logger.LogTrace("Start processing POST /api/auth/signup request");
             
-        ServiceResponse<UserSignUpResponseDto> response = await _authService.SignUp(requestData);
+        ServiceResponse<UserSignUpResponse> response = await _authService.SignUp(requestData);
             
         _logger.LogTrace("Finish processing POST /api/auth/signup request");
             
@@ -42,7 +42,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
-    public async Task<IActionResult> LogIn([FromBody] UserLogInRequestDto requestData)
+    public async Task<IActionResult> LogIn([FromBody] UserLogInRequest requestData)
     {
         _logger.LogTrace("Start POST /api/auth/login request processing");
             

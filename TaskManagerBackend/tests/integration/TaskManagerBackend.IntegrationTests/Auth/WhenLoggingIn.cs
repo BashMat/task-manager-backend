@@ -19,7 +19,7 @@ public class WhenLoggingIn : AuthorizationTestBase
     [Fact]
     public async Task LoggingInIsSuccessfulWithUserName()
     {
-        UserLogInRequestDto request = new()
+        UserLogInRequest request = new()
                                        {
                                            LogInData = UserName, 
                                            Password = Password
@@ -40,7 +40,7 @@ public class WhenLoggingIn : AuthorizationTestBase
     [Fact]
     public async Task LoggingInIsSuccessfulWithEmail()
     {
-        UserLogInRequestDto request = new()
+        UserLogInRequest request = new()
                                       {
                                           LogInData = Email, 
                                           Password = Password
@@ -63,7 +63,7 @@ public class WhenLoggingIn : AuthorizationTestBase
     {
         const string IncorrectUserName = "TotallyNotExistingUser";
         string password = Faker.Internet.Password();
-        UserLogInRequestDto request = new()
+        UserLogInRequest request = new()
                                        {
                                            LogInData = IncorrectUserName, 
                                            Password = password
@@ -83,7 +83,7 @@ public class WhenLoggingIn : AuthorizationTestBase
     public async Task LoggingInIsUnsuccessfulIfPasswordIsIncorrect()
     {
         const string IncorrectPassword = "TotallyIncorrectPassword";
-        UserLogInRequestDto request = new()
+        UserLogInRequest request = new()
                                       {
                                           LogInData = UserName, 
                                           Password = IncorrectPassword
