@@ -1,10 +1,9 @@
 ﻿#region
 
-using TaskManagerBackend.DataAccess.Database.Models;
-using TaskManagerBackend.Dto.Tracking.TrackingLog;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Dto.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Dto.User;
+using TaskManagerBackend.Domain.Users;
+using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
+using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
+using TrackingLogEntryStatus = TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
 
 #endregion
 
@@ -12,63 +11,49 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
 public static class ConvertingExtensions
 {
-    public static UserInfoDto ToUserInfoDto(this Database.Models.User user)
+    public static MinimalUserData ToDomain(this Database.Models.User user)
     {
-        return new UserInfoDto
-               {
-                   Id = user.Id,
-                   UserName = user.UserName,
-                   FirstName = user.FirstName,
-                   LastName = user.LastName,
-                   Email = user.Email
-               };
+        return new MinimalUserData(user.Id,
+                                   user.UserName,
+                                   user.Email);
     }
 
-    public static TrackingLogEntryStatusGetResponse ToTrackingLogEntryStatus(this TrackingLogEntryStatus trackingLogEntryTrackingLogEntryStatus)
+    public static TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
     {
-        return new TrackingLogEntryStatusGetResponse
-               {
-                   Id = trackingLogEntryTrackingLogEntryStatus.Id,
-                   Title = trackingLogEntryTrackingLogEntryStatus.Title,
-                   Description = trackingLogEntryTrackingLogEntryStatus.Description,
-                   TrackingLogId = trackingLogEntryTrackingLogEntryStatus.TrackingLogId
-               };
+        return new TrackingLogEntryStatus(trackingLogEntryStatus.Id,
+                                          trackingLogEntryStatus.Title,
+                                          trackingLogEntryStatus.Description,
+                                          trackingLogEntryStatus.TrackingLogId);
     }
 
-    public static TrackingLogEntryGetResponse ToTrackingLogEntryGetResponse(this TrackingLogEntry trackingLogEntry)
+    public static Domain.Tracking.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
     {
-        return new TrackingLogEntryGetResponse
-               {
-                   Id = trackingLogEntry.Id,
-                   Title = trackingLogEntry.Title,
-                   Description = trackingLogEntry.Description,
-                   TrackingLogId = trackingLogEntry.TrackingLogId,
-                   Status = trackingLogEntry.TrackingLogEntryStatus.ToTrackingLogEntryStatus(),
-                   Priority = trackingLogEntry.Priority,
-                   OrderIndex = (double)trackingLogEntry.OrderIndex,
-                   CreatedAt = trackingLogEntry.CreatedAt,
-                   CreatedBy = trackingLogEntry.CreatedByNavigation.ToUserInfoDto(),
-                   UpdatedAt = trackingLogEntry.UpdatedAt,
-                   UpdatedBy = trackingLogEntry.UpdatedByNavigation.ToUserInfoDto()
-               };
+        return new Domain.Tracking.TrackingLogEntry(trackingLogEntry.Id,
+                                                    trackingLogEntry.Title,
+                                                    trackingLogEntry.Description,
+                                                    trackingLogEntry.TrackingLogId,
+                                                    trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
+                                                    trackingLogEntry.Priority,
+                                                    trackingLogEntry.OrderIndex,
+                                                    trackingLogEntry.CreatedByNavigation.ToDomain(),
+                                                    trackingLogEntry.CreatedAt,
+                                                    trackingLogEntry.UpdatedByNavigation.ToDomain(),
+                                                    trackingLogEntry.UpdatedAt);
     }
 
-    public static TrackingLogGetResponse ToTrackingLogGetResponse(this TrackingLog trackingLog)
+    public static Domain.Tracking.TrackingLog ToDomain(this TrackingLog trackingLog)
     {
-        return new TrackingLogGetResponse
-               {
-                   Id = trackingLog.Id,
-                   Title = trackingLog.Title,
-                   Description = trackingLog.Description,
-                   CreatedAt = trackingLog.CreatedAt,
-                   CreatedBy = trackingLog.CreatedByNavigation.ToUserInfoDto(),
-                   UpdatedAt = trackingLog.UpdatedAt,
-                   UpdatedBy = trackingLog.UpdatedByNavigation.ToUserInfoDto(),
-                   TrackingLogEntries = trackingLog.TrackingLogEntries
-                                                   .Select(entry => entry.ToTrackingLogEntryGetResponse())
-                                                   .ToList(),
-                   TrackingLogEntriesStatuses = trackingLog.TrackingLogEntryStatuses.Select(s => s.ToTrackingLogEntryStatus())
-                                                                                    .ToList()
-               };
+        return new Domain.Tracking.TrackingLog(trackingLog.Id,
+                                               trackingLog.Title,
+                                               trackingLog.Description,
+                                               trackingLog.CreatedByNavigation.ToDomain(),
+                                               trackingLog.CreatedAt,
+                                               trackingLog.UpdatedByNavigation.ToDomain(),
+                                               trackingLog.UpdatedAt,
+                                               trackingLog.TrackingLogEntryStatuses.Select(s => s.ToDomain())
+                                                          .ToList(),
+                                               trackingLog.TrackingLogEntries
+                                                          .Select(entry => entry.ToDomain())
+                                                          .ToList());
     }
 }

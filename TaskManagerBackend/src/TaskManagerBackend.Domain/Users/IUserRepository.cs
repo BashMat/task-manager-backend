@@ -1,10 +1,4 @@
-﻿#region Usings
-
-using TaskManagerBackend.Dto.User;
-
-#endregion
-
-namespace TaskManagerBackend.Domain.Users;
+﻿namespace TaskManagerBackend.Domain.Users;
 
 public interface IUserRepository
 {

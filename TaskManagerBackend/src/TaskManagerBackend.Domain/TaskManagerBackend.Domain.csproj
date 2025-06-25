@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManagerBackend.Common\TaskManagerBackend.Common.csproj" />
-    <ProjectReference Include="..\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -40,7 +40,8 @@ public class TrackingService : ITrackingService
                                          CreatedAt = _dateTimeService.UtcNow
                                      };
 
-        ServiceResponse<TrackingLogGetResponse> response = await _trackingRepository.InsertTrackingLog(logToInsert);
+        TrackingLog? log = await _trackingRepository.InsertTrackingLog(logToInsert);
+        ServiceResponse<TrackingLogGetResponse> response = log?.ToDto();
 
         if (response.Data == null)
         {
@@ -53,14 +54,16 @@ public class TrackingService : ITrackingService
 
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId)
     {
-        ServiceResponse<List<TrackingLogGetResponse>> response = await _trackingRepository.GetAllTrackingLogs(userId);
+        List<TrackingLog> logs = await _trackingRepository.GetAllTrackingLogs(userId);
+        ServiceResponse<List<TrackingLogGetResponse>> response = logs.Select(log => log.ToDto()).ToList();
 
         return response;
     }
 
     public async Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id)
     {
-        ServiceResponse<TrackingLogGetResponse> response = await _trackingRepository.GetTrackingLogById(id);
+        TrackingLog? log = await _trackingRepository.GetTrackingLogById(id);
+        ServiceResponse<TrackingLogGetResponse> response = log?.ToDto();
 
         if (response.Data == null)
         {
@@ -73,8 +76,8 @@ public class TrackingService : ITrackingService
 
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
-        ServiceResponse<List<TrackingLogGetResponse>> response = 
-            await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
+        List<TrackingLog> logs = await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
+        ServiceResponse<List<TrackingLogGetResponse>> response = logs.Select(log => log.ToDto()).ToList();
 
         return response;
     }
@@ -97,9 +100,9 @@ public class TrackingService : ITrackingService
                                                    CreatedById = userId,
                                                    CreatedAt = _dateTimeService.UtcNow
                                                };
-
-        ServiceResponse<TrackingLogEntryGetResponse> response =
-            await _trackingRepository.InsertTrackingLogEntry(logEntryToInsert);
+        
+        TrackingLogEntry? entry = await _trackingRepository.InsertTrackingLogEntry(logEntryToInsert);
+        ServiceResponse<TrackingLogEntryGetResponse> response = entry?.ToDto();
 
         if (response.Data == null)
         {
@@ -112,16 +115,16 @@ public class TrackingService : ITrackingService
 
     public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId)
     {
-        ServiceResponse<List<TrackingLogEntryGetResponse>> response =
-            await _trackingRepository.GetAllTrackingLogEntries(userId);
+        List<TrackingLogEntry> entries = await _trackingRepository.GetAllTrackingLogEntries(userId);
+        ServiceResponse<List<TrackingLogEntryGetResponse>> response = entries.Select(log => log.ToDto()).ToList();
 
         return response;
     }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id)
     {
-        ServiceResponse<TrackingLogEntryGetResponse> response = 
-            await _trackingRepository.GetTrackingLogEntryById(id);
+        TrackingLogEntry? entry = await _trackingRepository.GetTrackingLogEntryById(id);
+        ServiceResponse<TrackingLogEntryGetResponse> response = entry?.ToDto();
 
         if (response.Data is null)
         {
@@ -136,11 +139,10 @@ public class TrackingService : ITrackingService
                                                                                            int id, 
                                                                                            UpdateTrackingLogEntryRequest request)
     {
+        TrackingLogEntry? entry = await _trackingRepository.GetTrackingLogEntryById(id);
         ServiceResponse<TrackingLogEntryGetResponse> response = new();
-        
-        TrackingLogEntryGetResponse? trackingLogEntry = await _trackingRepository.GetTrackingLogEntryById(id);
 
-        if (trackingLogEntry is null)
+        if (entry is null)
         {
             response.Success = false;
             response.Message = ResourceDoesNotExist;
@@ -150,7 +152,7 @@ public class TrackingService : ITrackingService
         // TODO: when resource is created and updated locally immediately,
         // DateTime value is considered equal.
         // Perhaps some sort of more accurate timestamp should be used
-        if (trackingLogEntry.UpdatedAt > request.UpdatedAt)
+        if (entry.UpdatedAt > request.UpdatedAt)
         {
             response.Success = false;
             response.Message = UpdateConflict;
@@ -170,9 +172,8 @@ public class TrackingService : ITrackingService
         updatableTrackingLogEntry.SetUpdatedData(userId,
                                                  _dateTimeService);
 
-        TrackingLogEntryGetResponse? updatedEntry = 
-            await _trackingRepository.UpdateTrackingLogEntryById(id, 
-                                                                 updatableTrackingLogEntry);
+        TrackingLogEntry? updatedEntry = 
+            await _trackingRepository.UpdateTrackingLogEntryById(id, updatableTrackingLogEntry);
         
         if (updatedEntry is null)
         {
@@ -181,15 +182,15 @@ public class TrackingService : ITrackingService
             return response;
         }
 
-        response.Data = updatedEntry;
+        response.Data = updatedEntry.ToDto();
         return response;
     }
 
     public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId, 
                                                                                                      int trackingLogEntryId)
     {
-        ServiceResponse<List<TrackingLogEntryGetResponse>> response = 
-            await _trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId);
+        List<TrackingLogEntry> entries = await _trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId);
+        ServiceResponse<List<TrackingLogEntryGetResponse>> response = entries.Select(log => log.ToDto()).ToList();
 
         return response;
     }
@@ -210,8 +211,8 @@ public class TrackingService : ITrackingService
                                                        CreatedAt = _dateTimeService.UtcNow
                                                    };
 
-        ServiceResponse<TrackingLogEntryStatusGetResponse> response = 
-            await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
+        TrackingLogEntryStatus? status = await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
+        ServiceResponse<TrackingLogEntryStatusGetResponse> response = status?.ToDto();
 
         if (response.Data == null)
         {
@@ -225,8 +226,8 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
                                                                                              int trackingLogEntryStatusId)
     {
-        ServiceResponse<List<TrackingLogEntryStatusGetResponse>> response = 
-            await _trackingRepository.DeleteTrackingLogEntryStatusById(trackingLogEntryStatusId);
+        List<TrackingLogEntryStatus> statuses = await _trackingRepository.DeleteTrackingLogEntryStatusById(userId);
+        ServiceResponse<List<TrackingLogEntryStatusGetResponse>> response = statuses.Select(log => log.ToDto()).ToList();
 
         return response;
     }

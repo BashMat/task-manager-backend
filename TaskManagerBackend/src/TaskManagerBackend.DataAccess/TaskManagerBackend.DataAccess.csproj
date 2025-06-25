@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TaskManagerBackend.Domain\TaskManagerBackend.Domain.csproj" />
     <ProjectReference Include="..\TaskManagerBackend.Common\TaskManagerBackend.Common.csproj" />
-    <ProjectReference Include="..\TaskManagerBackend.Dto\TaskManagerBackend.Dto.csproj" />
   </ItemGroup>
 
 </Project>
