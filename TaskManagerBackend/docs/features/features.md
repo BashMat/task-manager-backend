@@ -2,7 +2,7 @@
 
 ## About
 
-This article describes project features, redirecting to more specific sections for detailed information.
+This section describes project features, redirecting to more specific articles for detailed information.
 
 ## Supported features
 
