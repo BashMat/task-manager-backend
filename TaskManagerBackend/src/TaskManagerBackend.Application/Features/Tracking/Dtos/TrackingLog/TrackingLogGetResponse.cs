@@ -10,13 +10,13 @@ namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 
 public class TrackingLogGetResponse
 {
-    public int Id { get; set; }
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public required UserInfoDto CreatedBy { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public required UserInfoDto UpdatedBy { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public required List<TrackingLogEntryGetResponse> TrackingLogEntries { get; set; }
-    public required List<TrackingLogEntryStatusGetResponse> TrackingLogEntriesStatuses { get; set; }
+    public int Id { get; init; }
+    public required string Title { get; init; }
+    public string? Description { get; init; }
+    public required UserInfoDto CreatedBy { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public required UserInfoDto UpdatedBy { get; init; }
+    public DateTime UpdatedAt { get; init; }
+    public required List<TrackingLogEntryGetResponse> TrackingLogEntries { get; init; }
+    public required List<TrackingLogEntryStatusGetResponse> TrackingLogEntriesStatuses { get; init; }
 }

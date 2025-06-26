@@ -2,8 +2,8 @@
 
 public class TrackingLogEntryStatusGetResponse
 {
-    public int Id { get; set; }
-    public int TrackingLogId { get; set; }
-    public required string Title { get; set; }
-    public string? Description { get; set; }
+    public int Id { get; init; }
+    public int TrackingLogId { get; init; }
+    public required string Title { get; init; }
+    public string? Description { get; init; }
 }

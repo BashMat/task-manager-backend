@@ -6,7 +6,7 @@ namespace TaskManagerBackend.Application.Features.Auth.Dtos;
 public class UserLogInRequest
 {
     // UserName or Email
-    [MaxLength(256)]
+    [MaxLength(Constants.MaxDefaultTextLength)]
     public required string LogInData { get; init; }
 
     [Password]

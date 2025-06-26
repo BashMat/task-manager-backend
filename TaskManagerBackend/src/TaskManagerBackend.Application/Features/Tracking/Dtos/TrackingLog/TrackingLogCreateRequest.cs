@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskManagerBackend.Domain.Validation;
 
 namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 
 public class TrackingLogCreateRequest
 {
     [Required]
-    [MaxLength(256)]
-    public required string Title { get; set; }
+    [MaxLength(Constants.MaxDefaultTextLength)]
+    public required string Title { get; init; }
     
-    [MaxLength(512)]
-    public string? Description { get; set; }
+    [MaxLength(Constants.MaxLongTextLength)]
+    public string? Description { get; init; }
 }

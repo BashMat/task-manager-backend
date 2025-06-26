@@ -5,10 +5,10 @@ namespace TaskManagerBackend.Application.Features.Auth.Dtos;
 
 public class UserSignUpRequest
 {
-    [MaxLength(256)] 
+    [MaxLength(Constants.MaxDefaultTextLength)] 
     public required string UserName { get; init; }
     
-    [MaxLength(256)]
+    [MaxLength(Constants.MaxDefaultTextLength)]
     [EmailAddress]
     public required string Email { get; init; }
 
