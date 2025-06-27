@@ -4,8 +4,8 @@
 // Should separate inner application exception message (for logging) and client error message.
 /// <summary>
 ///     Represents interface for all application exceptions.
-///     Every custom exception has to implement it to indicate that it is processed exception and not a non-processed
-///     exception from bug or non-processed case.
+///     Every custom exception has to implement it to indicate that it is a processed exception
+///     and not a non-processed exception from bug or other case.
 /// </summary>
 public interface IApplicationException
 {

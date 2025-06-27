@@ -3,8 +3,8 @@
 namespace TaskManagerBackend.Application.Exceptions;
 
 /// <summary>
-/// Represents main exception handler in ASP. NET Core application
-/// used by the exception handler middleware.
+///     Represents main exception handler in ASP. NET Core application
+///     used by the exception handler middleware.
 /// </summary>
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         switch (applicationException)
         {
             case InvalidTokenException:
-                return StatusCodes.Status403Forbidden;
+                return StatusCodes.Status401Unauthorized;
             default:
                 _logger.LogError("Unrecognised application error");
                 return StatusCodes.Status500InternalServerError;
