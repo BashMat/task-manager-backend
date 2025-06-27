@@ -4,7 +4,7 @@ Own backend project for task management. Frontend client is located [here](https
 
 App supports:
 - creating user profiles (requires username, email and password)
-- managing user kanban-style boards with columns and cards
+- managing logs of tracked entries that can describe lists/grids of tasks, options or other items, kanban-style boards with columns and cards, etc.
 
 `master` branch status:
 
