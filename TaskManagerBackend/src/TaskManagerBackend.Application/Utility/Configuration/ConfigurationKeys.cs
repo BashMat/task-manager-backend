@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Common;
+﻿namespace TaskManagerBackend.Application.Utility.Configuration;
 
 /// <summary>
 ///     Provides constant values for configuration fields.

@@ -16,7 +16,6 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
 using TaskManagerBackend.Application.Utility.Security;
-using TaskManagerBackend.Common;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
