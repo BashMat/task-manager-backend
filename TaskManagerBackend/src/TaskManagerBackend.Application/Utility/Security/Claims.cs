@@ -3,7 +3,7 @@
 /// <summary>
 ///     Provides constant values for Claims.
 /// </summary>
-public abstract class Claims
+public static class Claims
 {
     public const string Sub = "sub";
 }

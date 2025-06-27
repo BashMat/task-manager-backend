@@ -3,7 +3,7 @@
 /// <summary>
 ///     Provides constant values for configuration fields.
 /// </summary>
-public abstract class ConfigurationKeys
+public static class ConfigurationKeys
 {
     public const string TokensSection = "Tokens";
     public const string SecretKey = "Secret";
