@@ -11,7 +11,7 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Tracking;
 
-// TODO: Add tests for problem details responses
+// TODO: Add tests for problem details responses (request validation, errors during action execution)
 public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
 {
     public WhenRequestingTrackingLogEntryStatuses(MsSqlTests fixture) : base(fixture) { }

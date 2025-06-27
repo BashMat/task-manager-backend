@@ -97,4 +97,68 @@ public class WhenLoggingIn : AuthorizationTestBase
         content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
         content.Detail.Should().Be(AuthService.IncorrectCredentialsMessage);
     }
+    
+    [Fact]
+    public async Task LogInIsUnsuccessfulIfUserNameIsTooLong()
+    {
+        UserLogInRequest request = new()
+                                   {
+                                       LogInData = Faker.Random.String2(257, 1024), 
+                                       Password = Password
+                                   };
+
+        HttpResponseMessage response = await HttpClient.LogIn(request);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
+    
+    [Fact]
+    public async Task LogInIsUnsuccessfulIfEmailIsTooLong()
+    {
+        UserLogInRequest request = new()
+                                   {
+                                       LogInData = $"{Faker.Random.String2(257, 1024)}@test.test", 
+                                       Password = Password
+                                   };
+
+        HttpResponseMessage response = await HttpClient.LogIn(request);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
+    
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public async Task SignUpIsUnsuccessfulIfPasswordIsTooShort(int passwordLength)
+    {
+        UserLogInRequest request = new()
+                                   {
+                                       LogInData = Email, 
+                                       Password = Faker.Internet.Password(length: passwordLength)
+                                   };
+
+        HttpResponseMessage response = await HttpClient.LogIn(request);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
 }
