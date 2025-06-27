@@ -3,6 +3,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
@@ -12,7 +13,6 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Auth;
 
-// TODO: Add tests for problem details responses
 public class WhenSigningUp : AuthorizationTestBase
 {
     public WhenSigningUp(MsSqlTests fixture) : base(fixture) { }
@@ -31,7 +31,8 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
+        ServiceResponse<UserSignUpResponse>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
 
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();
@@ -56,13 +57,13 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
-        content.Data.Should().BeNull();
-        content.Success.Should().BeFalse();
-        content.Message.Should().Be(AuthService.InvalidEmailAddressMessage);
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Detail.Should().Be(AuthService.InvalidEmailAddressMessage);
     }
     
     [Fact]
@@ -78,13 +79,13 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         content.Should().NotBeNull();
-        content.Data.Should().BeNull();
-        content.Success.Should().BeFalse();
-        content.Message.Should().Be(AuthService.UserAlreadyExistsMessage);
+        content.Status.Should().Be((int)HttpStatusCode.Conflict);
+        content.Detail.Should().Be(AuthService.UserAlreadyExistsMessage);
     }
     
     [Fact]
@@ -100,12 +101,12 @@ public class WhenSigningUp : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.SignUp(request);
-        ServiceResponse<UserSignUpResponse>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         content.Should().NotBeNull();
-        content.Data.Should().BeNull();
-        content.Success.Should().BeFalse();
-        content.Message.Should().Be(AuthService.UserAlreadyExistsMessage);
+        content.Status.Should().Be((int)HttpStatusCode.Conflict);
+        content.Detail.Should().Be(AuthService.UserAlreadyExistsMessage);
     }
 }

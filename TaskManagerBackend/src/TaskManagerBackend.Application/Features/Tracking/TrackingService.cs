@@ -5,6 +5,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Tracking;
 
 #endregion
@@ -41,12 +42,12 @@ public class TrackingService : ITrackingService
                                      };
 
         TrackingLog? log = await _trackingRepository.InsertTrackingLog(logToInsert);
-        ServiceResponse<TrackingLogGetResponse> response = log?.ToDto();
+        TrackingLogGetResponse? response = log?.ToDto();
 
-        if (response.Data == null)
+        if (response is null)
         {
-            response.Success = false;
-            response.Message = CouldNotCreateMessage;
+            return new ServiceResponse<TrackingLogGetResponse>(actionResult: ActionResults.ServerError,
+                                                               message: CouldNotCreateMessage);
         }
 
         return response;
@@ -55,20 +56,18 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId)
     {
         List<TrackingLog> logs = await _trackingRepository.GetAllTrackingLogs(userId);
-        ServiceResponse<List<TrackingLogGetResponse>> response = logs.Select(log => log.ToDto()).ToList();
-
-        return response;
+        return logs.Select(l => l.ToDto()).ToList();
     }
 
     public async Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id)
     {
         TrackingLog? log = await _trackingRepository.GetTrackingLogById(id);
-        ServiceResponse<TrackingLogGetResponse> response = log?.ToDto();
+        TrackingLogGetResponse? response = log?.ToDto();
 
-        if (response.Data == null)
+        if (response is null)
         {
-            response.Success = false;
-            response.Message = ResourceDoesNotExist;
+            return new ServiceResponse<TrackingLogGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                               message: ResourceDoesNotExist);
         }
 
         return response;
@@ -77,9 +76,7 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
         List<TrackingLog> logs = await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
-        ServiceResponse<List<TrackingLogGetResponse>> response = logs.Select(log => log.ToDto()).ToList();
-
-        return response;
+        return logs.Select(l => l.ToDto()).ToList();
     }
 
     #endregion
@@ -102,12 +99,12 @@ public class TrackingService : ITrackingService
                                                };
         
         TrackingLogEntry? entry = await _trackingRepository.InsertTrackingLogEntry(logEntryToInsert);
-        ServiceResponse<TrackingLogEntryGetResponse> response = entry?.ToDto();
+        TrackingLogEntryGetResponse? response = entry?.ToDto();
 
-        if (response.Data == null)
+        if (response is null)
         {
-            response.Success = false;
-            response.Message = CouldNotCreateMessage;
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResult: ActionResults.ServerError,
+                                                                    message: CouldNotCreateMessage);
         }
 
         return response;
@@ -116,20 +113,18 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId)
     {
         List<TrackingLogEntry> entries = await _trackingRepository.GetAllTrackingLogEntries(userId);
-        ServiceResponse<List<TrackingLogEntryGetResponse>> response = entries.Select(log => log.ToDto()).ToList();
-
-        return response;
+        return entries.Select(e => e.ToDto()).ToList();
     }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id)
     {
         TrackingLogEntry? entry = await _trackingRepository.GetTrackingLogEntryById(id);
-        ServiceResponse<TrackingLogEntryGetResponse> response = entry?.ToDto();
+        TrackingLogEntryGetResponse? response = entry?.ToDto();
 
-        if (response.Data is null)
+        if (response is null)
         {
-            response.Success = false;
-            response.Message = ResourceDoesNotExist;
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                                    message: ResourceDoesNotExist);
         }
 
         return response;
@@ -140,13 +135,11 @@ public class TrackingService : ITrackingService
                                                                                            UpdateTrackingLogEntryRequest request)
     {
         TrackingLogEntry? entry = await _trackingRepository.GetTrackingLogEntryById(id);
-        ServiceResponse<TrackingLogEntryGetResponse> response = new();
 
         if (entry is null)
         {
-            response.Success = false;
-            response.Message = ResourceDoesNotExist;
-            return response;
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                                    message: ResourceDoesNotExist);
         }
 
         // TODO: when resource is created and updated locally immediately,
@@ -154,9 +147,8 @@ public class TrackingService : ITrackingService
         // Perhaps some sort of more accurate timestamp should be used
         if (entry.UpdatedAt > request.UpdatedAt)
         {
-            response.Success = false;
-            response.Message = UpdateConflict;
-            return response;
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResult: ActionResults.DataConflict,
+                                                                    message: UpdateConflict);
         }
 
         UpdatableTrackingLogEntry updatableTrackingLogEntry = new()
@@ -177,30 +169,27 @@ public class TrackingService : ITrackingService
         
         if (updatedEntry is null)
         {
-            response.Success = false;
-            response.Message = ResourceDoesNotExist;
-            return response;
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                                    message: ResourceDoesNotExist);
         }
-
-        response.Data = updatedEntry.ToDto();
-        return response;
+        
+        return updatedEntry.ToDto();
     }
 
     public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId, 
                                                                                                      int trackingLogEntryId)
     {
-        List<TrackingLogEntry> entries = await _trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId);
-        ServiceResponse<List<TrackingLogEntryGetResponse>> response = entries.Select(log => log.ToDto()).ToList();
-
-        return response;
+        List<TrackingLogEntry> entries = 
+            await _trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId);
+        return entries.Select(e => e.ToDto()).ToList();
     }
 
     #endregion
 
     #region Tracking Log Entry Statuses
 
-    public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId,
-                                                                                       TrackingLogEntryStatusCreateRequest newStatus)
+    public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, 
+                                                                                                  TrackingLogEntryStatusCreateRequest newStatus)
     {
         NewTrackingLogEntryStatus statusToInsert = new()
                                                    {
@@ -212,24 +201,23 @@ public class TrackingService : ITrackingService
                                                    };
 
         TrackingLogEntryStatus? status = await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
-        ServiceResponse<TrackingLogEntryStatusGetResponse> response = status?.ToDto();
+        TrackingLogEntryStatusGetResponse? response = status?.ToDto();
 
-        if (response.Data == null)
+        if (response is null)
         {
-            response.Success = false;
-            response.Message = CouldNotCreateMessage;
+            return new ServiceResponse<TrackingLogEntryStatusGetResponse>(actionResult: ActionResults.ServerError,
+                                                                          message: CouldNotCreateMessage);
         }
 
         return response;
     }
 
     public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
-                                                                                             int trackingLogEntryStatusId)
+                                                                                                        int trackingLogEntryStatusId)
     {
-        List<TrackingLogEntryStatus> statuses = await _trackingRepository.DeleteTrackingLogEntryStatusById(userId);
-        ServiceResponse<List<TrackingLogEntryStatusGetResponse>> response = statuses.Select(log => log.ToDto()).ToList();
-
-        return response;
+        List<TrackingLogEntryStatus> statuses = 
+            await _trackingRepository.DeleteTrackingLogEntryStatusById(userId);
+        return statuses.Select(s => s.ToDto()).ToList();
     }
 
     #endregion

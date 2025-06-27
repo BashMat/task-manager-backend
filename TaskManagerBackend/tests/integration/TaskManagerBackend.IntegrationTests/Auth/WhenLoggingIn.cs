@@ -3,6 +3,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
@@ -12,7 +13,6 @@ using Xunit;
 
 namespace TaskManagerBackend.IntegrationTests.Auth;
 
-// TODO: Add tests for problem details responses
 public class WhenLoggingIn : AuthorizationTestBase
 {
     public WhenLoggingIn(MsSqlTests fixture) : base(fixture) { }
@@ -71,13 +71,12 @@ public class WhenLoggingIn : AuthorizationTestBase
                                        };
 
         HttpResponseMessage response = await HttpClient.LogIn(request);
-        ServiceResponse<string>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        ProblemDetails? content = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         content.Should().NotBeNull();
-        content.Data.Should().BeNull();
-        content.Success.Should().BeFalse();
-        content.Message.Should().Be(AuthService.IncorrectCredentialsMessage);
+        content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
+        content.Detail.Should().Be(AuthService.IncorrectCredentialsMessage);
     }
     
     [Fact]
@@ -91,12 +90,11 @@ public class WhenLoggingIn : AuthorizationTestBase
                                       };
 
         HttpResponseMessage response = await HttpClient.LogIn(request);
-        ServiceResponse<string>? content = await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        ProblemDetails? content = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         content.Should().NotBeNull();
-        content.Data.Should().BeNull();
-        content.Success.Should().BeFalse();
-        content.Message.Should().Be(AuthService.IncorrectCredentialsMessage);
+        content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
+        content.Detail.Should().Be(AuthService.IncorrectCredentialsMessage);
     }
 }

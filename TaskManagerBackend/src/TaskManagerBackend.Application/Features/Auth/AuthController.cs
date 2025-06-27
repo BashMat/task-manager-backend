@@ -32,12 +32,8 @@ public class AuthController : ControllerBase
         ServiceResponse<UserSignUpResponse> response = await _authService.SignUp(requestData);
             
         _logger.LogTrace("Finish processing POST /api/auth/signup request");
-            
-        if (response.Success)
-        {
-            return Ok(response);
-        }
-        return BadRequest(response);
+
+        return ConvertServiceResponse(response);
     }
     
     [HttpPost("login")]
@@ -49,10 +45,6 @@ public class AuthController : ControllerBase
             
         _logger.LogTrace("Finish POST /api/auth/login request processing");
             
-        if (response.Success)
-        {
-            return Ok(response);
-        }
-        return Unauthorized(response);
+        return ConvertServiceResponse(response);
     }
 }

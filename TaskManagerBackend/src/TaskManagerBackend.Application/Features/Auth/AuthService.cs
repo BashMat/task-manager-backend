@@ -4,6 +4,7 @@ using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
 
@@ -38,27 +39,21 @@ public class AuthService : IAuthService
 
     public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest requestData)
     {
-        ServiceResponse<UserSignUpResponse> response = new();
-
         // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
         if (!_emailValidator.Validate(requestData.Email))
         {
             _logger.LogTrace("Invalid email address format");
-                
-            response.Data = null;
-            response.Success = false;
-            response.Message = InvalidEmailAddressMessage;
-            return response;
+            
+            return new ServiceResponse<UserSignUpResponse>(actionResult: ActionResults.UserError,
+                                                           message: InvalidEmailAddressMessage);
         }
 
         if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
         {
             _logger.LogTrace("User already exists");
-
-            response.Data = null;
-            response.Success = false;
-            response.Message = UserAlreadyExistsMessage;
-            return response;
+            
+            return new ServiceResponse<UserSignUpResponse>(actionResult: ActionResults.DataConflict,
+                                                           message: UserAlreadyExistsMessage);
         }
 
         _logger.LogTrace("Start user registration");
@@ -69,11 +64,11 @@ public class AuthService : IAuthService
         NewUser newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
         await _userRepository.InsertUser(newUser);
 
-        response.Data = new UserSignUpResponse 
-                        {
-                            UserName = requestData.UserName,
-                            Email = requestData.Email
-                        };
+        UserSignUpResponse response = new()
+                                      {
+                                          UserName = requestData.UserName,
+                                          Email = requestData.Email
+                                      };
 
         _logger.LogTrace("Finish user registration");
 
@@ -82,34 +77,26 @@ public class AuthService : IAuthService
 
     public async Task<ServiceResponse<string>> LogIn(UserLogInRequest requestData)
     {
-        ServiceResponse<string> response = new();
-
         UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
 
         if (data is null)
         {
             _logger.LogTrace("User does not exist");
 
-            response.Data = null;
-            response.Success = false;
-            response.Message = IncorrectCredentialsMessage;
-            return response;
+            return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
+                                               message: IncorrectCredentialsMessage);
         }
 
         if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
         {
             _logger.LogTrace("Password hash was verified");
-
-            response.Data = _cryptographyService.CreateToken(data.Id);
-            return response;
+            
+            return _cryptographyService.CreateToken(data.Id);
         }
 
         _logger.LogTrace("Password hash was not verified");
 
-        response.Data = null;
-        response.Success = false;
-        response.Message = IncorrectCredentialsMessage;
-
-        return response;
+        return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
+                                           message: IncorrectCredentialsMessage);
     }
 }

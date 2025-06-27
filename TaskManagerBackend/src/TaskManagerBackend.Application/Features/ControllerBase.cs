@@ -1,7 +1,10 @@
 ﻿#region Usings
 
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Exceptions;
+using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain;
 
 #endregion
 
@@ -44,6 +47,25 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
             {
                 throw new InvalidTokenException(InvalidTokenExceptionMessage);
             }
+        }
+    }
+
+    // TODO: Try to move conversion into ServiceResponse<T> as user-defined implicit conversion.
+    protected ObjectResult ConvertServiceResponse<T>(ServiceResponse<T> response)
+    {
+        switch (response.ActionResult)
+        {
+            case ActionResults.Success:
+                return Ok(response);
+            case ActionResults.UserError:
+            case ActionResults.Unauthorized:
+            case ActionResults.AccessDenied:
+            case ActionResults.ResourceNotFound:
+            case ActionResults.DataConflict:
+            case ActionResults.ServerError:
+            default:
+                return Problem(detail: response.Message,
+                               statusCode: response.StatusCode);
         }
     }
 }
