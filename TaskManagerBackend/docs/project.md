@@ -39,15 +39,17 @@ Project uses following technologies:
 - `task-management-backend/TaskManagerBackend` – main directory for project.
     - `/docs` – directory for documentation. `.md` file extension is used for articles.
     - `/src` – directory for actual app source code.
-        - `/TaskManagerBackend.Application` – web application level project, includes startup file, controllers and services.
-        - `/TaskManagerBackend.Common` – project for common items like const strings.
-        - `/TaskManagerBackend.DataAccess` – project for Data Access Layer, includes classes for database queries and SQL scripts.
-        - `/TaskManagerBackend.Domain` – project for domain classes.
-        - `/TaskManagerBackend.Dto` – project for DTOs.
+        - `/TaskManagerBackend.Application` – web API level project, includes startup file, controllers with request and response DTOs and non-domain services.
+        - `/TaskManagerBackend.Common` – project for common items like const strings or data or service classes without direct correlation to use cases.
+        - `/TaskManagerBackend.DataAccess` – project for Data Access Layer, includes database ORM model classes, classes for database queries and commands and SQL scripts.
+        - `/TaskManagerBackend.Domain` – project for domain code, includes data and service classes.
     - `/tests` – directory for test code.
-        - `/TaskManagerBackend.Application.Tests` – project for TaskManagerBackend.Application related unit tests.
-        - `/TaskManagerBackend.Domain.Tests` – project for TaskManagerBackend.Domain related unit tests.
+        - `/integration` – directory for integration tests.
+          - `/TaskManagerBackend.IntegrationTests` – project for integration tests.
         - `/TaskManagerBackend.Tests.Common` – project for common testing related items.
+        - `/unit` – directory for unit tests.
+          - `/TaskManagerBackend.Application.Tests` – project for TaskManagerBackend.Application related unit tests.
+          - `/TaskManagerBackend.Domain.Tests` – project for TaskManagerBackend.Domain related unit tests.
     - Other files are located outside specific directories:
       - `Directory.Build.props` and `TaskManagerBackend.sln` are common file for managing .NET application.
       - `docker-compose.yaml`, `Dockerfile` and `.dockerignore` files are used for application building and deploying via `Docker`.
