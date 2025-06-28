@@ -216,7 +216,7 @@ public class TrackingService : ITrackingService
                                                                                                         int trackingLogEntryStatusId)
     {
         List<TrackingLogEntryStatus> statuses = 
-            await _trackingRepository.DeleteTrackingLogEntryStatusById(userId);
+            await _trackingRepository.DeleteTrackingLogEntryStatusById(trackingLogEntryStatusId);
         return statuses.Select(s => s.ToDto()).ToList();
     }
 

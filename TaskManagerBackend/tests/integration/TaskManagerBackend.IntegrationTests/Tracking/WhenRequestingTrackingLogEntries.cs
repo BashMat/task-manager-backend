@@ -17,19 +17,7 @@ namespace TaskManagerBackend.IntegrationTests.Tracking;
 // TODO: Add tests for problem details responses (request validation, errors during action execution)
 public class WhenRequestingTrackingLogEntries : TrackingTestBase
 {
-    private TrackingLogGetResponse? _defaultTrackingLog;
-    private TrackingLogEntryStatusGetResponse? _defaultTrackingLogEntryStatus;
-    
     public WhenRequestingTrackingLogEntries(MsSqlTests fixture) : base(fixture) { }
-
-    public override async Task InitializeAsync()
-    {
-        await base.InitializeAsync();
-        
-        _defaultTrackingLog = await CreateTrackingLogAndValidateResponse();
-        _defaultTrackingLogEntryStatus = 
-            await CreateTrackingLogEntryStatusAndValidateResponse(_defaultTrackingLog!.Id);
-    }
 
     [Fact]
     public async Task CreatingTrackingLogEntryIsSuccessful()
@@ -38,8 +26,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         const string Description = "Test description";
         DateTime utcDateTimeBeforeRequest = new DateTimeService().UtcNow;
 
-        HttpResponseMessage response = await CreateTrackingLogEntry(_defaultTrackingLog!.Id,
-                                                                    _defaultTrackingLogEntryStatus!.Id,
+        HttpResponseMessage response = await CreateTrackingLogEntry(DefaultTrackingLog!.Id,
+                                                                    DefaultTrackingLogEntryStatus!.Id,
                                                                     Title,
                                                                     Description);
         ServiceResponse<TrackingLogEntryGetResponse>? content = 
@@ -54,8 +42,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.CreatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
         content.Data.UpdatedBy.UserName.Should().Be(UserName);
         content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
-        content.Data.TrackingLogId.Should().Be(_defaultTrackingLog.Id);
-        content.Data.Status.Should().BeEquivalentTo(_defaultTrackingLogEntryStatus);
+        content.Data.TrackingLogId.Should().Be(DefaultTrackingLog.Id);
+        content.Data.Status.Should().BeEquivalentTo(DefaultTrackingLogEntryStatus);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
@@ -74,8 +62,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
     public async Task GettingTrackingLogEntryByIdIsSuccessful()
     {
         TrackingLogEntryGetResponse createdTrackingLogEntry = 
-            await CreateTrackingLogEntryAndValidateResponse(_defaultTrackingLog!.Id,
-                                                            _defaultTrackingLogEntryStatus!.Id);
+            await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                            DefaultTrackingLogEntryStatus!.Id);
 
         HttpResponseMessage response = await HttpClient.GetTrackingLogEntryById(createdTrackingLogEntry.Id);
         ServiceResponse<TrackingLogEntryGetResponse>? content = 
@@ -91,8 +79,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
     [Fact]
     public async Task GettingTrackingLogEntriesIsSuccessful()
     {
-        await CreateTrackingLogEntry(_defaultTrackingLog!.Id,
-                                     _defaultTrackingLogEntryStatus!.Id);
+        await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                        DefaultTrackingLogEntryStatus!.Id);
 
         HttpResponseMessage response = await HttpClient.GetTrackingLogEntries();
         ServiceResponse<IReadOnlyCollection<TrackingLogEntryGetResponse>>? content = 
@@ -109,8 +97,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
     public async Task UpdatingTrackingLogEntryByIdIsSuccessful()
     {
         TrackingLogEntryGetResponse createdTrackingLogEntry = 
-            await CreateTrackingLogEntryAndValidateResponse(_defaultTrackingLog!.Id,
-                                                            _defaultTrackingLogEntryStatus!.Id);
+            await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                            DefaultTrackingLogEntryStatus!.Id);
         const string Title = "NewLogEntry";
         const string Description = "Test description";
         DateTime utcDateTimeBeforeRequest = new DateTimeService().UtcNow;
@@ -151,8 +139,8 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
     public async Task DeletingTrackingLogEntryByIdIsSuccessful()
     {
         TrackingLogEntryGetResponse createdTrackingLogEntry = 
-            await CreateTrackingLogEntryAndValidateResponse(_defaultTrackingLog!.Id,
-                                                            _defaultTrackingLogEntryStatus!.Id);
+            await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                            DefaultTrackingLogEntryStatus!.Id);
 
         HttpResponseMessage response = await HttpClient.DeleteTrackingLogEntryById(createdTrackingLogEntry.Id);
         ServiceResponse<IReadOnlyCollection<TrackingLogEntryGetResponse>>? content = 

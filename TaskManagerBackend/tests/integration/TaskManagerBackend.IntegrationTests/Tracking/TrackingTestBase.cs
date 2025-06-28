@@ -18,12 +18,16 @@ public class TrackingTestBase : IntegrationTestBase,
                                 IAsyncLifetime,
                                 IDisposable
 {
+    protected TrackingLogGetResponse? DefaultTrackingLog;
+    protected TrackingLogEntryStatusGetResponse? DefaultTrackingLogEntryStatus;
+    
     protected TrackingTestBase(MsSqlTests fixture) : base(fixture)
     {
     }
 
     #region IAsyncLifetime Members
 
+    // TODO: Improve initialization. Create additional users, store multiple users and their Tracking Logs, test everything
     public virtual async Task InitializeAsync()
     {
         HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequest
@@ -40,6 +44,38 @@ public class TrackingTestBase : IntegrationTestBase,
         }
 
         HttpClient.SetAccessToken(response.Data);
+
+        int existingLogsCount = Faker.Random.Int(min: 5, max: 10);
+        int defaultLogCount = Faker.Random.Int(min: 0, max: existingLogsCount - 1);
+
+        for (int i = 0; i < existingLogsCount; i++)
+        {
+            TrackingLogGetResponse log = await CreateTrackingLogAndValidateResponse();
+            if (i == defaultLogCount)
+            {
+                DefaultTrackingLog = log;
+            }
+            
+            int existingStatusesCount = Faker.Random.Int(min: 2, max: 10);
+            int defaultStatusCount = Faker.Random.Int(min: 0, max: existingStatusesCount - 1);
+            
+            for (int j = 0; j < existingStatusesCount; j++)
+            {
+                TrackingLogEntryStatusGetResponse status = 
+                    await CreateTrackingLogEntryStatusAndValidateResponse(log.Id);
+                if (i == defaultLogCount && j == defaultStatusCount)
+                {
+                    DefaultTrackingLogEntryStatus = status;
+                }
+            
+                int existingEntriesCount = Faker.Random.Int(min: 2, max: 10);
+                for (int k = 0; k < existingEntriesCount; k++)
+                {
+                    await CreateTrackingLogEntryAndValidateResponse(log.Id,
+                                                                    status.Id);
+                }
+            }
+        }
     }
 
     public Task DisposeAsync()
