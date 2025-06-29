@@ -1,4 +1,9 @@
-﻿using TaskManagerBackend.Domain;
+﻿#region Usings
+
+using System.Text.Json.Serialization;
+using TaskManagerBackend.Domain;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Utility;
 
@@ -18,10 +23,14 @@ public class ServiceResponse<T>
         return new ServiceResponse<T>(data);
     }
     
-    public T? Data { get; set; }
-    public ActionResults ActionResult { get; set; }
-    public bool Success => ActionResult == ActionResults.Success;
-    public string? Message { get; set; }
+    public T? Data { get; init; }
+    
+    [JsonIgnore]
+    public ActionResults ActionResult { get; init; }
+    public bool Success => Data != null && ActionResult == ActionResults.Success;
+    public string? Message { get; init; }
+    
+    [JsonIgnore]
     public int? StatusCode => ConvertActionResultToStatusCode();
     
     private int? ConvertActionResultToStatusCode()
