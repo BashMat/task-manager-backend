@@ -99,6 +99,7 @@ public class AuthServiceTestBase : UnitTestsBase
                         .Returns(token);
     }
 
+    [Obsolete($"{nameof(IssueToken)} method must be used to issue both Access and Refresh tokens")]
     protected Task<ServiceResponse<string>> LogIn(UserLogInRequest? request = null)
     {
         request ??= new UserLogInRequest()

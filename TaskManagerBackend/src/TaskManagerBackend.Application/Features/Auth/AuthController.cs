@@ -37,6 +37,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
+    [Obsolete("/api/auth/token endpoint must be used to issue both Access and Refresh tokens")]
     public async Task<IActionResult> LogIn([FromBody] UserLogInRequest requestData)
     {
         _logger.LogTrace("Start POST /api/auth/login request processing");

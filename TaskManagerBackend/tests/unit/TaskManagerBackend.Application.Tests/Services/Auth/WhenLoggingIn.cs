@@ -8,6 +8,7 @@ using Xunit;
 
 namespace TaskManagerBackend.Application.Tests.Services.Auth;
 
+[Obsolete($"{nameof(IssueToken)} method must be used to issue both Access and Refresh tokens")]
 public class WhenLoggingIn : AuthServiceTestBase
 {
     [Fact]

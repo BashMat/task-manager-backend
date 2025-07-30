@@ -75,6 +75,7 @@ public class AuthService : IAuthService
         return response;
     }
 
+    [Obsolete($"{nameof(IssueToken)} method must be used to issue both Access and Refresh tokens")]
     public async Task<ServiceResponse<string>> LogIn(UserLogInRequest requestData)
     {
         UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
