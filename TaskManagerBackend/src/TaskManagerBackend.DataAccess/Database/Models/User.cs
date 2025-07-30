@@ -31,4 +31,6 @@ public partial class User : IEntity
     public virtual ICollection<TrackingLogEntry> TrackingLogEntryUpdatedByNavigations { get; set; } = new List<TrackingLogEntry>();
 
     public virtual ICollection<TrackingLog> TrackingLogUpdatedByNavigations { get; set; } = new List<TrackingLog>();
+
+    public virtual RefreshToken? RefreshToken { get; set; }
 }
