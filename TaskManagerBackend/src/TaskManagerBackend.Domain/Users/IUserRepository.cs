@@ -3,6 +3,7 @@
 public interface IUserRepository
 {
     public Task<UserPasswordData?> GetUserPasswordData(string logInData);
+    public Task SetUserRefreshToken(int userId, TokenData token);
     public Task<bool> CheckIfUserExistsById(int id);
     public Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email);
     public Task InsertUser(NewUser newUser);

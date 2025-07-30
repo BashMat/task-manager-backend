@@ -3,6 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Users;
 
 #endregion
@@ -38,6 +39,20 @@ public class UserRepository : IUserRepository
         _logger.LogInformation("Finishing getting user password data");
         
         return data;
+    }
+    public async Task SetUserRefreshToken(int userId, TokenData tokenData)
+    {
+        RefreshToken token = new()
+                             {
+                                 UserId = userId,
+                                 Token = tokenData.Token,
+                                 ExpiresAt = tokenData.ExpiresAt,
+                                 IssuedAt = tokenData.IssuedAt
+                             };
+
+        _dbContext.RefreshTokens.Add(token);
+
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<bool> CheckIfUserExistsById(int id)
