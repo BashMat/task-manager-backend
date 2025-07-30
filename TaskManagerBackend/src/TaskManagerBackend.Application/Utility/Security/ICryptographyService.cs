@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using TaskManagerBackend.Domain.Users;
 
 namespace TaskManagerBackend.Application.Utility.Security;
 
@@ -9,6 +10,7 @@ public interface ICryptographyService
 {
     ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password);
     bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
-    string CreateToken(int userId);
+    string IssueAccessToken(int userId);
+    TokenData IssueRefreshToken(int userId);
     SecurityKey GetSigningKey();
 }

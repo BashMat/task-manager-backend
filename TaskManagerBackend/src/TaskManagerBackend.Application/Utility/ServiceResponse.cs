@@ -43,6 +43,7 @@ public class ServiceResponse<T>
                    ActionResults.AccessDenied => StatusCodes.Status403Forbidden,
                    ActionResults.ResourceNotFound => StatusCodes.Status404NotFound,
                    ActionResults.DataConflict => StatusCodes.Status409Conflict,
+                   ActionResults.NotImplemented => StatusCodes.Status501NotImplemented,
                    ActionResults.ServerError => StatusCodes.Status500InternalServerError,
                    _ => null
                };

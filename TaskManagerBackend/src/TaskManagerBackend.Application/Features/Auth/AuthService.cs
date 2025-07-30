@@ -91,12 +91,56 @@ public class AuthService : IAuthService
         {
             _logger.LogTrace("Password hash was verified");
             
-            return _cryptographyService.CreateToken(data.Id);
+            return _cryptographyService.IssueAccessToken(data.Id);
         }
 
         _logger.LogTrace("Password hash was not verified");
 
         return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
                                            message: IncorrectCredentialsMessage);
+    }
+    
+    public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData)
+    {
+        if (requestData is { GrantType: "password", UserName: not null, Password: not null })
+        {
+            UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.UserName);
+
+            if (data is null)
+            {
+                _logger.LogTrace("User does not exist");
+
+                return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                               message: IncorrectCredentialsMessage);
+            }
+
+            if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
+            {
+                _logger.LogTrace("Password hash was verified");
+            
+                string accessToken = _cryptographyService.IssueAccessToken(data.Id);
+                TokenData refreshToken = _cryptographyService.IssueRefreshToken(data.Id);
+                await _userRepository.SetUserRefreshToken(data.Id, refreshToken);
+                
+                return new IssueTokenResponse()
+                       {
+                           AccessToken = accessToken,
+                           ExpiresIn = (refreshToken.ExpiresAt - _dateTimeService.UtcNow).Seconds,
+                           RefreshToken = refreshToken.Token,
+                           TokenType = "Bearer"
+                       };
+            }
+
+            _logger.LogTrace("Password hash was not verified");
+
+            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                           message: IncorrectCredentialsMessage);
+        }
+        else if (requestData.GrantType == "refresh_token")
+        {
+            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.NotImplemented);
+        }
+        
+        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError);
     }
 }

@@ -47,4 +47,16 @@ public class AuthController : ControllerBase
             
         return ConvertServiceResponse(response);
     }
+    
+    [HttpPost("token")]
+    public async Task<IActionResult> IssueToken([FromBody] IssueTokenRequest requestData)
+    {
+        _logger.LogTrace($"Start POST /api/auth/token request processing for grant_type {requestData.GrantType}");
+            
+        ServiceResponse<IssueTokenResponse> response = await _authService.IssueToken(requestData);
+            
+        _logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
+            
+        return ConvertServiceResponse(response);
+    }
 }

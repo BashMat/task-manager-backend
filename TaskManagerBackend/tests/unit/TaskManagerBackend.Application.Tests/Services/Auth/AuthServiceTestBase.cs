@@ -95,7 +95,7 @@ public class AuthServiceTestBase : UnitTestsBase
                                                          It.IsAny<byte[]>(), 
                                                          It.IsAny<byte[]>()))
                         .Returns(isPasswordHashCorrect);
-        AuthProviderMock.Setup(o => o.CreateToken(It.IsAny<int>()))
+        AuthProviderMock.Setup(o => o.IssueAccessToken(It.IsAny<int>()))
                         .Returns(token);
     }
 
@@ -107,5 +107,16 @@ public class AuthServiceTestBase : UnitTestsBase
                         Password = Faker.Internet.Password()
                     };
         return CreateAuthService().LogIn(request);
+    }
+    
+    protected Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest? request = null)
+    {
+        request ??= new IssueTokenRequest()
+                    {
+                        GrantType = "password",
+                        UserName = Faker.Internet.UserName(),
+                        Password = Faker.Internet.Password()
+                    };
+        return CreateAuthService().IssueToken(request);
     }
 }

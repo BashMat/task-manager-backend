@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Users;
 
 #endregion
 
@@ -39,24 +40,50 @@ public class CryptographyService : ICryptographyService
         return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
     }
 
-    public string CreateToken(int userId)
+    public string IssueAccessToken(int userId)
     {
         List<Claim> claims = new()
                              {
                                  new Claim(Claims.Sub, userId.ToString())
                              };
 
-        DateTime expirationDateTime = GetExpirationDateTime();
-        SecurityKey key = GetSigningKey();
-        SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-        JwtSecurityToken token = new JwtSecurityToken(null,
-                                                      null,
-                                                      claims,
-                                                      null,
-                                                      expirationDateTime,
-                                                      signingCredentials);
+        DateTime expiration = GetAccessTokenExpirationDateTime();
+        
+        return IssueToken(userId, claims, expiration).Token;
+    }
+    
+    public TokenData IssueRefreshToken(int userId)
+    {
+        List<Claim> claims = new()
+                             {
+                                 new Claim(Claims.Sub, userId.ToString())
+                             };
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        DateTime expiration = GetRefreshTokenExpirationDateTime();
+
+        return IssueToken(userId, claims, expiration);
+    }
+
+    private TokenData IssueToken(int userId, List<Claim> claims, DateTime expiration)
+    {
+        SecurityKey key = GetSigningKey();
+        SigningCredentials signingCredentials = new(key, SecurityAlgorithms.HmacSha512Signature);
+        JwtSecurityToken token = new(null,
+                                     null,
+                                     claims,
+                                     null,
+                                     expiration,
+                                     signingCredentials);
+
+        string issuedToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return new TokenData()
+               {
+                   UserId = userId,
+                   Token = issuedToken,
+                   ExpiresAt = token.ValidTo,
+                   IssuedAt = token.IssuedAt
+               };
     }
 
     public SecurityKey GetSigningKey()
@@ -64,8 +91,13 @@ public class CryptographyService : ICryptographyService
         return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokensConfiguration.CurrentValue.Secret));
     }
 
-    private DateTime GetExpirationDateTime()
+    private DateTime GetAccessTokenExpirationDateTime()
     {
         return _dateTimeService.UtcNow.AddMinutes(_tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutesAsDouble);
+    }
+    
+    private DateTime GetRefreshTokenExpirationDateTime()
+    {
+        return _dateTimeService.UtcNow.AddMinutes(_tokensConfiguration.CurrentValue.RefreshTokenLifeTimeInMinutesAsDouble);
     }
 }

@@ -38,6 +38,12 @@ public enum ActionResults
     /// </summary>
     DataConflict,
     
+    /// <summary>
+    ///     Represents error occuring during requesting not developed functionality.
+    ///     MUST be used only during development and unavailable to common user.
+    /// </summary>
+    NotImplemented,
+    
     // TODO: Reconsider usages
     /// <summary>
     ///     Represents abstract server error.

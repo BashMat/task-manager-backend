@@ -12,4 +12,6 @@ public interface IAuthService
     public Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest requestData);
 
     public Task<ServiceResponse<string>> LogIn(UserLogInRequest requestData);
+    
+    public Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData);
 }
