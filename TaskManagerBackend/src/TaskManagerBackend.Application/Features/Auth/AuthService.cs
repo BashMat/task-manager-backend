@@ -124,7 +124,8 @@ public class AuthService : IAuthService
         if (await _userRepository.CheckIfUserHasNonExpiredRefreshToken(userId.Value, 
                                                                        requestData.RefreshToken!))
         {
-            return await IssueToken(userId.Value);
+            return await IssueToken(userId.Value,
+                                    requestData.RefreshToken!);
         }
             
         _logger.LogTrace("Refresh token is invalid");
@@ -158,11 +159,14 @@ public class AuthService : IAuthService
                                                        message: InvalidCredentialsMessage);
     }
 
-    private async Task<IssueTokenResponse> IssueToken(int userId)
+    private async Task<IssueTokenResponse> IssueToken(int userId,
+                                                      string? invalidatedRefreshToken = null)
     {
         string accessToken = _cryptographyService.IssueAccessToken(userId);
         TokenData refreshToken = _cryptographyService.IssueRefreshToken(userId);
-        await _userRepository.SetUserRefreshToken(userId, refreshToken);
+        await _userRepository.SetUserRefreshToken(userId,
+                                                  refreshToken, 
+                                                  invalidatedRefreshToken);
                 
         return new IssueTokenResponse
                {

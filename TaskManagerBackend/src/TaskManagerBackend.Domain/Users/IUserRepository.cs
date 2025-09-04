@@ -3,7 +3,9 @@
 public interface IUserRepository
 {
     public Task<UserPasswordData?> GetUserPasswordData(string logInData);
-    public Task SetUserRefreshToken(int userId, TokenData token);
+    public Task SetUserRefreshToken(int userId,
+                                    TokenData token,
+                                    string? invalidatedRefreshToken);
     Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, 
                                                     string refreshToken);
     public Task<bool> CheckIfUserExistsById(int id);

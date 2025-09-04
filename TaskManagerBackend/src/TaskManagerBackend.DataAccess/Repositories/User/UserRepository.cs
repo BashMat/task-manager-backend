@@ -44,7 +44,9 @@ public class UserRepository : IUserRepository
         
         return data;
     }
-    public async Task SetUserRefreshToken(int userId, TokenData tokenData)
+    public async Task SetUserRefreshToken(int userId,
+                                          TokenData tokenData,
+                                          string? invalidatedRefreshToken)
     {
         RefreshToken token = new()
                              {
@@ -53,9 +55,14 @@ public class UserRepository : IUserRepository
                                  ExpiresAt = tokenData.ExpiresAt,
                                  IssuedAt = tokenData.IssuedAt
                              };
-
-        IQueryable<RefreshToken> previousUserTokens = _dbContext.RefreshTokens.Where(rt => rt.UserId == userId);
-        _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
+        
+        if (invalidatedRefreshToken is not null)
+        {
+            IQueryable<RefreshToken> previousUserTokens = 
+                _dbContext.RefreshTokens.Where(rt => rt.Token == invalidatedRefreshToken);
+            _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
+        }
+        
         _dbContext.RefreshTokens.Add(token);
 
         await _dbContext.SaveChangesAsync();
