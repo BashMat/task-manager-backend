@@ -76,7 +76,7 @@ public class WhenLoggingIn : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
-        content.Detail.Should().Be(AuthService.IncorrectCredentialsMessage);
+        content.Detail.Should().Be(AuthService.InvalidCredentialsMessage);
     }
     
     [Fact]
@@ -95,7 +95,7 @@ public class WhenLoggingIn : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
-        content.Detail.Should().Be(AuthService.IncorrectCredentialsMessage);
+        content.Detail.Should().Be(AuthService.InvalidCredentialsMessage);
     }
     
     [Fact]

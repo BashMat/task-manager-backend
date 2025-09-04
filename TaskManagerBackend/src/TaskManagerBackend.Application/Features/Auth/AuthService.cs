@@ -21,7 +21,7 @@ public class AuthService : IAuthService
     private readonly ILogger<AuthService> _logger;
 
     public const string UserAlreadyExistsMessage = "Username and/or Email already exists";
-    public const string IncorrectCredentialsMessage = "Incorrect username/password pair";
+    public const string InvalidCredentialsMessage = "Invalid credentials";
     public const string InvalidEmailAddressMessage = "Email address has invalid format";
 
     public AuthService(ICryptographyService cryptographyService, 
@@ -85,7 +85,7 @@ public class AuthService : IAuthService
             _logger.LogTrace("User does not exist");
 
             return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
-                                               message: IncorrectCredentialsMessage);
+                                               message: InvalidCredentialsMessage);
         }
 
         if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
@@ -98,7 +98,7 @@ public class AuthService : IAuthService
         _logger.LogTrace("Password hash was not verified");
 
         return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
-                                           message: IncorrectCredentialsMessage);
+                                           message: InvalidCredentialsMessage);
     }
     
     public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData)
@@ -112,7 +112,7 @@ public class AuthService : IAuthService
                 _logger.LogTrace("User does not exist");
 
                 return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                               message: IncorrectCredentialsMessage);
+                                                               message: InvalidCredentialsMessage);
             }
 
             if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
@@ -135,7 +135,7 @@ public class AuthService : IAuthService
             _logger.LogTrace("Password hash was not verified");
 
             return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                           message: IncorrectCredentialsMessage);
+                                                           message: InvalidCredentialsMessage);
         }
         else if (requestData.GrantType == "refresh_token")
         {
