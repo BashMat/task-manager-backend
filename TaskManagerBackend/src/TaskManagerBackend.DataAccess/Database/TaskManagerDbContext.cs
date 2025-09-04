@@ -117,15 +117,15 @@ public partial class TaskManagerDbContext : DbContext
         
         modelBuilder.Entity<RefreshToken>(entity =>
                                           {
-                                              entity.HasKey(e => e.UserId).HasName("RefreshToken_PK");
-
+                                              entity.HasKey(e => e.Id).HasName("RefreshToken_PK");
+                                              
                                               entity.ToTable("RefreshToken");
 
                                               entity.Property(e => e.Token).HasMaxLength(1024);
                                               
                                               entity.HasOne(d => d.User)
-                                                    .WithOne(p => p.RefreshToken)
-                                                    .HasForeignKey<RefreshToken>(d => d.UserId)
+                                                    .WithMany(p => p.RefreshToken)
+                                                    .HasForeignKey(d => d.UserId)
                                                     .OnDelete(DeleteBehavior.Cascade)
                                                     .HasConstraintName("RefreshToken_UserId_FK")
                                                     .IsRequired();
