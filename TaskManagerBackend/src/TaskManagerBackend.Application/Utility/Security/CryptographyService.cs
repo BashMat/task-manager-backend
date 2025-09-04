@@ -101,7 +101,7 @@ public class CryptographyService : ICryptographyService
         try
         {
             JwtSecurityToken jwtToken = new(token);
-            string? claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            string? claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == Claims.Sub)?.Value;
 
             return claimValue is null
                    ? null
