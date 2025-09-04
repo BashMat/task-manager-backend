@@ -6,4 +6,5 @@
 public static class Claims
 {
     public const string Sub = "sub";
+    public const string IssuedAt = "iat";
 }

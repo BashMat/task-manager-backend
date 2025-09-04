@@ -47,7 +47,8 @@ public class CryptographyService : ICryptographyService
     {
         List<Claim> claims = new()
                              {
-                                 new Claim(Claims.Sub, userId.ToString())
+                                 new Claim(Claims.Sub, userId.ToString()),
+                                 new Claim(Claims.IssuedAt, ((DateTimeOffset)_dateTimeService.UtcNow).ToUnixTimeSeconds().ToString())
                              };
 
         DateTime expiration = GetAccessTokenExpirationDateTime();
@@ -59,7 +60,8 @@ public class CryptographyService : ICryptographyService
     {
         List<Claim> claims = new()
                              {
-                                 new Claim(Claims.Sub, userId.ToString())
+                                 new Claim(Claims.Sub, userId.ToString()),
+                                 new Claim(Claims.IssuedAt, ((DateTimeOffset)_dateTimeService.UtcNow).ToUnixTimeSeconds().ToString())
                              };
 
         DateTime expiration = GetRefreshTokenExpirationDateTime();
