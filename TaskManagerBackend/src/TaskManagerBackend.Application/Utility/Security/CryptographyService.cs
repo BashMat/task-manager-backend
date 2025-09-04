@@ -18,12 +18,15 @@ public class CryptographyService : ICryptographyService
 {
     private readonly IDateTimeService _dateTimeService;
     private readonly IOptionsMonitor<TokensConfiguration> _tokensConfiguration;
-    
+    private readonly ILogger<CryptographyService> _logger;
+
     public CryptographyService(IDateTimeService dateTimeService,
-                               IOptionsMonitor<TokensConfiguration> tokensConfiguration)
+                               IOptionsMonitor<TokensConfiguration> tokensConfiguration,
+                               ILogger<CryptographyService> logger)
     {
         _dateTimeService = dateTimeService;
         _tokensConfiguration = tokensConfiguration;
+        _logger = logger;
     }
     
     public ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password)
@@ -89,6 +92,24 @@ public class CryptographyService : ICryptographyService
     public SecurityKey GetSigningKey()
     {
         return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokensConfiguration.CurrentValue.Secret));
+    }
+
+    public int? GetUserId(string token)
+    {
+        try
+        {
+            JwtSecurityToken jwtToken = new(token);
+            string? claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return claimValue is null
+                   ? null
+                   : int.Parse(claimValue);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return null;
+        }
     }
 
     private DateTime GetAccessTokenExpirationDateTime()

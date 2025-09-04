@@ -13,4 +13,5 @@ public interface ICryptographyService
     string IssueAccessToken(int userId);
     TokenData IssueRefreshToken(int userId);
     SecurityKey GetSigningKey();
+    int? GetUserId(string token);
 }
