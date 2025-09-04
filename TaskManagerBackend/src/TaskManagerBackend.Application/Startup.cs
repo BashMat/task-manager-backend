@@ -29,7 +29,7 @@ using TaskManagerBackend.Domain.Validation;
 namespace TaskManagerBackend.Application;
 
 /// <summary>
-/// Represents helping class to configure application.
+///     Represents helping class to configure application.
 /// </summary>
 public class Startup
 {
@@ -94,6 +94,8 @@ public class Startup
                                                               });
                                  });
     }
+
+    #region Builder configuration
 
     private void SetUpConfiguration(WebApplicationBuilder builder)
     {
@@ -189,15 +191,15 @@ public class Startup
 
     private void RegisterServices(IServiceCollection services)
     {
-        // Common and Application
-        services.AddSingleton<ICryptographyService, CryptographyService>();
+        // Common
         services.AddSingleton<IDateTimeService, DateTimeService>();
         
-        // Domain
-        services.AddScoped<IEmailValidator, EmailValidator>();
+        // Application-level only
+        services.AddSingleton<ICryptographyService, CryptographyService>();
         
         // Vertical feature slice
         // Auth and users:
+        services.AddScoped<IEmailValidator, EmailValidator>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
         
@@ -205,6 +207,8 @@ public class Startup
         services.AddScoped<ITrackingRepository, TrackingRepository>();
         services.AddScoped<ITrackingService, TrackingService>();
     }
+
+    #endregion
 
     public void ConfigureApp(WebApplication app)
     {
