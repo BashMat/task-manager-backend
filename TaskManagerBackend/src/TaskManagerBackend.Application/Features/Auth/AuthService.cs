@@ -103,45 +103,73 @@ public class AuthService : IAuthService
     
     public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData)
     {
-        if (requestData is { GrantType: "password", UserName: not null, Password: not null })
+        return requestData switch
+               {
+                   { GrantType: "password", UserName: not null, Password: not null } => await IssueTokenByPassword(requestData),
+                   { GrantType: "refresh_token", RefreshToken: not null } => await IssueTokenByRefreshToken(requestData),
+                   _ => new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError)
+               };
+    }
+    
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenRequest requestData)
+    {
+        int? userId = _cryptographyService.GetUserId(requestData.RefreshToken!);
+
+        if (userId is null)
         {
-            UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.UserName);
-
-            if (data is null)
-            {
-                _logger.LogTrace("User does not exist");
-
-                return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                               message: InvalidCredentialsMessage);
-            }
-
-            if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
-            {
-                _logger.LogTrace("Password hash was verified");
+            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                           message: InvalidCredentialsMessage);
+        }
+        
+        if (await _userRepository.CheckIfUserHasNonExpiredRefreshToken(userId.Value, 
+                                                                       requestData.RefreshToken!))
+        {
+            return await IssueToken(userId.Value);
+        }
             
-                string accessToken = _cryptographyService.IssueAccessToken(data.Id);
-                TokenData refreshToken = _cryptographyService.IssueRefreshToken(data.Id);
-                await _userRepository.SetUserRefreshToken(data.Id, refreshToken);
-                
-                return new IssueTokenResponse()
-                       {
-                           AccessToken = accessToken,
-                           ExpiresIn = (refreshToken.ExpiresAt - _dateTimeService.UtcNow).Seconds,
-                           RefreshToken = refreshToken.Token,
-                           TokenType = "Bearer"
-                       };
-            }
+        _logger.LogTrace("Refresh token is invalid");
 
-            _logger.LogTrace("Password hash was not verified");
+        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                       message: InvalidCredentialsMessage);
+    }
+
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenRequest requestData)
+    {
+        UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.UserName!);
+
+        if (data is null)
+        {
+            _logger.LogTrace("User does not exist");
 
             return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
                                                            message: InvalidCredentialsMessage);
         }
-        else if (requestData.GrantType == "refresh_token")
+
+        if (_cryptographyService.VerifyPasswordHash(requestData.Password!, data.PasswordHash, data.PasswordSalt))
         {
-            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.NotImplemented);
+            _logger.LogTrace("Password hash was verified");
+            
+            return await IssueToken(data.Id);
         }
-        
-        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError);
+
+        _logger.LogTrace("Password hash was not verified");
+
+        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                       message: InvalidCredentialsMessage);
+    }
+
+    private async Task<IssueTokenResponse> IssueToken(int userId)
+    {
+        string accessToken = _cryptographyService.IssueAccessToken(userId);
+        TokenData refreshToken = _cryptographyService.IssueRefreshToken(userId);
+        await _userRepository.SetUserRefreshToken(userId, refreshToken);
+                
+        return new IssueTokenResponse
+               {
+                   AccessToken = accessToken,
+                   ExpiresIn = (refreshToken.ExpiresAt - _dateTimeService.UtcNow).Seconds,
+                   RefreshToken = refreshToken.Token,
+                   TokenType = "Bearer"
+               };
     }
 }

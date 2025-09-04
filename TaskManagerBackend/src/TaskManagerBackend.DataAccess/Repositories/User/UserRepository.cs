@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Users;
@@ -13,12 +14,15 @@ namespace TaskManagerBackend.DataAccess.Repositories.User;
 public class UserRepository : IUserRepository
 {
     private readonly TaskManagerDbContext _dbContext;
+    private readonly IDateTimeService _dateTimeService;
     private readonly ILogger<UserRepository> _logger;
 
     public UserRepository(TaskManagerDbContext dbContext,
+                          IDateTimeService dateTimeService,
                           ILogger<UserRepository> logger)
     {
         _dbContext = dbContext;
+        _dateTimeService = dateTimeService;
         _logger = logger;
     }
 
@@ -50,9 +54,18 @@ public class UserRepository : IUserRepository
                                  IssuedAt = tokenData.IssuedAt
                              };
 
+        IQueryable<RefreshToken> previousUserTokens = _dbContext.RefreshTokens.Where(rt => rt.UserId == userId);
+        _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
         _dbContext.RefreshTokens.Add(token);
 
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, string refreshToken)
+    {
+        return await _dbContext.RefreshTokens.AnyAsync(rt => rt.Token == refreshToken && 
+                                                             rt.UserId == userId && 
+                                                             _dateTimeService.UtcNow < rt.ExpiresAt);
     }
 
     public async Task<bool> CheckIfUserExistsById(int id)
