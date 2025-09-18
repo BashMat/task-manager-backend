@@ -46,6 +46,11 @@ public class TaskManagerBackendHttpClient
     {
         return await _httpClient.PostAsJsonAsync("api/auth/token", request);
     }
+    
+    public async Task<HttpResponseMessage> RevokeToken()
+    {
+        return await _httpClient.PostAsync("api/auth/revoke", null);
+    }
 
     public async Task<HttpResponseMessage> LogIn(UserLogInRequest request)
     {

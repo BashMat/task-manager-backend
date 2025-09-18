@@ -103,7 +103,7 @@ public class WhenSigningUp : AuthServiceTestBase
 
         await SignUp(request);
 
-        UserRepositoryMock.Verify(o => o.InsertUser(It.Is<NewUser>(createdUser 
+        UserRepositoryMock.Verify(o => o.CreateUser(It.Is<NewUser>(createdUser 
                                                                 => newUserToBeCreated.UserName == createdUser.UserName &&
                                                                    newUserToBeCreated.Email == createdUser.Email &&
                                                                    newUserToBeCreated.CreatedAt == createdUser.CreatedAt &&

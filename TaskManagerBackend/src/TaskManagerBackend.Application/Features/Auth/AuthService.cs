@@ -65,7 +65,7 @@ public class AuthService : IAuthService
             _cryptographyService.CreatePasswordHashAndSalt(requestData.Password);
             
         NewUser newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
-        await _userRepository.InsertUser(newUser);
+        await _userRepository.CreateUser(newUser);
 
         UserSignUpResponse response = new()
                                       {
@@ -169,9 +169,9 @@ public class AuthService : IAuthService
     {
         string accessToken = _cryptographyService.IssueAccessToken(userId);
         TokenData refreshToken = _cryptographyService.IssueRefreshToken(userId);
-        await _userRepository.SetUserRefreshToken(userId,
-                                                  refreshToken, 
-                                                  invalidatedRefreshToken);
+        await _userRepository.CreateUserRefreshToken(userId, 
+                                                     refreshToken, 
+                                                     invalidatedRefreshToken);
                 
         return new IssueTokenResponse
                {
@@ -180,5 +180,10 @@ public class AuthService : IAuthService
                    RefreshToken = refreshToken.Token,
                    TokenType = "Bearer"
                };
+    }
+    
+    public async Task RevokeTokens(int userId)
+    {
+        await _userRepository.DeleteUserRefreshTokens(userId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
@@ -59,5 +60,19 @@ public class AuthController : ControllerBase
         _logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
         return ConvertServiceResponse(response);
+    }
+    
+    // TODO: Add functionality to revoke token for selected device
+    [HttpPost("revoke")]
+    [Authorize]
+    public async Task<IActionResult> RevokeTokens()
+    {
+        _logger.LogTrace("Start POST /api/auth/revoke request processing");
+            
+        await _authService.RevokeTokens(UserId);
+            
+        _logger.LogTrace("Finish POST /api/auth/revoke request processing");
+            
+        return Ok();
     }
 }

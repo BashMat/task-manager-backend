@@ -44,29 +44,6 @@ public class UserRepository : IUserRepository
         
         return data;
     }
-    public async Task SetUserRefreshToken(int userId,
-                                          TokenData tokenData,
-                                          string? invalidatedRefreshToken)
-    {
-        RefreshToken token = new()
-                             {
-                                 UserId = userId,
-                                 Token = tokenData.Token,
-                                 ExpiresAt = tokenData.ExpiresAt,
-                                 IssuedAt = tokenData.IssuedAt
-                             };
-        
-        if (invalidatedRefreshToken is not null)
-        {
-            IQueryable<RefreshToken> previousUserTokens = 
-                _dbContext.RefreshTokens.Where(rt => rt.Token == invalidatedRefreshToken);
-            _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
-        }
-        
-        _dbContext.RefreshTokens.Add(token);
-
-        await _dbContext.SaveChangesAsync();
-    }
 
     public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, string refreshToken)
     {
@@ -98,7 +75,7 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public async Task InsertUser(NewUser newUser)
+    public async Task CreateUser(NewUser newUser)
     {
         _logger.LogInformation("Starting inserting user data");
 
@@ -116,4 +93,41 @@ public class UserRepository : IUserRepository
         
         _logger.LogInformation("Finishing inserting user data");
     }
+
+    #region Tokens
+
+    public async Task CreateUserRefreshToken(int userId,
+                                             TokenData tokenData,
+                                             string? invalidatedRefreshToken)
+    {
+        RefreshToken token = new()
+                             {
+                                 UserId = userId,
+                                 Token = tokenData.Token,
+                                 ExpiresAt = tokenData.ExpiresAt,
+                                 IssuedAt = tokenData.IssuedAt
+                             };
+        
+        if (invalidatedRefreshToken is not null)
+        {
+            IQueryable<RefreshToken> previousUserTokens = 
+                _dbContext.RefreshTokens.Where(rt => rt.Token == invalidatedRefreshToken);
+            _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
+        }
+        
+        _dbContext.RefreshTokens.Add(token);
+
+        await _dbContext.SaveChangesAsync();
+    }
+    
+    public async Task DeleteUserRefreshTokens(int userId)
+    {
+        IQueryable<RefreshToken> previousUserTokens = 
+            _dbContext.RefreshTokens.Where(rt => rt.UserId == userId);
+        _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
+        
+        await _dbContext.SaveChangesAsync();
+    }
+
+    #endregion
 }
