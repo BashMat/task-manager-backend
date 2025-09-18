@@ -1,9 +1,9 @@
 ﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
-CREATE TABLE [__EFMigrationsHistory] (
-    [MigrationId] nvarchar(150) NOT NULL,
-    [ProductVersion] nvarchar(32) NOT NULL,
-    CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
     );
 END;
 GO
@@ -22,7 +22,7 @@ CREATE TABLE [User] (
     [PasswordHash] varbinary(256) NOT NULL,
     [PasswordSalt] varbinary(256) NOT NULL,
     CONSTRAINT [User_PK] PRIMARY KEY ([Id])
-    );
+);
 GO
 
 CREATE TABLE [TrackingLog] (
@@ -36,7 +36,7 @@ CREATE TABLE [TrackingLog] (
     CONSTRAINT [TrackingLog_PK] PRIMARY KEY ([Id]),
     CONSTRAINT [TrackingLog_CreatedBy_FK] FOREIGN KEY ([CreatedBy]) REFERENCES [User] ([Id]),
     CONSTRAINT [TrackingLog_UpdatedBy_FK] FOREIGN KEY ([UpdatedBy]) REFERENCES [User] ([Id])
-    );
+);
 GO
 
 CREATE TABLE [TrackingLogEntryStatus] (
@@ -52,7 +52,7 @@ CREATE TABLE [TrackingLogEntryStatus] (
     CONSTRAINT [TrackingLogEntryStatus_CreatedBy_FK] FOREIGN KEY ([CreatedBy]) REFERENCES [User] ([Id]),
     CONSTRAINT [TrackingLogEntryStatus_TrackingLogId_FK] FOREIGN KEY ([TrackingLogId]) REFERENCES [TrackingLog] ([Id]),
     CONSTRAINT [TrackingLogEntryStatus_UpdatedBy_FK] FOREIGN KEY ([UpdatedBy]) REFERENCES [User] ([Id])
-    );
+);
 GO
 
 CREATE TABLE [TrackingLogEntry] (
@@ -72,7 +72,7 @@ CREATE TABLE [TrackingLogEntry] (
     CONSTRAINT [TrackingLogEntry_StatusId_FK] FOREIGN KEY ([StatusId]) REFERENCES [TrackingLogEntryStatus] ([Id]),
     CONSTRAINT [TrackingLogEntry_TrackingLogId_FK] FOREIGN KEY ([TrackingLogId]) REFERENCES [TrackingLog] ([Id]),
     CONSTRAINT [TrackingLogEntry_UpdatedBy_FK] FOREIGN KEY ([UpdatedBy]) REFERENCES [User] ([Id])
-    );
+);
 GO
 
 CREATE INDEX [IX_TrackingLog_CreatedBy] ON [TrackingLog] ([CreatedBy]);
@@ -113,34 +113,23 @@ BEGIN TRANSACTION;
 GO
 
 CREATE TABLE [RefreshToken] (
+    [Id] int NOT NULL IDENTITY,
     [UserId] int NOT NULL,
     [Token] nvarchar(1024) NOT NULL,
     [IssuedAt] datetime2 NOT NULL,
     [ExpiresAt] datetime2 NOT NULL,
-    CONSTRAINT [RefreshToken_PK] PRIMARY KEY ([UserId]),
+    CONSTRAINT [RefreshToken_PK] PRIMARY KEY ([Id]),
     CONSTRAINT [RefreshToken_UserId_FK] FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]) ON DELETE CASCADE
-    );
-GO
-
-INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250628233856_AddRefreshTokenTable', N'8.0.17');
-GO
-
-COMMIT;
-GO
-
-BEGIN TRANSACTION;
-GO
-
-DROP INDEX [IX_RefreshToken_UserId] ON [RefreshToken];
+);
 GO
 
 CREATE INDEX [IX_RefreshToken_UserId] ON [RefreshToken] ([UserId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250904211510_UpdateRefreshTokenTablePrimaryKey', N'8.0.17');
+VALUES (N'20250918151036_AddRefreshTokenTable', N'8.0.17');
 GO
 
 COMMIT;
 GO
+

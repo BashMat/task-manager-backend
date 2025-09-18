@@ -15,6 +15,8 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                 name: "RefreshToken",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     IssuedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -22,7 +24,7 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("RefreshToken_PK", x => x.UserId);
+                    table.PrimaryKey("RefreshToken_PK", x => x.Id);
                     table.ForeignKey(
                         name: "RefreshToken_UserId_FK",
                         column: x => x.UserId,
@@ -30,6 +32,11 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_UserId",
+                table: "RefreshToken",
+                column: "UserId");
         }
 
         /// <inheritdoc />
