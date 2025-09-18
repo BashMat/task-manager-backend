@@ -42,7 +42,7 @@ public class CryptographyService : ICryptographyService
         using HMACSHA512 hmac = new(passwordSalt);
         return passwordHash.SequenceEqual(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
     }
-
+    
     public string IssueAccessToken(int userId)
     {
         List<Claim> claims = new()
@@ -69,6 +69,8 @@ public class CryptographyService : ICryptographyService
         return IssueToken(userId, claims, expiration);
     }
 
+    // TODO: Currently in cases of high throughput identical tokens are issued for the same input data.
+    //  Not a problem for a time, but has to be examined. Add some external randomized parameter.
     private TokenData IssueToken(int userId, List<Claim> claims, DateTime expiration)
     {
         SecurityKey key = GetSigningKey();

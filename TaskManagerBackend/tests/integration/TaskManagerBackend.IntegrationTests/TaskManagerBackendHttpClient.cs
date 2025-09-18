@@ -41,6 +41,11 @@ public class TaskManagerBackendHttpClient
     {
         return await _httpClient.PostAsJsonAsync("api/auth/signup", request);
     }
+    
+    public async Task<HttpResponseMessage> IssueToken(IssueTokenRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/auth/token", request);
+    }
 
     public async Task<HttpResponseMessage> LogIn(UserLogInRequest request)
     {

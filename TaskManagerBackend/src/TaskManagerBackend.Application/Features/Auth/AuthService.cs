@@ -23,6 +23,9 @@ public class AuthService : IAuthService
     public const string UserAlreadyExistsMessage = "Username and/or Email already exists";
     public const string InvalidCredentialsMessage = "Invalid credentials";
     public const string InvalidEmailAddressMessage = "Email address has invalid format";
+    
+    public const string PasswordGrantType = "password";
+    public const string RefreshTokenGrantType = "refresh_token";
 
     public AuthService(ICryptographyService cryptographyService, 
                        IUserRepository userRepository,
@@ -105,12 +108,14 @@ public class AuthService : IAuthService
     {
         return requestData switch
                {
-                   { GrantType: "password", UserName: not null, Password: not null } => await IssueTokenByPassword(requestData),
-                   { GrantType: "refresh_token", RefreshToken: not null } => await IssueTokenByRefreshToken(requestData),
+                   { GrantType: PasswordGrantType, UserName: not null, Password: not null } => 
+                       await IssueTokenByPassword(requestData),
+                   { GrantType: RefreshTokenGrantType, RefreshToken: not null } => 
+                       await IssueTokenByRefreshToken(requestData),
                    _ => new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError)
                };
     }
-    
+
     private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenRequest requestData)
     {
         int? userId = _cryptographyService.GetUserId(requestData.RefreshToken!);
@@ -158,7 +163,7 @@ public class AuthService : IAuthService
         return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
                                                        message: InvalidCredentialsMessage);
     }
-
+    
     private async Task<IssueTokenResponse> IssueToken(int userId,
                                                       string? invalidatedRefreshToken = null)
     {

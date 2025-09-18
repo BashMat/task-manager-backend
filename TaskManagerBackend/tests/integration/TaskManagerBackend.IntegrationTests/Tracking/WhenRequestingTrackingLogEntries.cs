@@ -3,9 +3,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
-using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using Xunit;
