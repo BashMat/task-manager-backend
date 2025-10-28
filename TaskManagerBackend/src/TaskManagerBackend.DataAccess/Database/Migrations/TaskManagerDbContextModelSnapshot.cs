@@ -22,6 +22,45 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<DateTime>("DispatchedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DispatchedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityVersion")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("Event_PK");
+
+                    b.HasIndex("DispatchedByUserId");
+
+                    b.HasIndex("EntityType", "EntityId", "EntityVersion")
+                        .IsUnique();
+
+                    b.ToTable("Event", (string)null);
+                });
+
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -238,6 +277,18 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.Event", b =>
+                {
+                    b.HasOne("TaskManagerBackend.DataAccess.Database.Models.User", "User")
+                        .WithMany("Events")
+                        .HasForeignKey("DispatchedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Event_DispatchedByUserId_FK");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.RefreshToken", b =>
                 {
                     b.HasOne("TaskManagerBackend.DataAccess.Database.Models.User", "User")
@@ -345,6 +396,8 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
 
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.User", b =>
                 {
+                    b.Navigation("Events");
+
                     b.Navigation("RefreshToken");
 
                     b.Navigation("TrackingLogCreatedByNavigations");

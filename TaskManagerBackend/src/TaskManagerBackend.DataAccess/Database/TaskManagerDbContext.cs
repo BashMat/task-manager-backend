@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database.Models;
 
@@ -17,6 +18,8 @@ public partial class TaskManagerDbContext : DbContext
         : base(options)
     {
     }
+    
+    public virtual DbSet<Event> Events { get; set; }
 
     public virtual DbSet<TrackingLogEntryStatus> TrackingLogEntryStatuses { get; set; }
 
@@ -144,6 +147,25 @@ public partial class TaskManagerDbContext : DbContext
                                       entity.Property(e => e.PasswordSalt).HasMaxLength(256);
                                       entity.Property(e => e.UserName).HasMaxLength(256);
                                   });
+
+        modelBuilder.Entity<Event>(entity =>
+                                   {
+                                       entity.HasKey(e => e.Id).HasName("Event_PK");
+
+                                       entity.ToTable("Event");
+
+                                       entity.Property(e => e.Data)
+                                             .HasColumnType("nvarchar(MAX)");
+
+                                       entity.HasOne(d => d.User)
+                                             .WithMany(p => p.Events)
+                                             .HasForeignKey(d => d.DispatchedByUserId)
+                                             .HasConstraintName("Event_DispatchedByUserId_FK")
+                                             .IsRequired();
+
+                                       entity.HasIndex(e => new { e.EntityType, e.EntityId, e.EntityVersion })
+                                             .IsUnique();
+                                   });
 
         OnModelCreatingPartial(modelBuilder);
     }
