@@ -1,8 +1,14 @@
 ﻿#region Usings
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Tracking;
+using TaskManagerBackend.Domain.Tracking.Events.TrackingLog;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
 using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntryStatus;
@@ -24,19 +30,56 @@ public class TrackingRepository : ITrackingRepository
 
     public async Task<Domain.Tracking.TrackingLog?> InsertTrackingLog(NewTrackingLog logToInsert)
     {
-        TrackingLog trackingLog = new()
-                                  {
-                                      Title = logToInsert.Title,
-                                      Description = logToInsert.Description,
-                                      CreatedBy = logToInsert.CreatedById,
-                                      CreatedAt = logToInsert.CreatedAt,
-                                      UpdatedBy = logToInsert.CreatedById,
-                                      UpdatedAt = logToInsert.CreatedAt
-                                  };
-        _dbContext.TrackingLogs.Add(trackingLog);
-        await _dbContext.SaveChangesAsync();
+        await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync();
+        
+        try
+        {
+            TrackingLog trackingLog = new()
+                                      {
+                                          Title = logToInsert.Title,
+                                          Description = logToInsert.Description,
+                                          CreatedBy = logToInsert.CreatedById,
+                                          CreatedAt = logToInsert.CreatedAt,
+                                          UpdatedBy = logToInsert.CreatedById,
+                                          UpdatedAt = logToInsert.CreatedAt
+                                      };
+        
+            _dbContext.TrackingLogs.Add(trackingLog);
+            
+            await _dbContext.SaveChangesAsync();
+            
+            TrackingLogCreated domainEvent = new(Guid.NewGuid(),
+                                                 trackingLog.Id,
+                                                 logToInsert,
+                                                 logToInsert.CreatedById,
+                                                 logToInsert.CreatedAt,
+                                                 Guid.NewGuid());
 
-        return await GetTrackingLogById(trackingLog.Id);
+            Event dbEvent = new()
+                            {
+                                Id = domainEvent.Id,
+                                EntityType = domainEvent.EntityType,
+                                EntityId = domainEvent.EntityId,
+                                EntityVersion = domainEvent.EntityVersion,
+                                Data = JsonSerializer.Serialize(domainEvent.Data),
+                                DispatchedByUserId = domainEvent.DispatchedByUserId,
+                                DispatchedAt = domainEvent.DispatchedAt,
+                                CorrelationId = domainEvent.CorrelationId
+                            };
+        
+            _dbContext.Events.Add(dbEvent);
+            
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return await GetTrackingLogById(trackingLog.Id);
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<List<Domain.Tracking.TrackingLog>> GetAllTrackingLogs(int userId)
