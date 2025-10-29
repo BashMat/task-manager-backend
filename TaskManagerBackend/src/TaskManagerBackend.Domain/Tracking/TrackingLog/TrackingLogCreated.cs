@@ -1,6 +1,6 @@
 ﻿using TaskManagerBackend.Domain.Events;
 
-namespace TaskManagerBackend.Domain.Tracking.Events.TrackingLog;
+namespace TaskManagerBackend.Domain.Tracking;
 
 public class TrackingLogCreated : EntityCreated, IEvent<NewTrackingLog>
 {

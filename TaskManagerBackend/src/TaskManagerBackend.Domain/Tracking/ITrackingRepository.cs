@@ -19,7 +19,7 @@ public interface ITrackingRepository
     Task<List<TrackingLogEntry>> GetAllTrackingLogEntries(int userId);
     Task<TrackingLogEntry?> GetTrackingLogEntryById(int trackingLogEntryId);
     Task<TrackingLogEntry?> UpdateTrackingLogEntryById(int id, 
-                                                                  UpdatableTrackingLogEntry updatableTrackingLogEntry);
+                                                       UpdatableTrackingLogEntry updatableTrackingLogEntry);
     Task<List<TrackingLogEntry>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId);
 
     #endregion

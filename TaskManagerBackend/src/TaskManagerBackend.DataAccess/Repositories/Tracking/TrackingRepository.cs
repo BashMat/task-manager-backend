@@ -7,8 +7,6 @@ using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Tracking;
-using TaskManagerBackend.Domain.Tracking.Events.TrackingLog;
-using TaskManagerBackend.Domain.Tracking.Events.TrackingLogEntry;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
 using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntryStatus;
@@ -197,7 +195,7 @@ public class TrackingRepository : ITrackingRepository
     }
 
     public async Task<Domain.Tracking.TrackingLogEntry?> UpdateTrackingLogEntryById(int id, 
-                                                                               UpdatableTrackingLogEntry updatableTrackingLogEntry)
+                                                                                    UpdatableTrackingLogEntry updatableTrackingLogEntry)
     {
         TrackingLogEntry? entry = await _dbContext.TrackingLogEntries.FilterById(id)
                                                                      .FirstOrDefaultAsync();
