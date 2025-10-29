@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
+using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Tracking.Events.TrackingLog;
 using TaskManagerBackend.Domain.Tracking.Events.TrackingLogEntry;
@@ -214,6 +215,35 @@ public class TrackingRepository : ITrackingRepository
         entry.OrderIndex = (decimal)updatableTrackingLogEntry.OrderIndex;
         entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
         entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
+        
+        int lastEntityVersion = await _dbContext.Events.Where(e => e.EntityType == EntityType.TrackingLogEntry.Id &&
+                                                                   e.EntityId == id)
+                                                       .Select(e => e.EntityVersion)
+                                                       .OrderByDescending(o => o)
+                                                       .FirstAsync();
+        
+        TrackingLogEntryUpdated domainEvent = new(Guid.NewGuid(), 
+                                                  entry.Id,
+                                                  lastEntityVersion + 1,
+                                                  updatableTrackingLogEntry,
+                                                  updatableTrackingLogEntry.UpdatedBy, 
+                                                  updatableTrackingLogEntry.UpdatedAt,
+                                                  Guid.NewGuid());
+
+        Event dbEvent = new()
+                        {
+                            Id = domainEvent.Id,
+                            EntityType = domainEvent.EntityType,
+                            EntityId = domainEvent.EntityId,
+                            EntityVersion = domainEvent.EntityVersion,
+                            Data = JsonSerializer.Serialize(domainEvent.Data),
+                            DispatchedByUserId = domainEvent.DispatchedByUserId,
+                            DispatchedAt = domainEvent.DispatchedAt,
+                            CorrelationId = domainEvent.CorrelationId
+                        };
+        
+        _dbContext.Events.Add(dbEvent);
+        
         await _dbContext.SaveChangesAsync();
 
         return await GetTrackingLogEntryById(id);
