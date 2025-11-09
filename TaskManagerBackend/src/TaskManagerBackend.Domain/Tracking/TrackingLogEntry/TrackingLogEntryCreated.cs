@@ -11,16 +11,14 @@ public class TrackingLogEntryCreated : EntityCreated, IEvent<NewTrackingLogEntry
     public TrackingLogEntryCreated(Guid id,
                                    int entityId,
                                    NewTrackingLogEntry data,
-                                   int dispatchedByUserId,
-                                   DateTime dispatchedAt,
                                    Guid correlationId)
     {
         Id = id;
         EntityType = Domain.EntityType.TrackingLogEntry.Id;
         EntityId = entityId;
         Data = data;
-        DispatchedByUserId = dispatchedByUserId;
-        DispatchedAt = dispatchedAt;
+        DispatchedByUserId = data.CreatedById;
+        DispatchedAt = data.CreatedAt;
         CorrelationId = correlationId;
     }
 

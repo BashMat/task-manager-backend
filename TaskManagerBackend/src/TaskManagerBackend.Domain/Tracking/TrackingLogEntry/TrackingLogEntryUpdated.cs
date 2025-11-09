@@ -8,8 +8,6 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
                                    int entityId,
                                    int entityVersion,
                                    UpdatableTrackingLogEntry data,
-                                   int dispatchedByUserId,
-                                   DateTime dispatchedAt,
                                    Guid correlationId)
     {
         Id = id;
@@ -17,8 +15,8 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
         EntityId = entityId;
         EntityVersion = entityVersion;
         Data = data;
-        DispatchedByUserId = dispatchedByUserId;
-        DispatchedAt = dispatchedAt;
+        DispatchedByUserId = data.UpdatedBy;
+        DispatchedAt = data.UpdatedAt;
         CorrelationId = correlationId;
     }
     

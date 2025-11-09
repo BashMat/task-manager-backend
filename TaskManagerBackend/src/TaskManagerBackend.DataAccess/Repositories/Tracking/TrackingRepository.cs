@@ -49,8 +49,6 @@ public class TrackingRepository : ITrackingRepository
             TrackingLogCreated domainEvent = new(Guid.NewGuid(),
                                                  trackingLog.Id,
                                                  logToInsert,
-                                                 logToInsert.CreatedById,
-                                                 logToInsert.CreatedAt,
                                                  Guid.NewGuid());
 
             Event dbEvent = new()
@@ -141,8 +139,6 @@ public class TrackingRepository : ITrackingRepository
             TrackingLogEntryCreated domainEvent = new(Guid.NewGuid(), 
                                                       entry.Id, 
                                                       logEntryToInsert,
-                                                      logEntryToInsert.CreatedById, 
-                                                      logEntryToInsert.CreatedAt, 
                                                       Guid.NewGuid());
 
             Event dbEvent = new()
@@ -224,8 +220,6 @@ public class TrackingRepository : ITrackingRepository
                                                   entry.Id,
                                                   lastEntityVersion + 1,
                                                   updatableTrackingLogEntry,
-                                                  updatableTrackingLogEntry.UpdatedBy, 
-                                                  updatableTrackingLogEntry.UpdatedAt,
                                                   Guid.NewGuid());
 
         Event dbEvent = new()
