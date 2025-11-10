@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Features.History.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
@@ -16,6 +17,7 @@ public interface ITrackingService
     Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId, TrackingLogCreateRequest newLog);
     Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId);
     Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id);
+    Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogHistoryById(int id);
     Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId);
 
     #endregion

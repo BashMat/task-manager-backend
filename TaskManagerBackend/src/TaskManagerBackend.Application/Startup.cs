@@ -11,6 +11,7 @@ using NLog.Web;
 using Prometheus;
 using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Features.Auth;
+using TaskManagerBackend.Application.Features.History;
 using TaskManagerBackend.Application.Features.Tracking;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
@@ -18,8 +19,10 @@ using TaskManagerBackend.Application.Utility.Health;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.DataAccess.Repositories.History;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.History;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
@@ -206,6 +209,10 @@ public class Startup
         // Tracking:
         services.AddScoped<ITrackingRepository, TrackingRepository>();
         services.AddScoped<ITrackingService, TrackingService>();
+
+        // History:
+        services.AddScoped<IHistoryRepository, HistoryRepository>();
+        services.AddScoped<IHistoryService, HistoryService>();
     }
 
     #endregion

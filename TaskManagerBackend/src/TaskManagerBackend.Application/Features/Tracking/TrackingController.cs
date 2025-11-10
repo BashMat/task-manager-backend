@@ -52,6 +52,12 @@ public class TrackingController : ControllerBase
         return ConvertServiceResponse(await _trackingService.GetTrackingLogById(id));
     }
     
+    [HttpGet("logs/{id:int}/history")]
+    public async Task<IActionResult> GetTrackingLogHistoryById([FromRoute] int id)
+    {
+        return ConvertServiceResponse(await _trackingService.GetTrackingLogHistoryById(id));
+    }
+    
     [HttpDelete("logs/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogById([FromRoute] int id)
     {

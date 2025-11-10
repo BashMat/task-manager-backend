@@ -1,11 +1,14 @@
 ﻿#region Usings
 
+using TaskManagerBackend.Application.Features.History;
+using TaskManagerBackend.Application.Features.History.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Tracking;
 
 #endregion
@@ -15,6 +18,7 @@ namespace TaskManagerBackend.Application.Features.Tracking;
 public class TrackingService : ITrackingService
 {
     private readonly ITrackingRepository _trackingRepository;
+    private readonly IHistoryService _historyService;
     private readonly IDateTimeService _dateTimeService;
 
     private const string CouldNotCreateMessage = "Could not create resource";
@@ -22,9 +26,11 @@ public class TrackingService : ITrackingService
     private const string UpdateConflict = "Resource was updated";
 
     public TrackingService(ITrackingRepository trackingRepository,
+                           IHistoryService historyService,
                            IDateTimeService dateTimeService)
     {
         _trackingRepository = trackingRepository;
+        _historyService = historyService;
         _dateTimeService = dateTimeService;
     }
 
@@ -72,8 +78,14 @@ public class TrackingService : ITrackingService
 
         return response;
     }
+    
+    public async Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogHistoryById(int id)
+    {
+        return await _historyService.GetEntityHistory(EntityType.TrackingLog, id);
+    }
 
-    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId)
+    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId,
+                                                                                           int trackingLogId)
     {
         List<TrackingLog> logs = await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
         return logs.Select(l => l.ToDto()).ToList();
