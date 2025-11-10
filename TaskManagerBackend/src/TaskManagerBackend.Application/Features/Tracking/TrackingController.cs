@@ -96,6 +96,12 @@ public class TrackingController : ControllerBase
         return ConvertServiceResponse(await _trackingService.GetTrackingLogEntryById(id));
     }
     
+    [HttpGet("log-entries/{id:int}/history")]
+    public async Task<IActionResult> GetTrackingLogEntryHistoryById([FromRoute] int id)
+    {
+        return ConvertServiceResponse(await _trackingService.GetTrackingLogEntryHistoryById(id));
+    }
+    
     [HttpPut("log-entries/{id:int}")]
     public async Task<IActionResult> UpdateTrackingLogEntryById([FromRoute] int id,
                                                                 [FromBody] 

@@ -28,6 +28,7 @@ public interface ITrackingService
                                                                               TrackingLogEntryCreateRequest newLog);
     Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId);
     Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id);
+    Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogEntryHistoryById(int id);
     Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
                                                                               int id,
                                                                               UpdateTrackingLogEntryRequest request);
@@ -39,8 +40,8 @@ public interface ITrackingService
     #region Tracking Log Entry Statuses
 
     Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, TrackingLogEntryStatusCreateRequest newStatus);
-    Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId,
-                                                                                int trackingLogEntryStatusId);
+    Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
+                                                                                           int trackingLogEntryStatusId);
 
     #endregion
 }

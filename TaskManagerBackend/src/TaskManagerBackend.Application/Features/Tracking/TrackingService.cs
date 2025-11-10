@@ -141,6 +141,11 @@ public class TrackingService : ITrackingService
 
         return response;
     }
+    
+    public async Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogEntryHistoryById(int id)
+    {
+        return await _historyService.GetEntityHistory(EntityType.TrackingLogEntry, id);
+    }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
                                                                                            int id, 
