@@ -125,7 +125,7 @@ public class TrackingRepository : ITrackingRepository
                                          TrackingLogId = logEntryToInsert.TrackingLogId,
                                          StatusId = logEntryToInsert.StatusId,
                                          Priority = logEntryToInsert.Priority,
-                                         OrderIndex = (decimal) logEntryToInsert.OrderIndex,
+                                         OrderIndex = logEntryToInsert.OrderIndex,
                                          CreatedBy = logEntryToInsert.CreatedById,
                                          CreatedAt = logEntryToInsert.CreatedAt,
                                          UpdatedBy = logEntryToInsert.CreatedById,
@@ -206,7 +206,7 @@ public class TrackingRepository : ITrackingRepository
         entry.TrackingLogId = updatableTrackingLogEntry.TrackingLogId;
         entry.StatusId = updatableTrackingLogEntry.StatusId;
         entry.Priority = updatableTrackingLogEntry.Priority;
-        entry.OrderIndex = (decimal)updatableTrackingLogEntry.OrderIndex;
+        entry.OrderIndex = updatableTrackingLogEntry.OrderIndex;
         entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
         entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
         

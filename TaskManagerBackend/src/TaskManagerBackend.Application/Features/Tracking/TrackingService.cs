@@ -100,7 +100,7 @@ public class TrackingService : ITrackingService
                                                    newLogEntry.TrackingLogId, 
                                                    newLogEntry.StatusId,
                                                    newLogEntry.Priority, 
-                                                   newLogEntry.OrderIndex, 
+                                                   (decimal)newLogEntry.OrderIndex, 
                                                    userId,
                                                    _dateTimeService);
         
@@ -167,7 +167,7 @@ public class TrackingService : ITrackingService
                                                                   request.TrackingLogId,
                                                                   request.StatusId,
                                                                   request.Priority,
-                                                                  request.OrderIndex,
+                                                                  (decimal)request.OrderIndex,
                                                                   userId,
                                                                   _dateTimeService);
 

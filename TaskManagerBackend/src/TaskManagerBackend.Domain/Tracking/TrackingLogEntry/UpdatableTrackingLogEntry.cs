@@ -9,7 +9,7 @@ public class UpdatableTrackingLogEntry
                                      int trackingLogId,
                                      int statusId,
                                      int? priority,
-                                     double orderIndex,
+                                     decimal orderIndex,
                                      int updatedBy,
                                      IDateTimeService dateTimeService)
     {
@@ -28,7 +28,7 @@ public class UpdatableTrackingLogEntry
     public int TrackingLogId { get; }
     public int StatusId { get; }
     public int? Priority { get; }
-    public double OrderIndex { get; }
+    public decimal OrderIndex { get; }
     public int UpdatedBy { get; }
     public DateTime UpdatedAt { get; }
 }
