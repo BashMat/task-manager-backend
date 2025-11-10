@@ -11,7 +11,7 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
                                    Guid correlationId)
     {
         Id = id;
-        EntityType = Domain.EntityType.TrackingLogEntry.Id;
+        EntityType = Entities.EntityType.TrackingLogEntry.Id;
         EntityId = entityId;
         EntityVersion = entityVersion;
         Data = data;

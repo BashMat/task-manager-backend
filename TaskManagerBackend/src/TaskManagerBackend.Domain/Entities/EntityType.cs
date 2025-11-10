@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Domain;
+﻿namespace TaskManagerBackend.Domain.Entities;
 
 public class EntityType
 {

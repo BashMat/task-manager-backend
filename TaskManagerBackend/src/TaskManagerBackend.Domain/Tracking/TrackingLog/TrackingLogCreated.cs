@@ -10,7 +10,7 @@ public class TrackingLogCreated : EntityCreated, IEvent<NewTrackingLog>
                               Guid correlationId)
     {
         Id = id;
-        EntityType = Domain.EntityType.TrackingLog.Id;
+        EntityType = Entities.EntityType.TrackingLog.Id;
         EntityId = entityId;
         Data = data;
         DispatchedByUserId = data.CreatedById;

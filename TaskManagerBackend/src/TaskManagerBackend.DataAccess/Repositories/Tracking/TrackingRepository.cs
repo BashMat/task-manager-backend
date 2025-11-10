@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
-using TaskManagerBackend.Domain;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Tracking;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
@@ -241,8 +241,8 @@ public class TrackingRepository : ITrackingRepository
         return await GetTrackingLogEntryById(id);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId,
-                                                                                    int trackingLogEntryId)
+    public async Task<List<Domain.Tracking.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId, 
+                                                                                         int trackingLogEntryId)
     {
         int deletedCount = await _dbContext.TrackingLogEntries.FilterById(trackingLogEntryId)
                                                               .ExecuteDeleteAsync();
