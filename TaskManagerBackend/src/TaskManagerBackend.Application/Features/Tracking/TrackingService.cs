@@ -39,13 +39,10 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId,
                                                                                  TrackingLogCreateRequest newLog)
     {
-        NewTrackingLog logToInsert = new()
-                                     {
-                                         Title = newLog.Title,
-                                         Description = newLog.Description,
-                                         CreatedById = userId,
-                                         CreatedAt = _dateTimeService.UtcNow
-                                     };
+        NewTrackingLog logToInsert = new(newLog.Title,
+                                         newLog.Description,
+                                         userId,
+                                         _dateTimeService);
 
         TrackingLog? log = await _trackingRepository.InsertTrackingLog(logToInsert);
         TrackingLogGetResponse? response = log?.ToDto();
@@ -98,17 +95,14 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(int userId,
                                                                                            TrackingLogEntryCreateRequest newLogEntry)
     {
-        NewTrackingLogEntry logEntryToInsert = new()
-                                               {
-                                                   Title = newLogEntry.Title,
-                                                   Description = newLogEntry.Description,
-                                                   TrackingLogId = newLogEntry.TrackingLogId,
-                                                   StatusId = newLogEntry.StatusId,
-                                                   Priority = newLogEntry.Priority,
-                                                   OrderIndex = newLogEntry.OrderIndex,
-                                                   CreatedById = userId,
-                                                   CreatedAt = _dateTimeService.UtcNow
-                                               };
+        NewTrackingLogEntry logEntryToInsert = new(newLogEntry.Title,
+                                                   newLogEntry.Description,
+                                                   newLogEntry.TrackingLogId, 
+                                                   newLogEntry.StatusId,
+                                                   newLogEntry.Priority, 
+                                                   newLogEntry.OrderIndex, 
+                                                   userId,
+                                                   _dateTimeService);
         
         TrackingLogEntry? entry = await _trackingRepository.InsertTrackingLogEntry(logEntryToInsert);
         TrackingLogEntryGetResponse? response = entry?.ToDto();
@@ -168,18 +162,14 @@ public class TrackingService : ITrackingService
                                                                     message: UpdateConflict);
         }
 
-        UpdatableTrackingLogEntry updatableTrackingLogEntry = new()
-                                                              {
-                                                                  Title = request.Title,
-                                                                  Description = request.Description,
-                                                                  TrackingLogId = request.TrackingLogId,
-                                                                  StatusId = request.StatusId,
-                                                                  Priority = request.Priority,
-                                                                  OrderIndex = request.OrderIndex,
-                                                              };
-
-        updatableTrackingLogEntry.SetUpdatedData(userId,
-                                                 _dateTimeService);
+        UpdatableTrackingLogEntry updatableTrackingLogEntry = new(request.Title,
+                                                                  request.Description,
+                                                                  request.TrackingLogId,
+                                                                  request.StatusId,
+                                                                  request.Priority,
+                                                                  request.OrderIndex,
+                                                                  userId,
+                                                                  _dateTimeService);
 
         TrackingLogEntry? updatedEntry = 
             await _trackingRepository.UpdateTrackingLogEntryById(id, updatableTrackingLogEntry);
@@ -208,14 +198,11 @@ public class TrackingService : ITrackingService
     public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, 
                                                                                                   TrackingLogEntryStatusCreateRequest newStatus)
     {
-        NewTrackingLogEntryStatus statusToInsert = new()
-                                                   {
-                                                       Title = newStatus.Title,
-                                                       Description = newStatus.Description,
-                                                       TrackingLogId = newStatus.TrackingLogId,
-                                                       CreatedById = userId,
-                                                       CreatedAt = _dateTimeService.UtcNow
-                                                   };
+        NewTrackingLogEntryStatus statusToInsert = new(newStatus.Title,
+                                                       newStatus.Description,
+                                                       newStatus.TrackingLogId,
+                                                       userId,
+                                                       _dateTimeService);
 
         TrackingLogEntryStatus? status = await _trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
         TrackingLogEntryStatusGetResponse? response = status?.ToDto();

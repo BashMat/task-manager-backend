@@ -4,18 +4,31 @@ namespace TaskManagerBackend.Domain.Tracking;
 
 public class UpdatableTrackingLogEntry
 {
-    public required string Title { get; init; }
-    public string? Description { get; init; }
-    public int TrackingLogId { get; init; }
-    public int StatusId { get; init; }
-    public int? Priority { get; init; }
-    public double OrderIndex { get; init; }
-    public int UpdatedBy { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
-
-    public void SetUpdatedData(int userId, IDateTimeService dateTimeService)
+    public UpdatableTrackingLogEntry(string title,
+                                     string? description,
+                                     int trackingLogId,
+                                     int statusId,
+                                     int? priority,
+                                     double orderIndex,
+                                     int updatedBy,
+                                     IDateTimeService dateTimeService)
     {
-        UpdatedBy = userId;
+        Title = title;
+        Description = description;
+        TrackingLogId = trackingLogId;
+        StatusId = statusId;
+        Priority = priority;
+        OrderIndex = orderIndex;
+        UpdatedBy = updatedBy;
         UpdatedAt = dateTimeService.UtcNow;
     }
+    
+    public string Title { get; }
+    public string? Description { get; }
+    public int TrackingLogId { get; }
+    public int StatusId { get; }
+    public int? Priority { get; }
+    public double OrderIndex { get; }
+    public int UpdatedBy { get; }
+    public DateTime UpdatedAt { get; }
 }

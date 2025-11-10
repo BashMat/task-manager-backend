@@ -13,11 +13,8 @@ public class TrackingLogEntryStatus
         TrackingLogId = trackingLogId;
     }
 
-    public int Id { get; init; }
-
-    public string Title { get; init; }
-
-    public string? Description { get; init; }
-
-    public int TrackingLogId { get; init; }
+    public int Id { get; }
+    public string Title { get; }
+    public string? Description { get; }
+    public int TrackingLogId { get; }
 }

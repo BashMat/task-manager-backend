@@ -1,13 +1,34 @@
-﻿namespace TaskManagerBackend.Domain.Tracking;
+﻿using TaskManagerBackend.Common.Services;
+
+namespace TaskManagerBackend.Domain.Tracking;
 
 public class NewTrackingLogEntry
 {
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public int TrackingLogId { get; set; }
-    public int StatusId { get; set; }
-    public int? Priority { get; set; }
-    public double OrderIndex { get; set; }
-    public int CreatedById { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public NewTrackingLogEntry(string title,
+                               string? description,
+                               int trackingLogId,
+                               int statusId,
+                               int? priority,
+                               double orderIndex,
+                               int createdById,
+                               IDateTimeService dateTimeService)
+    {
+        Title = title;
+        Description = description;
+        TrackingLogId = trackingLogId;
+        StatusId = statusId;
+        Priority = priority;
+        OrderIndex = orderIndex;
+        CreatedById = createdById;
+        CreatedAt = dateTimeService.UtcNow;
+    }
+    
+    public string Title { get; }
+    public string? Description { get; }
+    public int TrackingLogId { get; }
+    public int StatusId { get; }
+    public int? Priority { get; }
+    public double OrderIndex { get; }
+    public int CreatedById { get; }
+    public DateTime CreatedAt { get; }
 }

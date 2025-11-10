@@ -29,13 +29,13 @@ public class TrackingLog
         TrackingLogEntries = trackingLogEntries;
     }
     
-    public int Id { get; init; }
-    public string Title { get; init; }
-    public string? Description { get; init; }
-    public IReadOnlyCollection<TrackingLogEntryStatus> TrackingLogEntryStatuses { get; init; }
-    public IReadOnlyCollection<TrackingLogEntry> TrackingLogEntries { get; init; }
-    public MinimalUserData CreatedBy { get; init; }
-    public DateTime CreatedAt { get; init; }
-    public MinimalUserData UpdatedBy { get; init; }
-    public DateTime UpdatedAt { get; init; }
+    public int Id { get; }
+    public string Title { get; }
+    public string? Description { get; }
+    public IReadOnlyCollection<TrackingLogEntryStatus> TrackingLogEntryStatuses { get; }
+    public IReadOnlyCollection<TrackingLogEntry> TrackingLogEntries { get; }
+    public MinimalUserData CreatedBy { get; }
+    public DateTime CreatedAt { get; }
+    public MinimalUserData UpdatedBy { get; }
+    public DateTime UpdatedAt { get; }
 }

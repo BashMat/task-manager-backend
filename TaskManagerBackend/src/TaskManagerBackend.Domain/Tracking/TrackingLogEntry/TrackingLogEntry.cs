@@ -33,24 +33,15 @@ public class TrackingLogEntry
         UpdatedAt = updatedAt;
     }
 
-    public int Id { get; init; }
-    public string Title { get; init; }
-
-    public string? Description { get; init; }
-
-    public int TrackingLogId { get; init; }
-
-    public TrackingLogEntryStatus Status { get; init; }
-
-    public int? Priority { get; init; }
-
-    public decimal OrderIndex { get; init; }
-
-    public MinimalUserData CreatedBy { get; init; }
-
-    public DateTime CreatedAt { get; init; }
-
-    public MinimalUserData UpdatedBy { get; init; }
-
-    public DateTime UpdatedAt { get; init; }
+    public int Id { get; }
+    public string Title { get; }
+    public string? Description { get; }
+    public int TrackingLogId { get; }
+    public TrackingLogEntryStatus Status { get; }
+    public int? Priority { get; }
+    public decimal OrderIndex { get; }
+    public MinimalUserData CreatedBy { get; }
+    public DateTime CreatedAt { get; }
+    public MinimalUserData UpdatedBy { get; }
+    public DateTime UpdatedAt { get; }
 }
