@@ -215,6 +215,10 @@ public class TrackingService : ITrackingService
 
         return response;
     }
+    public async Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogEntryStatusHistoryById(int id)
+    {
+        return await _historyService.GetEntityHistory(EntityType.TrackingLogEntryStatus, id);
+    }
 
     public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
                                                                                                         int trackingLogEntryStatusId)

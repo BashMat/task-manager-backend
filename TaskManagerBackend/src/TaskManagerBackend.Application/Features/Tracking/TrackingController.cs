@@ -138,6 +138,12 @@ public class TrackingController : ControllerBase
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
     
+    [HttpGet("statuses/{id:int}/history")]
+    public async Task<IActionResult> GetTrackingLogEntryStatusHistoryById(int id)
+    {
+        return ConvertServiceResponse(await _trackingService.GetTrackingLogEntryStatusHistoryById(id));
+    }
+    
     [HttpDelete("statuses/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogEntryStatus([FromRoute] int id)
     {

@@ -2,9 +2,13 @@
 
 using System.Net.Http.Json;
 using FluentAssertions;
+using TaskManagerBackend.Application.Features.History.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Entities;
+using TaskManagerBackend.Domain.Users;
 using Xunit;
 
 #endregion
@@ -39,6 +43,45 @@ public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
         content.Data.TrackingLogId.Should().Be(trackingLog.Id);
         content.Data.Title.Should().Be(Title);
         content.Data.Description.Should().Be(Description);
+        content.Success.Should().BeTrue();
+        content.Message.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task TrackingLogHasHistory()
+    {
+        TrackingLogGetResponse trackingLog = await CreateTrackingLogAndValidateResponse();
+        const string Title = "NewLogEntryStatus";
+        const string Description = "Test description";
+        TrackingLogEntryStatusCreateRequest request = new()
+                                                      {
+                                                          TrackingLogId = trackingLog.Id,
+                                                          Title = Title,
+                                                          Description = Description
+                                                      };
+        DateTime now = new DateTimeService().UtcNow;
+        HttpResponseMessage creationResponse = await HttpClient.CreateTrackingLogEntryStatus(request);
+        ServiceResponse<TrackingLogEntryStatusGetResponse>? creationResponseContent = 
+            await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryStatusGetResponse>>();
+        creationResponse.EnsureSuccessStatusCode();
+        creationResponseContent.Should().NotBeNull();
+        creationResponseContent.Data.Should().NotBeNull();
+        
+        HttpResponseMessage response = 
+            await HttpClient.GetTrackingLogEntryStatusHistoryById(creationResponseContent.Data.Id);
+        ServiceResponse<GetEntityHistoryResponse>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<GetEntityHistoryResponse>>();
+
+        response.EnsureSuccessStatusCode();
+        content.Should().NotBeNull();
+        content.Data.Should().NotBeNull();
+        content.Data.EntityId.Should().Be(creationResponseContent.Data.Id);
+        content.Data.EntityTypeName.Should().Be(EntityType.TrackingLogEntryStatus.Name);
+        content.Data.HistoryEntries.Count.Should().Be(1);
+        content.Data.HistoryEntries.First().User.Should().BeEquivalentTo(new MinimalUserData(1,
+                                                                                             UserName,
+                                                                                             Email));
+        content.Data.HistoryEntries.First().DateTime.Should().BeOnOrAfter(now);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

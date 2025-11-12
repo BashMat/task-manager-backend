@@ -40,6 +40,7 @@ public interface ITrackingService
     #region Tracking Log Entry Statuses
 
     Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, TrackingLogEntryStatusCreateRequest newStatus);
+    Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogEntryStatusHistoryById(int id);
     Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
                                                                                            int trackingLogEntryStatusId);
 

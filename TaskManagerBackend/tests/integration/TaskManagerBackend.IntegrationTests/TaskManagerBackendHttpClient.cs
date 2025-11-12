@@ -122,6 +122,11 @@ public class TaskManagerBackendHttpClient
         return await _httpClient.PostAsJsonAsync("api/tracking/statuses", request);
     }
     
+    public async Task<HttpResponseMessage> GetTrackingLogEntryStatusHistoryById(int id)
+    {
+        return await _httpClient.GetAsync($"api/tracking/statuses/{id}/history");
+    }
+    
     public async Task<HttpResponseMessage> DeleteTrackingLogEntryStatus(int id)
     {
         return await _httpClient.DeleteAsync($"api/tracking/statuses/{id}");
