@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Entities;
+using TaskManagerBackend.Domain.Events;
 using TaskManagerBackend.Domain.Tracking;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
@@ -18,10 +19,13 @@ namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 public class TrackingRepository : ITrackingRepository
 {
     private readonly TaskManagerDbContext _dbContext;
+    private readonly IEventStore _eventStore;
 
-    public TrackingRepository(TaskManagerDbContext dbContext)
+    public TrackingRepository(TaskManagerDbContext dbContext,
+                              IEventStore eventStore)
     {
         _dbContext = dbContext;
+        _eventStore = eventStore;
     }
 
     #region Tracking Log
@@ -51,19 +55,7 @@ public class TrackingRepository : ITrackingRepository
                                                  logToInsert,
                                                  Guid.NewGuid());
 
-            Event dbEvent = new()
-                            {
-                                Id = domainEvent.Id,
-                                EntityType = domainEvent.EntityType,
-                                EntityId = domainEvent.EntityId,
-                                EntityVersion = domainEvent.EntityVersion,
-                                Data = JsonSerializer.Serialize(domainEvent.Data),
-                                DispatchedByUserId = domainEvent.DispatchedByUserId,
-                                DispatchedAt = domainEvent.DispatchedAt,
-                                CorrelationId = domainEvent.CorrelationId
-                            };
-        
-            _dbContext.Events.Add(dbEvent);
+            _eventStore.Append(domainEvent);
             
             await _dbContext.SaveChangesAsync();
 
@@ -141,19 +133,7 @@ public class TrackingRepository : ITrackingRepository
                                                       logEntryToInsert,
                                                       Guid.NewGuid());
 
-            Event dbEvent = new()
-                            {
-                                Id = domainEvent.Id,
-                                EntityType = domainEvent.EntityType,
-                                EntityId = domainEvent.EntityId,
-                                EntityVersion = domainEvent.EntityVersion,
-                                Data = JsonSerializer.Serialize(domainEvent.Data),
-                                DispatchedByUserId = domainEvent.DispatchedByUserId,
-                                DispatchedAt = domainEvent.DispatchedAt,
-                                CorrelationId = domainEvent.CorrelationId
-                            };
-        
-            _dbContext.Events.Add(dbEvent);
+            _eventStore.Append(domainEvent);
             
             await _dbContext.SaveChangesAsync();
 
@@ -282,20 +262,8 @@ public class TrackingRepository : ITrackingRepository
                                                             trackingLogEntryStatus.Id, 
                                                             statusToInsert, 
                                                             Guid.NewGuid());
-
-            Event dbEvent = new()
-                            {
-                                Id = domainEvent.Id,
-                                EntityType = domainEvent.EntityType,
-                                EntityId = domainEvent.EntityId,
-                                EntityVersion = domainEvent.EntityVersion,
-                                Data = JsonSerializer.Serialize(domainEvent.Data),
-                                DispatchedByUserId = domainEvent.DispatchedByUserId,
-                                DispatchedAt = domainEvent.DispatchedAt,
-                                CorrelationId = domainEvent.CorrelationId
-                            };
-        
-            _dbContext.Events.Add(dbEvent);
+            
+            _eventStore.Append(domainEvent);
             
             await _dbContext.SaveChangesAsync();
 

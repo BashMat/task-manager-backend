@@ -18,10 +18,12 @@ using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.DataAccess;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Repositories.History;
 using TaskManagerBackend.DataAccess.Repositories.Tracking;
 using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.Domain.Events;
 using TaskManagerBackend.Domain.History;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Users;
@@ -199,6 +201,9 @@ public class Startup
         
         // Application-level only
         services.AddSingleton<ICryptographyService, CryptographyService>();
+        
+        // Core (clean domain + domain abstractions around infrastructure)
+        services.AddScoped<IEventStore, EventStore>();
         
         // Vertical feature slice
         // Auth and users:
