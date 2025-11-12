@@ -261,23 +261,56 @@ public class TrackingRepository : ITrackingRepository
 
     public async Task<Domain.Tracking.TrackingLogEntryStatus?> InsertTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert)
     {
-        TrackingLogEntryStatus trackingLogEntryStatus = new()
-                        {
-                            Title = statusToInsert.Title,
-                            Description = statusToInsert.Description,
-                            TrackingLogId = statusToInsert.TrackingLogId,
-                            CreatedBy = statusToInsert.CreatedById,
-                            CreatedAt = statusToInsert.CreatedAt,
-                            UpdatedBy = statusToInsert.CreatedById,
-                            UpdatedAt = statusToInsert.CreatedAt
-                        };
-        _dbContext.TrackingLogEntryStatuses.Add(trackingLogEntryStatus);
-        await _dbContext.SaveChangesAsync();
+        await using IDbContextTransaction transaction = await _dbContext.Database.BeginTransactionAsync();
+        
+        try
+        {
+            TrackingLogEntryStatus trackingLogEntryStatus = new()
+                                                            {
+                                                                Title = statusToInsert.Title,
+                                                                Description = statusToInsert.Description,
+                                                                TrackingLogId = statusToInsert.TrackingLogId,
+                                                                CreatedBy = statusToInsert.CreatedById,
+                                                                CreatedAt = statusToInsert.CreatedAt,
+                                                                UpdatedBy = statusToInsert.CreatedById,
+                                                                UpdatedAt = statusToInsert.CreatedAt
+                                                            };
+            _dbContext.TrackingLogEntryStatuses.Add(trackingLogEntryStatus);
+            await _dbContext.SaveChangesAsync();
+            
+            TrackingLogEntryStatusCreated domainEvent = new(Guid.NewGuid(), 
+                                                            trackingLogEntryStatus.Id, 
+                                                            statusToInsert, 
+                                                            Guid.NewGuid());
 
-        return new Domain.Tracking.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
-                                                          trackingLogEntryStatus.Title,
-                                                          trackingLogEntryStatus.Description,
-                                                          trackingLogEntryStatus.TrackingLogId);
+            Event dbEvent = new()
+                            {
+                                Id = domainEvent.Id,
+                                EntityType = domainEvent.EntityType,
+                                EntityId = domainEvent.EntityId,
+                                EntityVersion = domainEvent.EntityVersion,
+                                Data = JsonSerializer.Serialize(domainEvent.Data),
+                                DispatchedByUserId = domainEvent.DispatchedByUserId,
+                                DispatchedAt = domainEvent.DispatchedAt,
+                                CorrelationId = domainEvent.CorrelationId
+                            };
+        
+            _dbContext.Events.Add(dbEvent);
+            
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return new Domain.Tracking.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
+                                                              trackingLogEntryStatus.Title,
+                                                              trackingLogEntryStatus.Description,
+                                                              trackingLogEntryStatus.TrackingLogId);
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<List<Domain.Tracking.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId)
