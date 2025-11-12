@@ -2,10 +2,6 @@
 
 public abstract class EntityCreated
 {
-    internal EntityCreated()
-    {
-        EntityVersion = Constants.NewEntityVersion;
-    }
-    
-    public int EntityVersion { get; }
+    private const int NewEntityVersion = 1;
+    public int EntityVersion => NewEntityVersion;
 }
