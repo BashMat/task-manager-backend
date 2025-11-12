@@ -19,14 +19,16 @@ public class HistoryRepository : IHistoryRepository
                                                                           int entityId)
     {
         var events = await _dbContext.Events.AsNoTracking()
-                                            .OrderBy(e => e.EntityVersion)
+                                            .Where(e => e.EntityId == entityId && e.EntityType == entityType.Id)
                                             .Select(e => new
                                                          {
                                                              EntityTypeName = entityType.Name,
                                                              EntityId = entityId,
+                                                             e.EntityVersion,
                                                              e.DispatchedAt,
                                                              e.User
                                                          })
+                                            .OrderBy(e => e.EntityVersion)
                                             .ToListAsync();
         
         return events.Select(e => new HistoryEntry
