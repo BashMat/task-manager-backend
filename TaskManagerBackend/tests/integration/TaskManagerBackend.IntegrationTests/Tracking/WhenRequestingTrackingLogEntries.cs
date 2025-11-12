@@ -3,9 +3,13 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using TaskManagerBackend.Application.Features.History.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Entities;
+using TaskManagerBackend.Domain.History;
+using TaskManagerBackend.Domain.Users;
 using Xunit;
 
 #endregion
@@ -129,6 +133,62 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.UpdatedAt.Should().NotBe(createdTrackingLogEntry.UpdatedAt);
         content.Data.TrackingLogId.Should().Be(createdTrackingLogEntry.TrackingLogId);
         content.Data.Status.Should().BeEquivalentTo(createdTrackingLogEntry.Status);
+        content.Success.Should().BeTrue();
+        content.Message.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task TrackingLogEntryHasHistory()
+    {
+        TrackingLogEntryGetResponse createdTrackingLogEntry = 
+            await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                            DefaultTrackingLogEntryStatus!.Id);
+        Thread.Sleep(3_000);
+        const string Title = "NewLogEntry";
+        const string Description = "Test description";
+        UpdateTrackingLogEntryRequest request = new()
+                                                {
+                                                    Title = Title,
+                                                    Description = Description,
+                                                    TrackingLogId = createdTrackingLogEntry.TrackingLogId,
+                                                    StatusId = createdTrackingLogEntry.Status.Id,
+                                                    OrderIndex = createdTrackingLogEntry.OrderIndex,
+                                                    Priority = createdTrackingLogEntry.Priority,
+                                                    UpdatedAt = createdTrackingLogEntry.UpdatedAt
+                                                };
+        HttpResponseMessage responseUpd = await HttpClient.UpdateTrackingLogEntry(createdTrackingLogEntry.Id,
+                                                                               request);
+        ServiceResponse<TrackingLogEntryGetResponse>? contentUpd = 
+            await responseUpd.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryGetResponse>>();
+        contentUpd.Should().NotBeNull();
+        contentUpd.Data.Should().NotBeNull();
+        var updatedAt = contentUpd.Data.UpdatedAt;
+        
+        HttpResponseMessage response = await HttpClient.GetTrackingLogEntryHistoryById(createdTrackingLogEntry.Id);
+        ServiceResponse<GetEntityHistoryResponse>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<GetEntityHistoryResponse>>();
+
+        response.EnsureSuccessStatusCode();
+        content.Should().NotBeNull();
+        content.Data.Should().NotBeNull();
+        content.Data.EntityId.Should().Be(createdTrackingLogEntry.Id);
+        content.Data.EntityTypeName.Should().Be(EntityType.TrackingLogEntry.Name);
+        content.Data.HistoryEntries.Count.Should().Be(2);
+        content.Data.HistoryEntries.Should().BeEquivalentTo([
+                                                                new HistoryEntry 
+                                                                {
+                                                                    User = new MinimalUserData(1,
+                                                                                               UserName,
+                                                                                               Email),
+                                                                    DateTime = createdTrackingLogEntry.CreatedAt
+                                                                }, 
+                                                                new HistoryEntry 
+                                                                {
+                                                                    User = new MinimalUserData(1,
+                                                                                               UserName,
+                                                                                               Email),
+                                                                    DateTime = updatedAt
+                                                                }]);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

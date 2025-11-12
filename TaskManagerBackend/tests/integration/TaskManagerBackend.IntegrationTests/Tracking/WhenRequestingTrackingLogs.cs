@@ -3,9 +3,13 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using TaskManagerBackend.Application.Features.History.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Entities;
+using TaskManagerBackend.Domain.History;
+using TaskManagerBackend.Domain.Users;
 using Xunit;
 
 #endregion
@@ -81,6 +85,34 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
         response.EnsureSuccessStatusCode();
         content.Should().NotBeNull();
         content.Data.Should().NotBeEmpty();
+        content.Success.Should().BeTrue();
+        content.Message.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task TrackingLogHasHistory()
+    {
+        TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
+        
+        HttpResponseMessage response = await HttpClient.GetTrackingLogHistoryById(createdTrackingLog.Id);
+        ServiceResponse<GetEntityHistoryResponse>? content = 
+            await response.Content.ReadFromJsonAsync<ServiceResponse<GetEntityHistoryResponse>>();
+
+        response.EnsureSuccessStatusCode();
+        content.Should().NotBeNull();
+        content.Data.Should().NotBeNull();
+        content.Data.EntityId.Should().Be(createdTrackingLog.Id);
+        content.Data.EntityTypeName.Should().Be(EntityType.TrackingLog.Name);
+        content.Data.HistoryEntries.Count.Should().Be(1);
+        content.Data.HistoryEntries.Should().BeEquivalentTo([
+                                                                new HistoryEntry 
+                                                                {
+                                                                    User = new MinimalUserData(1,
+                                                                                               UserName,
+                                                                                               Email),
+                                                                    DateTime = createdTrackingLog.CreatedAt
+                                                                }
+                                                            ]);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

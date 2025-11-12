@@ -75,6 +75,11 @@ public class TaskManagerBackendHttpClient
     {
         return await _httpClient.GetAsync("api/tracking/logs");
     }
+    
+    public async Task<HttpResponseMessage> GetTrackingLogHistoryById(int id)
+    {
+        return await _httpClient.GetAsync($"api/tracking/logs/{id}/history");
+    }
 
     public async Task<HttpResponseMessage> DeleteTrackingLogById(int id)
     {
@@ -94,6 +99,11 @@ public class TaskManagerBackendHttpClient
     public async Task<HttpResponseMessage> GetTrackingLogEntries()
     {
         return await _httpClient.GetAsync("api/tracking/log-entries");
+    }
+    
+    public async Task<HttpResponseMessage> GetTrackingLogEntryHistoryById(int id)
+    {
+        return await _httpClient.GetAsync($"api/tracking/log-entries/{id}/history");
     }
     
     public async Task<HttpResponseMessage> UpdateTrackingLogEntry(int id, 
