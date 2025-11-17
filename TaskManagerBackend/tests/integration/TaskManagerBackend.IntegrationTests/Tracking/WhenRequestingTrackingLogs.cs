@@ -110,9 +110,11 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
                                                                     User = new MinimalUserData(1,
                                                                                                UserName,
                                                                                                Email),
-                                                                    DateTime = createdTrackingLog.CreatedAt
+                                                                    DateTime = createdTrackingLog.CreatedAt,
+                                                                    Entity = string.Empty
                                                                 }
-                                                            ]);
+                                                            ],
+                                                            HistoryEntryComparisonOptions());
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

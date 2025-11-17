@@ -4,6 +4,6 @@ namespace TaskManagerBackend.Domain.History;
 
 public interface IHistoryRepository
 {
-    Task<IReadOnlyCollection<HistoryEntry>> GetEntityHistory(EntityType entityType,
+    Task<IReadOnlyCollection<HistoryEntry>> GetEntityHistory(EntityType entityType, 
                                                              int entityId);
 }

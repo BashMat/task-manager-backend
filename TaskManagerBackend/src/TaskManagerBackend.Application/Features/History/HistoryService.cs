@@ -17,8 +17,9 @@ public class HistoryService : IHistoryService
     public async Task<GetEntityHistoryResponse> GetEntityHistory(EntityType entityType, 
                                                                  int entityId)
     {
-        IReadOnlyCollection<HistoryEntry> historyEntries = await _historyRepository.GetEntityHistory(entityType,
-                                                                                                     entityId);
+        IReadOnlyCollection<HistoryEntry> historyEntries = 
+            await _historyRepository.GetEntityHistory(entityType, 
+                                                      entityId);
         return new GetEntityHistoryResponse
                {
                    EntityTypeName = entityType.Name,

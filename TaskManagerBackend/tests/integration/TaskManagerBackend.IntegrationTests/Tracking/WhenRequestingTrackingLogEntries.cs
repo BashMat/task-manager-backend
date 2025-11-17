@@ -180,15 +180,19 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
                                                                     User = new MinimalUserData(1,
                                                                                                UserName,
                                                                                                Email),
-                                                                    DateTime = createdTrackingLogEntry.CreatedAt
+                                                                    DateTime = createdTrackingLogEntry.CreatedAt,
+                                                                    Entity = string.Empty
                                                                 }, 
                                                                 new HistoryEntry 
                                                                 {
                                                                     User = new MinimalUserData(1,
                                                                                                UserName,
                                                                                                Email),
-                                                                    DateTime = updatedAt
-                                                                }]);
+                                                                    DateTime = updatedAt,
+                                                                    Entity = string.Empty
+                                                                }
+                                                            ], 
+                                                            HistoryEntryComparisonOptions());
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }

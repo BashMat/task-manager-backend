@@ -25,6 +25,7 @@ public class HistoryRepository : IHistoryRepository
                                                              EntityTypeName = entityType.Name,
                                                              EntityId = entityId,
                                                              e.EntityVersion,
+                                                             e.Data,
                                                              e.DispatchedAt,
                                                              e.User
                                                          })
@@ -34,7 +35,8 @@ public class HistoryRepository : IHistoryRepository
         return events.Select(e => new HistoryEntry
                                   {
                                       DateTime = e.DispatchedAt,
-                                      User = e.User.ToDomain()
+                                      User = e.User.ToDomain(),
+                                      Entity = e.Data
                                   })
                      .ToList();
     }

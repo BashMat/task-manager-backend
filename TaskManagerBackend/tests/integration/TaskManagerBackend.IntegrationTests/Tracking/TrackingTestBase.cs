@@ -2,11 +2,13 @@
 
 using System.Net.Http.Json;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain.History;
 using Xunit;
 
 #endregion
@@ -167,5 +169,10 @@ public class TrackingTestBase : IntegrationTestBase,
         creationResponseContent.Should().NotBeNull();
         creationResponseContent.Data.Should().NotBeNull();
         return creationResponseContent.Data;
+    }
+    
+    protected Func<EquivalencyAssertionOptions<HistoryEntry>, EquivalencyAssertionOptions<HistoryEntry>> HistoryEntryComparisonOptions()
+    {
+        return historyEntry => historyEntry.Excluding(o => o.Entity);
     }
 }
