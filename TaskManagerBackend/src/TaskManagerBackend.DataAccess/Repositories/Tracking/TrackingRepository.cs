@@ -52,8 +52,7 @@ public class TrackingRepository : ITrackingRepository
             
             TrackingLogCreated domainEvent = new(Guid.NewGuid(),
                                                  trackingLog.Id,
-                                                 logToInsert,
-                                                 Guid.NewGuid());
+                                                 logToInsert);
 
             _eventStore.Append(domainEvent);
             
@@ -130,8 +129,7 @@ public class TrackingRepository : ITrackingRepository
             
             TrackingLogEntryCreated domainEvent = new(Guid.NewGuid(), 
                                                       entry.Id, 
-                                                      logEntryToInsert,
-                                                      Guid.NewGuid());
+                                                      logEntryToInsert);
 
             _eventStore.Append(domainEvent);
             
@@ -199,22 +197,9 @@ public class TrackingRepository : ITrackingRepository
         TrackingLogEntryUpdated domainEvent = new(Guid.NewGuid(), 
                                                   entry.Id,
                                                   lastEntityVersion + 1,
-                                                  updatableTrackingLogEntry,
-                                                  Guid.NewGuid());
+                                                  updatableTrackingLogEntry);
 
-        Event dbEvent = new()
-                        {
-                            Id = domainEvent.Id,
-                            EntityType = domainEvent.EntityType,
-                            EntityId = domainEvent.EntityId,
-                            EntityVersion = domainEvent.EntityVersion,
-                            Data = JsonSerializer.Serialize(domainEvent.Data),
-                            DispatchedByUserId = domainEvent.DispatchedByUserId,
-                            DispatchedAt = domainEvent.DispatchedAt,
-                            CorrelationId = domainEvent.CorrelationId
-                        };
-        
-        _dbContext.Events.Add(dbEvent);
+        _eventStore.Append(domainEvent);
         
         await _dbContext.SaveChangesAsync();
 
@@ -260,8 +245,7 @@ public class TrackingRepository : ITrackingRepository
             
             TrackingLogEntryStatusCreated domainEvent = new(Guid.NewGuid(), 
                                                             trackingLogEntryStatus.Id, 
-                                                            statusToInsert, 
-                                                            Guid.NewGuid());
+                                                            statusToInsert);
             
             _eventStore.Append(domainEvent);
             

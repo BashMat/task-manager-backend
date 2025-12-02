@@ -7,8 +7,7 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
     public TrackingLogEntryUpdated(Guid id,
                                    int entityId,
                                    int entityVersion,
-                                   UpdatableTrackingLogEntry data,
-                                   Guid correlationId)
+                                   UpdatableTrackingLogEntry data)
     {
         Id = id;
         EntityType = Entities.EntityType.TrackingLogEntry.Id;
@@ -17,7 +16,6 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
         Data = data;
         DispatchedByUserId = data.UpdatedBy;
         DispatchedAt = data.UpdatedAt;
-        CorrelationId = correlationId;
     }
     
     public Guid Id { get; }
@@ -27,5 +25,6 @@ public class TrackingLogEntryUpdated : IEvent<UpdatableTrackingLogEntry>
     public UpdatableTrackingLogEntry Data { get; }
     public int DispatchedByUserId { get; }
     public DateTime DispatchedAt { get; }
-    public Guid CorrelationId { get; }
+    public Guid CorrelationId => Id;
+    public Guid CausationId => Id;
 }

@@ -12,7 +12,7 @@ using TaskManagerBackend.DataAccess.Database;
 namespace TaskManagerBackend.DataAccess.Database.Migrations
 {
     [DbContext(typeof(TaskManagerDbContext))]
-    [Migration("20251005134701_AddEventTable")]
+    [Migration("20251202020042_AddEventTable")]
     partial class AddEventTable
     {
         /// <inheritdoc />
@@ -29,6 +29,9 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CausationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CorrelationId")
@@ -55,6 +58,10 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
 
                     b.HasKey("Id")
                         .HasName("Event_PK");
+
+                    b.HasIndex("CausationId");
+
+                    b.HasIndex("CorrelationId");
 
                     b.HasIndex("DispatchedByUserId");
 
@@ -282,12 +289,30 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
 
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.Event", b =>
                 {
+                    b.HasOne("TaskManagerBackend.DataAccess.Database.Models.Event", "Causation")
+                        .WithMany("Causations")
+                        .HasForeignKey("CausationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Event_CausationId_FK");
+
+                    b.HasOne("TaskManagerBackend.DataAccess.Database.Models.Event", "Correlation")
+                        .WithMany("Correlations")
+                        .HasForeignKey("CorrelationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("Event_CorrelationId_FK");
+
                     b.HasOne("TaskManagerBackend.DataAccess.Database.Models.User", "User")
                         .WithMany("Events")
                         .HasForeignKey("DispatchedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("Event_DispatchedByUserId_FK");
+
+                    b.Navigation("Causation");
+
+                    b.Navigation("Correlation");
 
                     b.Navigation("User");
                 });
@@ -383,6 +408,13 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                     b.Navigation("TrackingLog");
 
                     b.Navigation("UpdatedByNavigation");
+                });
+
+            modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.Event", b =>
+                {
+                    b.Navigation("Causations");
+
+                    b.Navigation("Correlations");
                 });
 
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.TrackingLog", b =>

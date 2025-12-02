@@ -18,5 +18,15 @@ public partial class Event
     
     public Guid CorrelationId { get; set; } 
     
+    public Guid CausationId { get; set; } 
+    
     public virtual User User { get; set; } = null!;
+    
+    public virtual Event Correlation { get; set; } = null!;
+    
+    public virtual ICollection<Event> Correlations { get; set; } = null!;
+    
+    public virtual Event Causation { get; set; } = null!;
+    
+    public virtual ICollection<Event> Causations { get; set; } = null!;
 }

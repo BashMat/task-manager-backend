@@ -6,8 +6,7 @@ public class TrackingLogCreated : EntityCreated, IEvent<NewTrackingLog>
 {
     public TrackingLogCreated(Guid id,
                               int entityId,
-                              NewTrackingLog data,
-                              Guid correlationId)
+                              NewTrackingLog data)
     {
         Id = id;
         EntityType = Entities.EntityType.TrackingLog.Id;
@@ -15,7 +14,6 @@ public class TrackingLogCreated : EntityCreated, IEvent<NewTrackingLog>
         Data = data;
         DispatchedByUserId = data.CreatedById;
         DispatchedAt = data.CreatedAt;
-        CorrelationId = correlationId;
     }
     
     public Guid Id { get; }
@@ -24,5 +22,6 @@ public class TrackingLogCreated : EntityCreated, IEvent<NewTrackingLog>
     public NewTrackingLog Data { get; }
     public int DispatchedByUserId { get; }
     public DateTime DispatchedAt { get; }
-    public Guid CorrelationId { get; }
+    public Guid CorrelationId => Id;
+    public Guid CausationId => Id;
 }

@@ -27,7 +27,8 @@ public class EventStore : IEventStore
                             Data = dataJson,
                             DispatchedByUserId = domainEvent.DispatchedByUserId,
                             DispatchedAt = domainEvent.DispatchedAt,
-                            CorrelationId = domainEvent.CorrelationId
+                            CorrelationId = domainEvent.CorrelationId,
+                            CausationId = domainEvent.CausationId
                         };
         
         _dbContext.Events.Add(dbEvent);

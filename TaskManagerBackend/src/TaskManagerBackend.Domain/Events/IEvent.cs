@@ -10,4 +10,5 @@ public interface IEvent<TEntity>
     public int DispatchedByUserId { get; }
     public DateTime DispatchedAt { get; }
     public Guid CorrelationId { get; }
+    public Guid CausationId { get; }
 }

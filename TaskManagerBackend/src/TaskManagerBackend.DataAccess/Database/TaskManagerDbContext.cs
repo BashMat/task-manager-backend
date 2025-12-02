@@ -161,6 +161,20 @@ public partial class TaskManagerDbContext : DbContext
                                              .HasForeignKey(d => d.DispatchedByUserId)
                                              .HasConstraintName("Event_DispatchedByUserId_FK")
                                              .IsRequired();
+                                       
+                                       entity.HasOne(e =>  e.Correlation)
+                                             .WithMany(p => p.Correlations)
+                                             .HasForeignKey(e => e.CorrelationId)
+                                             .HasConstraintName("Event_CorrelationId_FK")
+                                             .OnDelete(DeleteBehavior.NoAction)
+                                             .IsRequired();
+                                       
+                                       entity.HasOne(e =>  e.Causation)
+                                             .WithMany(p => p.Causations)
+                                             .HasForeignKey(e => e.CausationId)
+                                             .HasConstraintName("Event_CausationId_FK")
+                                             .OnDelete(DeleteBehavior.NoAction)
+                                             .IsRequired();
 
                                        entity.HasIndex(e => new { e.EntityType, e.EntityId, e.EntityVersion })
                                              .IsUnique();
