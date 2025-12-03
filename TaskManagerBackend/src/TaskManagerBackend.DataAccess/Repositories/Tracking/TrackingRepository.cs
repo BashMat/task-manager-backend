@@ -1,10 +1,8 @@
 ﻿#region Usings
 
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using TaskManagerBackend.DataAccess.Database;
-using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Events;
 using TaskManagerBackend.Domain.Tracking;
