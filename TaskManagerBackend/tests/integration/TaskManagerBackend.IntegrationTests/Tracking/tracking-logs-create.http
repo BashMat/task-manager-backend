@@ -1,0 +1,7 @@
+﻿POST http://localhost:5000/api/tracking/logs
+Content-Type: application/json
+Authorization: Bearer // token
+
+{
+  "Title": ""
+}

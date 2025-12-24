@@ -1,0 +1,2 @@
+﻿GET http://localhost:5000/api/tracking/logs
+Authorization: Bearer // token
