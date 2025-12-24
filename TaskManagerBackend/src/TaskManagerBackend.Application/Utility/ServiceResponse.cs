@@ -40,6 +40,8 @@ public class ServiceResponse<T>
                    ActionResults.Success => StatusCodes.Status200OK,
                    ActionResults.UserError => StatusCodes.Status400BadRequest,
                    ActionResults.Unauthorized => StatusCodes.Status401Unauthorized,
+                   // TODO: Revisit the way status is handled for Access Denied and 
+                   //  Resource Not Found cases. From security standpoint, only one status should be used.
                    ActionResults.AccessDenied => StatusCodes.Status403Forbidden,
                    ActionResults.ResourceNotFound => StatusCodes.Status404NotFound,
                    ActionResults.DataConflict => StatusCodes.Status409Conflict,
