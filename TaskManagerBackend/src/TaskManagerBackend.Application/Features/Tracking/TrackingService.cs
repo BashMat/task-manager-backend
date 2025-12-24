@@ -87,6 +87,33 @@ public class TrackingService : ITrackingService
         List<TrackingLog> logs = await _trackingRepository.DeleteTrackingLogById(userId, trackingLogId);
         return logs.Select(l => l.ToDto()).ToList();
     }
+    
+    public async Task<ServiceResponse<TrackingLogSimpleGetResponse>> RenameTrackingLog(int userId,
+                                                                                       int trackingLogId,
+                                                                                       string newTitle)
+    {
+        TrackingLogSimple? log = await _trackingRepository.GetTrackingLogSimpleById(trackingLogId);
+
+        if (log is null)
+        {
+            return new ServiceResponse<TrackingLogSimpleGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                                     message: ResourceDoesNotExist);
+        }
+        
+        log.Rename(newTitle,
+                   userId,
+                   _dateTimeService);
+
+        TrackingLogSimple? logAfterUpdate = await _trackingRepository.SaveTrackingLog(log);
+
+        if (logAfterUpdate is null)
+        {
+            return new ServiceResponse<TrackingLogSimpleGetResponse>(actionResult: ActionResults.ResourceNotFound,
+                                                                     message: ResourceDoesNotExist);
+        }
+
+        return logAfterUpdate.ToDto();
+    }
 
     #endregion
 

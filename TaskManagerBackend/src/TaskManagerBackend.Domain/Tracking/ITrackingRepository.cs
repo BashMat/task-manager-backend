@@ -8,7 +8,10 @@ public interface ITrackingRepository
     Task<TrackingLog?> InsertTrackingLog(NewTrackingLog logToInsert);
     Task<List<TrackingLog>> GetAllTrackingLogs(int userId);
     Task<TrackingLog?> GetTrackingLogById(int trackingLogId);
+    Task<TrackingLogSimple?> GetTrackingLogSimpleById(int trackingLogId);
     Task<List<TrackingLog>> DeleteTrackingLogById(int userId, int trackingLogId);
+    
+    Task<TrackingLogSimple?> SaveTrackingLog(TrackingLogSimple logToSave);
 
     #endregion
     

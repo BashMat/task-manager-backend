@@ -1,0 +1,8 @@
+﻿POST http://localhost:5000/api/tracking/logs/rename
+Content-Type: application/json
+Authorization: Bearer //token
+
+{
+  "Id": 1,
+  "Title": ""
+}

@@ -63,6 +63,16 @@ public class TrackingController : ControllerBase
     {
         return ConvertServiceResponse(await _trackingService.DeleteTrackingLogById(UserId, id));
     }
+    
+    [HttpPost("logs/rename")]
+    public async Task<IActionResult> RenameTrackingLog([FromBody] TrackingLogRenameRequest request)
+    {
+        ServiceResponse<TrackingLogSimpleGetResponse> response = 
+            await _trackingService.RenameTrackingLog(UserId,
+                                                     request.Id,
+                                                     request.Title);
+        return ConvertServiceResponse(response);
+    }
 
     #endregion
     

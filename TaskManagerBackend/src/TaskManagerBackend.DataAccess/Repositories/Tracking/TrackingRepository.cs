@@ -52,7 +52,8 @@ public class TrackingRepository : ITrackingRepository
                                                  trackingLog.Id,
                                                  logToInsert);
 
-            _eventStore.Append(domainEvent);
+            _eventStore.Append(domainEvent,
+                               domainEvent.EntityVersion);
             
             await _dbContext.SaveChangesAsync();
 
@@ -84,6 +85,14 @@ public class TrackingRepository : ITrackingRepository
                                             .Select(log => log.ToDomain())
                                             .FirstOrDefaultAsync();
     }
+    
+    public async Task<TrackingLogSimple?> GetTrackingLogSimpleById(int trackingLogId)
+    {
+        return await _dbContext.TrackingLogs.AsNoTracking()
+                                            .FilterById(trackingLogId)
+                                            .Select(log => log.ToDomainSimple())
+                                            .FirstOrDefaultAsync();
+    }
 
     public async Task<List<Domain.Tracking.TrackingLog>> DeleteTrackingLogById(int userId, int trackingLogId)
     {
@@ -97,6 +106,30 @@ public class TrackingRepository : ITrackingRepository
         return await GetAllTrackingLogs(userId);
     }
     
+    public async Task<TrackingLogSimple?> SaveTrackingLog(TrackingLogSimple logToSave)
+    {
+        TrackingLog? log = await _dbContext.TrackingLogs.FilterById(logToSave.Id)
+                                                        .FirstOrDefaultAsync();
+
+        if (log is null)
+        {
+            return null;
+        }
+        
+        log.Title = logToSave.Title;
+        log.Description = logToSave.Description;
+        log.UpdatedBy = logToSave.UpdatedByUserId;
+        log.UpdatedAt = logToSave.UpdatedAt;
+        
+        logToSave.DispatchEvents(_eventStore,
+                                 await _eventStore.GetLastEntityVersion(EntityType.TrackingLog,
+                                                                        logToSave.Id));
+        
+        await _dbContext.SaveChangesAsync();
+
+        return logToSave;
+    }
+
     #endregion
 
     #region Tracking Log Entries
@@ -129,7 +162,8 @@ public class TrackingRepository : ITrackingRepository
                                                       entry.Id, 
                                                       logEntryToInsert);
 
-            _eventStore.Append(domainEvent);
+            _eventStore.Append(domainEvent,
+                               domainEvent.EntityVersion);
             
             await _dbContext.SaveChangesAsync();
 
@@ -186,18 +220,15 @@ public class TrackingRepository : ITrackingRepository
         entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
         entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
         
-        int lastEntityVersion = await _dbContext.Events.Where(e => e.EntityType == EntityType.TrackingLogEntry.Id &&
-                                                                   e.EntityId == id)
-                                                       .Select(e => e.EntityVersion)
-                                                       .OrderByDescending(o => o)
-                                                       .FirstAsync();
+        int lastEntityVersion = await _eventStore.GetLastEntityVersion(EntityType.TrackingLogEntry, 
+                                                                       id);
         
         TrackingLogEntryUpdated domainEvent = new(Guid.NewGuid(), 
                                                   entry.Id,
-                                                  lastEntityVersion + 1,
                                                   updatableTrackingLogEntry);
 
-        _eventStore.Append(domainEvent);
+        _eventStore.Append(domainEvent,
+                           lastEntityVersion + 1);
         
         await _dbContext.SaveChangesAsync();
 
@@ -245,7 +276,8 @@ public class TrackingRepository : ITrackingRepository
                                                             trackingLogEntryStatus.Id, 
                                                             statusToInsert);
             
-            _eventStore.Append(domainEvent);
+            _eventStore.Append(domainEvent,
+                               domainEvent.EntityVersion);
             
             await _dbContext.SaveChangesAsync();
 

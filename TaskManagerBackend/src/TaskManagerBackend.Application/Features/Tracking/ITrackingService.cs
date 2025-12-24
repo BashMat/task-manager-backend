@@ -19,6 +19,10 @@ public interface ITrackingService
     Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id);
     Task<ServiceResponse<GetEntityHistoryResponse>> GetTrackingLogHistoryById(int id);
     Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, int trackingLogId);
+    
+    Task<ServiceResponse<TrackingLogSimpleGetResponse>> RenameTrackingLog(int userId,
+                                                                          int trackingLogId,
+                                                                          string newTitle);
 
     #endregion
     

@@ -56,4 +56,15 @@ public static class ConvertingExtensions
                                                           .Select(entry => entry.ToDomain())
                                                           .ToList());
     }
+    
+    public static Domain.Tracking.TrackingLogSimple ToDomainSimple(this TrackingLog trackingLog)
+    {
+        return new Domain.Tracking.TrackingLogSimple(trackingLog.Id,
+                                                     trackingLog.Title,
+                                                     trackingLog.Description,
+                                                     trackingLog.CreatedBy,
+                                                     trackingLog.CreatedAt,
+                                                     trackingLog.UpdatedBy,
+                                                     trackingLog.UpdatedAt);
+    }
 }

@@ -69,4 +69,18 @@ public static class ConvertingExtensions
                                                                                     .ToList()
                };
     }
+    
+    public static TrackingLogSimpleGetResponse ToDto(this Domain.Tracking.TrackingLogSimple trackingLog)
+    {
+        return new TrackingLogSimpleGetResponse
+               {
+                   Id = trackingLog.Id,
+                   Title = trackingLog.Title,
+                   Description = trackingLog.Description,
+                   CreatedAt = trackingLog.CreatedAt,
+                   CreatedByUserId = trackingLog.CreatedByUserId,
+                   UpdatedAt = trackingLog.UpdatedAt,
+                   UpdatedByUserId = trackingLog.UpdatedByUserId
+               };
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Events;
 
 namespace TaskManagerBackend.DataAccess;
@@ -13,8 +15,19 @@ public class EventStore : IEventStore
     {
         _dbContext = dbContext;
     }
+
+    public async Task<int> GetLastEntityVersion(EntityType entityType,
+                                                int entityId)
+    {
+        return await _dbContext.Events.Where(e => e.EntityType == entityType.Id &&
+                                                  e.EntityId == entityId)
+                                      .Select(e => e.EntityVersion)
+                                      .OrderByDescending(o => o)
+                                      .FirstAsync();
+    }
     
-    public void Append<TEntity>(IEvent<TEntity> domainEvent)
+    public void Append<TEntity>(IEvent<TEntity> domainEvent,
+                                int entityVersion)
     {
         string dataJson = JsonSerializer.Serialize(domainEvent.Data);
 
@@ -23,7 +36,7 @@ public class EventStore : IEventStore
                             Id = domainEvent.Id,
                             EntityId = domainEvent.EntityId,
                             EntityType = domainEvent.EntityType,
-                            EntityVersion = domainEvent.EntityVersion,
+                            EntityVersion = entityVersion,
                             Data = dataJson,
                             DispatchedByUserId = domainEvent.DispatchedByUserId,
                             DispatchedAt = domainEvent.DispatchedAt,
