@@ -2,18 +2,20 @@
 
 public interface IUserRepository
 {
-    public Task<UserPasswordData?> GetUserPasswordData(string logInData);
+    Task CreateUser(NewUser newUser);
+    Task<MinimalUserData?> GetMinimalUserData(int id);
+    Task<UserPasswordData?> GetUserPasswordData(string logInData);
+    
     Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, 
                                                     string refreshToken);
-    public Task<bool> CheckIfUserExistsById(int id);
-    public Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email);
-    public Task CreateUser(NewUser newUser);
+    Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, 
+                                                  string email); 
 
     #region Tokens
 
-    public Task CreateUserRefreshToken(int userId,
-                                       TokenData token,
-                                       string? invalidatedRefreshToken);
+    Task CreateUserRefreshToken(int userId,
+                                TokenData token,
+                                string? invalidatedRefreshToken);
     Task DeleteUserRefreshTokens(int userId);
 
     #endregion

@@ -25,14 +25,41 @@ public class UserRepository : IUserRepository
         _dateTimeService = dateTimeService;
         _logger = logger;
     }
+    
+    public async Task CreateUser(NewUser newUser)
+    {
+        _logger.LogInformation("Starting inserting user data");
 
+        Database.Models.User user = new()
+                                    {
+                                        UserName = newUser.UserName,
+                                        Email = newUser.Email,
+                                        PasswordHash = newUser.PasswordHash,
+                                        PasswordSalt = newUser.PasswordSalt,
+                                        CreatedAt = newUser.CreatedAt,
+                                        UpdatedAt = newUser.UpdatedAt
+                                    };
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+        
+        _logger.LogInformation("Finishing inserting user data");
+    }
+
+    public async Task<MinimalUserData?> GetMinimalUserData(int id)
+    {
+        return await _dbContext.Users.Where(u => u.Id == id)
+                                     .Select(u => new MinimalUserData(u.Id,
+                                                                      u.UserName,
+                                                                      u.Email))
+                                     .FirstOrDefaultAsync();
+    }
     public async Task<UserPasswordData?> GetUserPasswordData(string logInData)
     {
         _logger.LogInformation("Starting getting user password data");
 
         UserPasswordData? data = await _dbContext.Users.Where(u => u.UserName == logInData ||
                                                                    u.Email == logInData)
-                                                       .Select(u => new UserPasswordData()
+                                                       .Select(u => new UserPasswordData
                                                                     {
                                                                         Id = u.Id,
                                                                         PasswordHash = u.PasswordHash,
@@ -73,25 +100,6 @@ public class UserRepository : IUserRepository
         _logger.LogInformation("Finishing checking if user exists by user name or email");
             
         return result;
-    }
-
-    public async Task CreateUser(NewUser newUser)
-    {
-        _logger.LogInformation("Starting inserting user data");
-
-        Database.Models.User user = new()
-                                    {
-                                        UserName = newUser.UserName,
-                                        Email = newUser.Email,
-                                        PasswordHash = newUser.PasswordHash,
-                                        PasswordSalt = newUser.PasswordSalt,
-                                        CreatedAt = newUser.CreatedAt,
-                                        UpdatedAt = newUser.UpdatedAt
-                                    };
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
-        
-        _logger.LogInformation("Finishing inserting user data");
     }
 
     #region Tokens

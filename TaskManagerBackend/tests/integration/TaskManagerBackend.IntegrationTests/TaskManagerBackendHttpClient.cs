@@ -118,4 +118,18 @@ public class TaskManagerBackendHttpClient
     }
 
     #endregion
+
+    #region Users
+
+    public async Task<HttpResponseMessage> GetCurrentUserData()
+    {
+        return await _httpClient.GetAsync("api/users/current");
+    }
+    
+    public async Task<HttpResponseMessage> GetUserDataById(int id)
+    {
+        return await _httpClient.GetAsync($"api/users/{id}");
+    }
+
+    #endregion
 }

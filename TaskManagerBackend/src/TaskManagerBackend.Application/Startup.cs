@@ -12,6 +12,7 @@ using Prometheus;
 using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Tracking;
+using TaskManagerBackend.Application.Features.User;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
@@ -202,6 +203,7 @@ public class Startup
         services.AddScoped<IEmailValidator, EmailValidator>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
         
         // Tracking:
         services.AddScoped<ITrackingRepository, TrackingRepository>();

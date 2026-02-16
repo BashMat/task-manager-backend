@@ -11,6 +11,7 @@ namespace TaskManagerBackend.IntegrationTests;
 [Trait(CategoryTraitName, CategoryTraitValueIntegrationTests)]
 public class IntegrationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, IDisposable
 {
+    public const int UserId = 1;
     public const string UserName = "test";
     public const string Email = "test@test.test";
     public const string Password = "test-1234";
