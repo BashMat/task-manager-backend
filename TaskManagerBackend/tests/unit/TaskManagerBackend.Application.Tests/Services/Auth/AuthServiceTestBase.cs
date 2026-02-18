@@ -77,12 +77,7 @@ public class AuthServiceTestBase : UnitTestsBase
             
         if (userId != null && passwordHash != null && passwordSalt != null)
         {
-            result = new UserPasswordData
-                     {
-                         Id = (int)userId,
-                         PasswordHash = passwordHash,
-                         PasswordSalt = passwordSalt
-                     };
+            result = new UserPasswordData((int) userId, passwordHash, passwordSalt);
         }
             
         UserRepositoryMock.Setup(o => o.GetUserPasswordData(It.IsAny<string>()))

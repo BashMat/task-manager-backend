@@ -41,6 +41,7 @@ public class WhenGettingUser : UserTestBase
         issueTokenContent.Should().NotBeNull();
         issueTokenContent.Data.Should().NotBeNull();
         HttpClient.SetAccessToken(issueTokenContent.Data.AccessToken);
+        
         HttpResponseMessage response = await HttpClient.GetUserDataById(UserId);
         ServiceResponse<GetUserDataResponse>? content = 
             await response.Content.ReadFromJsonAsync<ServiceResponse<GetUserDataResponse>>();
@@ -76,8 +77,8 @@ public class WhenGettingUser : UserTestBase
         issueTokenContent.Should().NotBeNull();
         issueTokenContent.Data.Should().NotBeNull();
         HttpClient.SetAccessToken(issueTokenContent.Data.AccessToken);
-        HttpResponseMessage response = await HttpClient.GetUserDataById(UserId);
         
+        HttpResponseMessage response = await HttpClient.GetUserDataById(UserId);
         ProblemDetails? content = 
             await response.Content.ReadFromJsonAsync<ProblemDetails>();
 

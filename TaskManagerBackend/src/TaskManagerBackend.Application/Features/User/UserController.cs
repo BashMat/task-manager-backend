@@ -30,12 +30,12 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetCurrentUserData()
     {
         _logger.LogTrace("Start GET /api/users/current request processing");
-            
+        
         ServiceResponse<GetUserDataResponse> response = await _userService.GetUserDataById(UserId, 
                                                                                            UserId);
-            
+        
         _logger.LogTrace("Finish GET /api/users/current request processing");
-            
+        
         return ConvertServiceResponse(response);
     }
     
@@ -43,12 +43,25 @@ public class UserController : ControllerBase
     public async Task<IActionResult> GetUserDataById([FromRoute] int userId)
     {
         _logger.LogTrace($"Start GET /api/users/{userId} request processing");
-            
+        
         ServiceResponse<GetUserDataResponse> response = await _userService.GetUserDataById(UserId, 
                                                                                            userId);
-            
+        
         _logger.LogTrace($"Finish GET /api/users/{userId} request processing");
-            
+        
+        return ConvertServiceResponse(response);
+    }
+    
+    [HttpPost("update-password")]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+    {
+        _logger.LogTrace("Start POST /api/users/update-password request processing");
+        
+        ServiceResponse<bool> response = await _userService.UpdatePassword(UserId, 
+                                                                           request);
+        
+        _logger.LogTrace("Finish POST /api/users/update-password request processing");
+        
         return ConvertServiceResponse(response);
     }
 }

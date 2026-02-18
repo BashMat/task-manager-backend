@@ -6,6 +6,7 @@ using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
+using TaskManagerBackend.Application.Features.User.Dtos;
 
 #endregion
 
@@ -129,6 +130,11 @@ public class TaskManagerBackendHttpClient
     public async Task<HttpResponseMessage> GetUserDataById(int id)
     {
         return await _httpClient.GetAsync($"api/users/{id}");
+    }
+    
+    public async Task<HttpResponseMessage> UpdatePassword(UpdatePasswordRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/users/update-password", request);
     }
 
     #endregion

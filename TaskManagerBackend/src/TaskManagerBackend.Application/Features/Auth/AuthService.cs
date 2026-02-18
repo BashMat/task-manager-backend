@@ -95,7 +95,7 @@ public class AuthService : IAuthService
         {
             _logger.LogTrace("Password hash was verified");
             
-            return _cryptographyService.IssueAccessToken(data.Id);
+            return _cryptographyService.IssueAccessToken(data.UserId);
         }
 
         _logger.LogTrace("Password hash was not verified");
@@ -155,7 +155,7 @@ public class AuthService : IAuthService
         {
             _logger.LogTrace("Password hash was verified");
             
-            return await IssueToken(data.Id);
+            return await IssueToken(data.UserId);
         }
 
         _logger.LogTrace("Password hash was not verified");

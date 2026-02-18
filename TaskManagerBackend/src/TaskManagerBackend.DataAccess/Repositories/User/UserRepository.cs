@@ -53,18 +53,27 @@ public class UserRepository : IUserRepository
                                                                       u.Email))
                                      .FirstOrDefaultAsync();
     }
+    
+    public async Task<UserPasswordData?> GetUserPasswordData(int userId)
+    {
+        _logger.LogInformation("Starting getting user password data");
+
+        UserPasswordData? data = await _dbContext.Users.Where(u => u.Id == userId)
+                                                       .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
+                                                       .FirstOrDefaultAsync();
+
+        _logger.LogInformation("Finishing getting user password data");
+        
+        return data;
+    }
+    
     public async Task<UserPasswordData?> GetUserPasswordData(string logInData)
     {
         _logger.LogInformation("Starting getting user password data");
 
         UserPasswordData? data = await _dbContext.Users.Where(u => u.UserName == logInData ||
                                                                    u.Email == logInData)
-                                                       .Select(u => new UserPasswordData
-                                                                    {
-                                                                        Id = u.Id,
-                                                                        PasswordHash = u.PasswordHash,
-                                                                        PasswordSalt = u.PasswordSalt
-                                                                    })
+                                                       .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
                                                        .FirstOrDefaultAsync();
 
         _logger.LogInformation("Finishing getting user password data");
@@ -100,6 +109,25 @@ public class UserRepository : IUserRepository
         _logger.LogInformation("Finishing checking if user exists by user name or email");
             
         return result;
+    }
+    
+    public async Task<bool> UpdatePasswordData(UserPasswordData newPasswordData,
+                                               DateTime updatedAt)
+    {
+        Database.Models.User? dbUser = await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == newPasswordData.UserId);
+
+        if (dbUser is null)
+        {
+            return false;
+        }
+        
+        dbUser.PasswordHash = newPasswordData.PasswordHash;
+        dbUser.PasswordSalt = newPasswordData.PasswordSalt;
+        dbUser.UpdatedAt = updatedAt;
+        
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 
     #region Tokens
