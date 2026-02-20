@@ -17,12 +17,12 @@ Application uses `semver` for versioning. Currently, it is deep under developmen
 
 Project uses following technologies:
 
-- `.NET 8`
-    - `C# 12`
-    - `ASP.NET Core 8`
+- `.NET 10`
+    - `C# 14`
+    - `ASP.NET Core 10`
     - Different libraries for:
       - core application logic and infrastructure:
-        - `Entity Framework Core 8`
+        - `Entity Framework Core 10`
         - `NLog`
         - `prometheus-net`
         - `Swagger`

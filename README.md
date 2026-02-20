@@ -17,7 +17,7 @@ App supports:
 ## Stack
 
 Project created using:
-- .NET 8 (C# 12)
+- .NET 10 (C# 14)
 - SQL (Microsoft SQL Server)
 
 ## Documentation
