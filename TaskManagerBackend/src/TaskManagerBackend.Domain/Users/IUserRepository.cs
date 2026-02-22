@@ -8,7 +8,7 @@ public interface IUserRepository
     Task<UserPasswordData?> GetUserPasswordData(string logInData);
     
     Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, 
-                                                    string refreshToken);
+                                                    Guid refreshTokenId);
     Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, 
                                                   string email);
     
@@ -18,8 +18,8 @@ public interface IUserRepository
     #region Tokens
 
     Task CreateUserRefreshToken(int userId,
-                                TokenData token,
-                                string? invalidatedRefreshToken);
+                                RefreshTokenData refreshTokenData,
+                                Guid? invalidatedRefreshTokenId);
     Task DeleteUserRefreshTokens(int userId);
 
     #endregion

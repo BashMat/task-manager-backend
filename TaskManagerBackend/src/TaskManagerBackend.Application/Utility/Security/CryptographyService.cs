@@ -45,52 +45,56 @@ public class CryptographyService : ICryptographyService
     
     public string IssueAccessToken(int userId)
     {
-        List<Claim> claims = new()
-                             {
-                                 new Claim(Claims.Sub, userId.ToString()),
-                                 new Claim(Claims.IssuedAt, ((DateTimeOffset)_dateTimeService.UtcNow).ToUnixTimeSeconds().ToString())
-                             };
-
-        DateTime expiration = GetAccessTokenExpirationDateTime();
+        DateTime issuedAt = _dateTimeService.UtcNow;
+        DateTime expiresAt = GetAccessTokenExpirationDateTime();
         
-        return IssueToken(userId, claims, expiration).Token;
+        return IssueTokenAsString(userId, null, issuedAt, expiresAt);
     }
     
-    public TokenData IssueRefreshToken(int userId)
+    public RefreshTokenData IssueRefreshToken(int userId)
     {
-        List<Claim> claims = new()
-                             {
-                                 new Claim(Claims.Sub, userId.ToString()),
-                                 new Claim(Claims.IssuedAt, ((DateTimeOffset)_dateTimeService.UtcNow).ToUnixTimeSeconds().ToString())
-                             };
+        Guid tokenId = Guid.NewGuid();
+        DateTime issuedAt = _dateTimeService.UtcNow;
+        DateTime expiresAt = GetRefreshTokenExpirationDateTime();
 
-        DateTime expiration = GetRefreshTokenExpirationDateTime();
-
-        return IssueToken(userId, claims, expiration);
+        return new RefreshTokenData(userId,
+                                    tokenId,
+                                    IssueTokenAsString(userId, tokenId, issuedAt, expiresAt),
+                                    issuedAt,
+                                    expiresAt);
     }
-
+    
     // TODO: Currently in cases of high throughput identical tokens are issued for the same input data.
     //  Not a problem for a time, but has to be examined. Add some external randomized parameter.
-    private TokenData IssueToken(int userId, List<Claim> claims, DateTime expiration)
+    private string IssueTokenAsString(int userId, 
+                                      Guid? tokenId, 
+                                      DateTime issuedAt, 
+                                      DateTime expiresAt)
     {
+        List<Claim> claims =
+        [
+            new(Claims.Sub, userId.ToString()),
+            new(Claims.IssuedAt,
+                ((DateTimeOffset) issuedAt).ToUnixTimeSeconds().ToString())
+        ];
+
+        string? tokenIdAsStringOrNull = tokenId?.ToString();
+        
+        if (tokenIdAsStringOrNull is not null)
+        {
+            claims.Add(new Claim(Claims.TokenId, tokenIdAsStringOrNull));
+        }
+        
         SecurityKey key = GetSigningKey();
         SigningCredentials signingCredentials = new(key, SecurityAlgorithms.HmacSha512Signature);
         JwtSecurityToken token = new(null,
                                      null,
                                      claims,
                                      null,
-                                     expiration,
+                                     expiresAt,
                                      signingCredentials);
 
-        string issuedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return new TokenData()
-               {
-                   UserId = userId,
-                   Token = issuedToken,
-                   ExpiresAt = token.ValidTo,
-                   IssuedAt = token.IssuedAt
-               };
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     private SecurityKey GetSigningKey()
@@ -111,16 +115,34 @@ public class CryptographyService : ICryptographyService
                };
     }
 
-    public int? GetUserId(string token)
+    public int? GetUserIdOrNull(string token)
     {
         try
         {
             JwtSecurityToken jwtToken = new(token);
-            string? claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == Claims.Sub)?.Value;
+            string? claimValue = jwtToken.Claims.GetClaimValueOrNull(Claims.Sub);
 
             return claimValue is null
                        ? null
                        : int.Parse(claimValue);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return null;
+        }
+    }
+    
+    public Guid? GetTokenIdOrNull(string token)
+    {
+        try
+        {
+            JwtSecurityToken jwtToken = new(token);
+            string? claimValue = jwtToken.Claims.GetClaimValueOrNull(Claims.TokenId);
+
+            return claimValue is null
+                       ? null
+                       : Guid.Parse(claimValue);
         }
         catch (Exception e)
         {

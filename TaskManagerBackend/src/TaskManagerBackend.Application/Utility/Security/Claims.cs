@@ -5,6 +5,7 @@
 /// </summary>
 public static class Claims
 {
+    public const string TokenId = "jti";
     public const string Sub = "sub";
     public const string IssuedAt = "iat";
 }

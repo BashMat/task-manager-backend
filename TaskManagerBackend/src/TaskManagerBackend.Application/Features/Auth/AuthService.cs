@@ -125,19 +125,27 @@ public class AuthService : IAuthService
                                                            message: InvalidCredentialsMessage);
         }
         
-        int? userId = _cryptographyService.GetUserId(requestData.RefreshToken!);
+        int? userId = _cryptographyService.GetUserIdOrNull(requestData.RefreshToken!);
 
         if (userId is null)
         {
             return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
                                                            message: InvalidCredentialsMessage);
         }
+
+        Guid? tokenId = _cryptographyService.GetTokenIdOrNull(requestData.RefreshToken!);
+
+        if (tokenId is null)
+        {
+            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                           message: InvalidCredentialsMessage);
+        }
         
         if (await _userRepository.CheckIfUserHasNonExpiredRefreshToken(userId.Value, 
-                                                                       requestData.RefreshToken!))
+                                                                       tokenId.Value))
         {
             return await IssueToken(userId.Value,
-                                    requestData.RefreshToken!);
+                                    tokenId.Value);
         }
             
         _logger.LogTrace("Refresh token is invalid");
@@ -172,13 +180,13 @@ public class AuthService : IAuthService
     }
     
     private async Task<IssueTokenResponse> IssueToken(int userId,
-                                                      string? invalidatedRefreshToken = null)
+                                                      Guid? invalidatedRefreshTokenId = null)
     {
         string accessToken = _cryptographyService.IssueAccessToken(userId);
-        TokenData refreshToken = _cryptographyService.IssueRefreshToken(userId);
+        RefreshTokenData refreshToken = _cryptographyService.IssueRefreshToken(userId);
         await _userRepository.CreateUserRefreshToken(userId, 
                                                      refreshToken, 
-                                                     invalidatedRefreshToken);
+                                                     invalidatedRefreshTokenId);
                 
         return new IssueTokenResponse
                {

@@ -81,9 +81,9 @@ public class UserRepository : IUserRepository
         return data;
     }
 
-    public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, string refreshToken)
+    public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, Guid refreshTokenId)
     {
-        return await _dbContext.RefreshTokens.AnyAsync(rt => rt.Token == refreshToken && 
+        return await _dbContext.RefreshTokens.AnyAsync(rt => rt.Id == refreshTokenId && 
                                                              rt.UserId == userId && 
                                                              _dateTimeService.UtcNow < rt.ExpiresAt);
     }
@@ -133,21 +133,21 @@ public class UserRepository : IUserRepository
     #region Tokens
 
     public async Task CreateUserRefreshToken(int userId,
-                                             TokenData tokenData,
-                                             string? invalidatedRefreshToken)
+                                             RefreshTokenData refreshTokenData,
+                                             Guid? invalidatedRefreshTokenId)
     {
         RefreshToken token = new()
                              {
+                                 Id = refreshTokenData.TokenId,
                                  UserId = userId,
-                                 Token = tokenData.Token,
-                                 ExpiresAt = tokenData.ExpiresAt,
-                                 IssuedAt = tokenData.IssuedAt
+                                 ExpiresAt = refreshTokenData.ExpiresAt,
+                                 IssuedAt = refreshTokenData.IssuedAt
                              };
         
-        if (invalidatedRefreshToken is not null)
+        if (invalidatedRefreshTokenId is not null)
         {
             IQueryable<RefreshToken> previousUserTokens = 
-                _dbContext.RefreshTokens.Where(rt => rt.Token == invalidatedRefreshToken);
+                _dbContext.RefreshTokens.Where(rt => rt.Id == invalidatedRefreshTokenId);
             _dbContext.RefreshTokens.RemoveRange(previousUserTokens);
         }
         

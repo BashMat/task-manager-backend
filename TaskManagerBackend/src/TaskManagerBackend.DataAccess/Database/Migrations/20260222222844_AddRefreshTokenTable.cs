@@ -15,10 +15,8 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
                 name: "RefreshToken",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
                     IssuedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

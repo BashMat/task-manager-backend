@@ -2,9 +2,8 @@
 GO
 
 CREATE TABLE [RefreshToken] (
-    [Id] int NOT NULL IDENTITY,
+    [Id] uniqueidentifier NOT NULL,
     [UserId] int NOT NULL,
-    [Token] nvarchar(1024) NOT NULL,
     [IssuedAt] datetime2 NOT NULL,
     [ExpiresAt] datetime2 NOT NULL,
     CONSTRAINT [RefreshToken_PK] PRIMARY KEY ([Id]),
@@ -16,7 +15,7 @@ CREATE INDEX [IX_RefreshToken_UserId] ON [RefreshToken] ([UserId]);
 GO
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250918151036_AddRefreshTokenTable', N'8.0.17');
+VALUES (N'20260222222844_AddRefreshTokenTable', N'8.0.17');
 GO
 
 COMMIT;

@@ -121,7 +121,7 @@ public partial class TaskManagerDbContext : DbContext
                                               
                                               entity.ToTable("RefreshToken");
 
-                                              entity.Property(e => e.Token).HasMaxLength(1024);
+                                              entity.Property(e => e.Id).ValueGeneratedNever();
                                               
                                               entity.HasOne(d => d.User)
                                                     .WithMany(p => p.RefreshToken)

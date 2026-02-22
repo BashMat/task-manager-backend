@@ -24,22 +24,14 @@ namespace TaskManagerBackend.DataAccess.Database.Migrations
 
             modelBuilder.Entity("TaskManagerBackend.DataAccess.Database.Models.RefreshToken", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
