@@ -108,6 +108,7 @@ public class AuthService : IAuthService
     {
         return requestData switch
                {
+                   // TODO: Add explicit domain classes to enforce nullability rules
                    { GrantType: PasswordGrantType, UserName: not null, Password: not null } => 
                        await IssueTokenByPassword(requestData),
                    { GrantType: RefreshTokenGrantType, RefreshToken: not null } => 
@@ -115,9 +116,15 @@ public class AuthService : IAuthService
                    _ => new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError)
                };
     }
-
+    
     private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenRequest requestData)
     {
+        if (!_cryptographyService.VerifyToken(requestData.RefreshToken!))
+        {
+            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+                                                           message: InvalidCredentialsMessage);
+        }
+        
         int? userId = _cryptographyService.GetUserId(requestData.RefreshToken!);
 
         if (userId is null)

@@ -2,7 +2,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Application.Utility.Security;
 
 #endregion
@@ -20,15 +19,7 @@ public class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBearerOpti
 
     public void Configure(JwtBearerOptions options)
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-                                            {
-                                                ValidateIssuerSigningKey = true,
-                                                IssuerSigningKey = _cryptographyService.GetSigningKey(),
-                                                ValidateIssuer = false,
-                                                ValidateAudience = false,
-                                                ValidateLifetime = true,
-                                                ClockSkew = TimeSpan.Zero
-                                            };
+        options.TokenValidationParameters = _cryptographyService.GetValidationParameters();
     }
 
     public void Configure(string? name, JwtBearerOptions options)

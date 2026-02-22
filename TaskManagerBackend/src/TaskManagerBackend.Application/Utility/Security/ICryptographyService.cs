@@ -12,6 +12,7 @@ public interface ICryptographyService
     bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
     string IssueAccessToken(int userId);
     TokenData IssueRefreshToken(int userId);
-    SecurityKey GetSigningKey();
+    TokenValidationParameters GetValidationParameters();
     int? GetUserId(string token);
+    bool VerifyToken(string token);
 }

@@ -93,9 +93,22 @@ public class CryptographyService : ICryptographyService
                };
     }
 
-    public SecurityKey GetSigningKey()
+    private SecurityKey GetSigningKey()
     {
         return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokensConfiguration.CurrentValue.Secret));
+    }
+    
+    public TokenValidationParameters GetValidationParameters()
+    {
+        return new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = GetSigningKey(),
+                   ValidateIssuer = false,
+                   ValidateAudience = false,
+                   ValidateLifetime = true,
+                   ClockSkew = TimeSpan.Zero
+               };
     }
 
     public int? GetUserId(string token)
@@ -106,13 +119,30 @@ public class CryptographyService : ICryptographyService
             string? claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == Claims.Sub)?.Value;
 
             return claimValue is null
-                   ? null
-                   : int.Parse(claimValue);
+                       ? null
+                       : int.Parse(claimValue);
         }
         catch (Exception e)
         {
             _logger.LogError(e.Message);
             return null;
+        }
+    }
+    
+    public bool VerifyToken(string token)
+    {
+        try
+        {
+            new JwtSecurityTokenHandler().ValidateToken(token,
+                                                        GetValidationParameters(),
+                                                        out SecurityToken _);
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return false;
         }
     }
 
