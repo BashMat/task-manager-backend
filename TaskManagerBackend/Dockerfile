@@ -2,7 +2,7 @@
 WORKDIR /app
 COPY . ./src
 RUN mkdir ./proj && cd ./src && \
-  find . -type f -a \( -iname "*.sln" -o -iname "*.csproj" \) \
+  find . -type f -a \( -iname "*.sln" -o -iname "*.csproj" -o -iname "*.props"\) \
     -exec cp --parents "{}" ../proj/ \;
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dotnet-build
@@ -12,7 +12,7 @@ RUN dotnet restore ./src
 COPY --from=dotnet-prep /app/src ./src
 RUN dotnet publish ./src -c Release -o out --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 as dotnet-runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS dotnet-runtime
 WORKDIR /app
 COPY --from=dotnet-build /app/out .
 ENTRYPOINT ["dotnet", "TaskManagerBackend.Application.dll"]
