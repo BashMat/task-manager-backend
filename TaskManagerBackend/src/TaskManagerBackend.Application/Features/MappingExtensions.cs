@@ -10,7 +10,7 @@ using TaskManagerBackend.Domain.Users;
 
 namespace TaskManagerBackend.Application.Features;
 
-public static class ConvertingExtensions
+public static class MappingExtensions
 {
     public static UserInfoDto ToDto(this MinimalUserData user)
     {

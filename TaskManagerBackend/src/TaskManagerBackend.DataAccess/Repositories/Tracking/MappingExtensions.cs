@@ -9,7 +9,7 @@ using TrackingLogEntryStatus = TaskManagerBackend.Domain.Tracking.TrackingLogEnt
 
 namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
-public static class ConvertingExtensions
+public static class MappingExtensions
 {
     public static MinimalUserData ToDomain(this Database.Models.User user)
     {
