@@ -49,23 +49,13 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
             }
         }
     }
-
-    // TODO: Try to move conversion into ServiceResponse<T> as user-defined implicit conversion.
-    protected ObjectResult ConvertServiceResponse<T>(ServiceResponse<T> response)
+    
+    protected IActionResult HandleServiceResponse<T>(ServiceResponse<T> response)
     {
-        switch (response.ActionResult)
-        {
-            case ActionResults.Success:
-                return Ok(response);
-            case ActionResults.UserError:
-            case ActionResults.Unauthorized:
-            case ActionResults.AccessDenied:
-            case ActionResults.ResourceNotFound:
-            case ActionResults.DataConflict:
-            case ActionResults.ServerError:
-            default:
-                return Problem(detail: response.Message,
-                               statusCode: response.StatusCode);
-        }
+        return response.Success switch
+               {
+                   true => Ok(response),
+                   false => Problem(detail: response.Message, statusCode: response.HttpStatusCode)
+               };
     }
 }

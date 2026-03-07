@@ -37,25 +37,25 @@ public class TrackingController : ControllerBase
             return CreatedAtAction(nameof(CreateTrackingLog), response);
         }
         
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
     
     [HttpGet("logs")]
     public async Task<IActionResult> GetAllTrackingLogs()
     {
-        return ConvertServiceResponse(await _trackingService.GetAllTrackingLogsByUserId(UserId));
+        return HandleServiceResponse(await _trackingService.GetAllTrackingLogsByUserId(UserId));
     }
     
     [HttpGet("logs/{id:int}")]
     public async Task<IActionResult> GetTrackingLogById([FromRoute] int id)
     {
-        return ConvertServiceResponse(await _trackingService.GetTrackingLogById(id));
+        return HandleServiceResponse(await _trackingService.GetTrackingLogById(id));
     }
     
     [HttpDelete("logs/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogById([FromRoute] int id)
     {
-        return ConvertServiceResponse(await _trackingService.DeleteTrackingLogById(UserId, id));
+        return HandleServiceResponse(await _trackingService.DeleteTrackingLogById(UserId, id));
     }
 
     #endregion
@@ -81,13 +81,13 @@ public class TrackingController : ControllerBase
     [HttpGet("log-entries")]
     public async Task<IActionResult> GetAllTrackingLogEntries()
     {
-        return ConvertServiceResponse(await _trackingService.GetAllTrackingLogEntriesByUserId(UserId));
+        return HandleServiceResponse(await _trackingService.GetAllTrackingLogEntriesByUserId(UserId));
     }
     
     [HttpGet("log-entries/{id:int}")]
     public async Task<IActionResult> GetTrackingLogEntryById([FromRoute] int id)
     {
-        return ConvertServiceResponse(await _trackingService.GetTrackingLogEntryById(id));
+        return HandleServiceResponse(await _trackingService.GetTrackingLogEntryById(id));
     }
     
     [HttpPut("log-entries/{id:int}")]
@@ -95,7 +95,7 @@ public class TrackingController : ControllerBase
                                                                 [FromBody] 
                                                                 UpdateTrackingLogEntryRequest updatedTrackingLogEntry)
     {
-        return ConvertServiceResponse(await _trackingService.UpdateTrackingLogEntry(UserId,
+        return HandleServiceResponse(await _trackingService.UpdateTrackingLogEntry(UserId,
                                                                                     id,
                                                                                     updatedTrackingLogEntry));
     }
@@ -103,7 +103,7 @@ public class TrackingController : ControllerBase
     [HttpDelete("log-entries/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogEntryById([FromRoute] int id)
     {
-        return ConvertServiceResponse(await _trackingService.DeleteTrackingLogEntryById(UserId, id));
+        return HandleServiceResponse(await _trackingService.DeleteTrackingLogEntryById(UserId, id));
     }
 
     #endregion
@@ -129,7 +129,7 @@ public class TrackingController : ControllerBase
     [HttpDelete("statuses/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogEntryStatus([FromRoute] int id)
     {
-        return ConvertServiceResponse(await _trackingService.DeleteTrackingLogStatus(UserId, id));
+        return HandleServiceResponse(await _trackingService.DeleteTrackingLogStatus(UserId, id));
     }
 
     #endregion
