@@ -6,7 +6,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Auth;
 
 #endregion
@@ -133,38 +135,41 @@ public class CryptographyService : ICryptographyService
         }
     }
     
-    public Guid? GetTokenIdOrNull(string token)
+    public ServiceResponse<RefreshTokenData> ParseToken(string token)
     {
         try
         {
+            // The first step of parsing: token must have JWT format, otherwise fail
             JwtSecurityToken jwtToken = new(token);
-            string? claimValue = jwtToken.Claims.GetClaimValueOrNull(Claims.TokenId);
-
-            return claimValue is null
-                       ? null
-                       : Guid.Parse(claimValue);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return null;
-        }
-    }
-    
-    public bool VerifyToken(string token)
-    {
-        try
-        {
+            
+            // The second step of parsing: token integrity check
             new JwtSecurityTokenHandler().ValidateToken(token,
                                                         GetValidationParameters(),
                                                         out SecurityToken _);
+            
+            // The third step of parsing: getting actual token claims to build domain object
+            int? userId = jwtToken.Claims.GetClaimValueOrNullAsInt(Claims.Sub);
+            Guid? tokenId = jwtToken.Claims.GetClaimValueOrNullAsGuid(Claims.TokenId);
+            DateTime? issuedAt = jwtToken.Claims.GetClaimValueOrNullAsDateTimeFromUnixSeconds(Claims.IssuedAt);
+            DateTime? expiresAt = jwtToken.Claims.GetClaimValueOrNullAsDateTimeFromUnixSeconds(Claims.ExpiresAt);
 
-            return true;
+            if (userId is null || tokenId is null || expiresAt is null || issuedAt is null)
+            {
+                return new ServiceResponse<RefreshTokenData>(actionResult: ActionResults.Unauthorized,
+                                                             message: AuthService.InvalidCredentialsMessage);
+            }
+            
+            return new ServiceResponse<RefreshTokenData>(new RefreshTokenData(userId.Value,
+                                                                              tokenId.Value,
+                                                                              token,
+                                                                              issuedAt.Value,
+                                                                              expiresAt.Value));
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.LogError(e.Message);
-            return false;
+            _logger.LogError(ex.Message);
+            return new ServiceResponse<RefreshTokenData>(actionResult: ActionResults.Unauthorized,
+                                                         message: AuthService.InvalidCredentialsMessage);
         }
     }
 

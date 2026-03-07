@@ -17,7 +17,5 @@ public interface ICryptographyService
     string IssueAccessToken(int userId);
     RefreshTokenData IssueRefreshToken(int userId);
     TokenValidationParameters GetValidationParameters();
-    int? GetUserIdOrNull(string token);
-    Guid? GetTokenIdOrNull(string token);
-    bool VerifyToken(string token);
+    ServiceResponse<RefreshTokenData> ParseToken(string token);
 }

@@ -41,10 +41,10 @@ public class AuthService : IAuthService
         _logger = logger;
     }
 
-    public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest requestData)
+    public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request)
     {
         // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
-        if (!_emailValidator.Validate(requestData.Email))
+        if (!_emailValidator.Validate(request.Email))
         {
             _logger.LogTrace("Invalid email address format");
             
@@ -52,7 +52,7 @@ public class AuthService : IAuthService
                                                            message: InvalidEmailAddressMessage);
         }
 
-        if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(requestData.UserName, requestData.Email))
+        if (await _userRepository.CheckIfUserExistsByUserNameOrEmail(request.UserName, request.Email))
         {
             _logger.LogTrace("User already exists");
             
@@ -63,15 +63,15 @@ public class AuthService : IAuthService
         _logger.LogTrace("Start user registration");
 
         (byte[] passwordHash, byte[] passwordSalt) =
-            _cryptographyService.CreatePasswordHashAndSalt(requestData.Password);
+            _cryptographyService.CreatePasswordHashAndSalt(request.Password);
             
-        NewUser newUser = new(_dateTimeService, requestData.UserName, requestData.Email, passwordHash, passwordSalt);
+        NewUser newUser = new(_dateTimeService, request.UserName, request.Email, passwordHash, passwordSalt);
         await _userRepository.CreateUser(newUser);
 
         UserSignUpResponse response = new()
                                       {
-                                          UserName = requestData.UserName,
-                                          Email = requestData.Email
+                                          UserName = request.UserName,
+                                          Email = request.Email
                                       };
 
         _logger.LogTrace("Finish user registration");
@@ -79,48 +79,36 @@ public class AuthService : IAuthService
         return response;
     }
     
-    public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData)
+    public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest request)
     {
-        return requestData switch
-               {
-                   // TODO: Add explicit domain classes to enforce nullability rules
-                   { GrantType: PasswordGrantType, Username: not null, Password: not null } => 
-                       await IssueTokenByPassword(requestData),
-                   { GrantType: RefreshTokenGrantType, RefreshToken: not null } => 
-                       await IssueTokenByRefreshToken(requestData),
-                   _ => new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError)
-               };
+        switch (request)
+        {
+            case { GrantType: PasswordGrantType, Username: not null, Password: not null }:
+                return await IssueTokenByPassword(new IssueTokenByPasswordRequest(request.Username, request.Password));
+            case { GrantType: RefreshTokenGrantType, RefreshToken: not null }:
+            {
+                ServiceResponse<RefreshTokenData> refreshTokenResponse = 
+                    _cryptographyService.ParseToken(request.RefreshToken);
+
+                return refreshTokenResponse.Success switch
+                       {
+                           true => await IssueTokenByRefreshToken(new IssueTokenByRefreshTokenRequest(refreshTokenResponse.Data!)),
+                           false => new ServiceResponse<IssueTokenResponse>(actionResult: refreshTokenResponse.ActionResult,
+                                                                            message: refreshTokenResponse.Message)
+                       };
+            }
+            default:
+                return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError);
+        }
     }
     
-    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenRequest requestData)
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenByRefreshTokenRequest request)
     {
-        if (!_cryptographyService.VerifyToken(requestData.RefreshToken!))
+        if (await _userRepository.CheckIfUserHasNonExpiredRefreshToken(request.RefreshToken.UserId, 
+                                                                       request.RefreshToken.TokenId))
         {
-            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                           message: InvalidCredentialsMessage);
-        }
-        
-        int? userId = _cryptographyService.GetUserIdOrNull(requestData.RefreshToken!);
-
-        if (userId is null)
-        {
-            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                           message: InvalidCredentialsMessage);
-        }
-
-        Guid? tokenId = _cryptographyService.GetTokenIdOrNull(requestData.RefreshToken!);
-
-        if (tokenId is null)
-        {
-            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
-                                                           message: InvalidCredentialsMessage);
-        }
-        
-        if (await _userRepository.CheckIfUserHasNonExpiredRefreshToken(userId.Value, 
-                                                                       tokenId.Value))
-        {
-            return await IssueToken(userId.Value,
-                                    tokenId.Value);
+            return await IssueToken(request.RefreshToken.UserId,
+                                    request.RefreshToken.TokenId);
         }
             
         _logger.LogTrace("Refresh token is invalid");
@@ -129,9 +117,9 @@ public class AuthService : IAuthService
                                                        message: InvalidCredentialsMessage);
     }
 
-    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenRequest requestData)
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenByPasswordRequest request)
     {
-        UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.Username!);
+        UserPasswordData? data = await _userRepository.GetUserPasswordData(request.Username);
 
         if (data is null)
         {
@@ -141,7 +129,7 @@ public class AuthService : IAuthService
                                                            message: InvalidCredentialsMessage);
         }
 
-        if (_cryptographyService.VerifyPasswordHash(requestData.Password!, data.PasswordHash, data.PasswordSalt))
+        if (_cryptographyService.VerifyPasswordHash(request.Password, data.PasswordHash, data.PasswordSalt))
         {
             _logger.LogTrace("Password hash was verified");
             
