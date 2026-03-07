@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
             
         _logger.LogTrace("Finish processing POST /api/auth/signup request");
 
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
     
     [HttpPost("token")]
@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
             
         _logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
     
     // TODO: Add functionality to revoke token for selected device

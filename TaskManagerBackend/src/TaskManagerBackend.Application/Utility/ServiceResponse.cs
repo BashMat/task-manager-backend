@@ -24,16 +24,16 @@ public class ServiceResponse<T>
     }
     
     public T? Data { get; init; }
-    
-    [JsonIgnore]
-    public ActionResults ActionResult { get; init; }
-    public bool Success => Data != null && ActionResult == ActionResults.Success;
+    public bool Success => Data is not null && ActionResult == ActionResults.Success;
     public string? Message { get; init; }
     
     [JsonIgnore]
-    public int? StatusCode => ConvertActionResultToStatusCode();
+    public ActionResults ActionResult { get; init; }
     
-    private int? ConvertActionResultToStatusCode()
+    [JsonIgnore]
+    public int? HttpStatusCode => MapActionResultToStatusCode();
+    
+    private int? MapActionResultToStatusCode()
     {
         return ActionResult switch
                {

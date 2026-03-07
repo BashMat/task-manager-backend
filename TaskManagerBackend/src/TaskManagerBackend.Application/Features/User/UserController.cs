@@ -36,7 +36,7 @@ public class UserController : ControllerBase
         
         _logger.LogTrace("Finish GET /api/users/current request processing");
         
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
     
     [HttpGet("{userId:int}")]
@@ -49,7 +49,7 @@ public class UserController : ControllerBase
         
         _logger.LogTrace($"Finish GET /api/users/{userId} request processing");
         
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
     
     [HttpPost("update-password")]
@@ -62,6 +62,6 @@ public class UserController : ControllerBase
         
         _logger.LogTrace("Finish POST /api/users/update-password request processing");
         
-        return ConvertServiceResponse(response);
+        return HandleServiceResponse(response);
     }
 }
