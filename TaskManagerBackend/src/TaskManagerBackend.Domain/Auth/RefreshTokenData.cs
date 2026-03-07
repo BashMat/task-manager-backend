@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Domain.Users;
+﻿namespace TaskManagerBackend.Domain.Auth;
 
 public class RefreshTokenData
 {

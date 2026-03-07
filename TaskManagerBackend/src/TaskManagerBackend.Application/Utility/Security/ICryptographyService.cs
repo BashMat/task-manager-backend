@@ -1,5 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using TaskManagerBackend.Domain.Users;
+﻿#region Usings
+
+using Microsoft.IdentityModel.Tokens;
+using TaskManagerBackend.Domain.Auth;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Utility.Security;
 

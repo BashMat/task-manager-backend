@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Auth;
 
 #endregion
 

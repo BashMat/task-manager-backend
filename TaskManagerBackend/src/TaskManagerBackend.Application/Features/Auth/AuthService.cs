@@ -5,6 +5,7 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain;
+using TaskManagerBackend.Domain.Auth;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
 
