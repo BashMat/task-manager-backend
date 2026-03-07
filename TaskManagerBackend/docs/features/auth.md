@@ -13,10 +13,7 @@ Web API uses `/api/auth` to denote all endpoints related to `Auth`.
 Following endpoints are provided, which can be seen in `AuthController`:
 
 - `/api/auth/signup` – endpoint for `Signing Up` (registration). It supports only `POST` requests;
-- `/api/auth/login` `(deprecated)` – endpoint for `Logging In`. It supports only `POST` requests.
-Should be replaced with `/api/auth/token`;
 - `/api/auth/token` – endpoint for `Issuing Tokens` (signing in). It supports only `POST` requests.
-Replaces `/api/auth/login`;
 - `/api/auth/revoke` – endpoint for `Token Revocation` (ending all sessions). It supports only `POST` requests;
 
 ### Functionality
@@ -42,9 +39,9 @@ If everything is correct (e-mail is validated and `User` identification data is 
 > It means that at the moment data regarding e-mail address is stored only for information purposes. In future
 > e-mail provider may be used to send e-mails for various functionality like verification / account restoration.
 
-#### Logging In / Signing In / Issuing Tokens
+#### Signing In / Issuing Tokens
 
-`Logging In`, `Signing In` or `Issuing Tokens` are available at `/api/auth/token` and mean 
+`Signing In` or `Issuing Tokens` are available at `/api/auth/token` and mean 
 that API provides access and refresh tokens to user. This functionality requires API user to provide:
 
 - `grant_type` specifying whether password or refresh authentication is used;

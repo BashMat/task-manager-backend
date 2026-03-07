@@ -30,20 +30,17 @@ public class TrackingTestBase : IntegrationTestBase,
     // TODO: Improve initialization. Create additional users, store multiple users and their Tracking Logs, test everything
     public virtual async Task InitializeAsync()
     {
-        HttpResponseMessage responseMessage = await HttpClient.LogIn(new UserLogInRequest
-                                                                     {
-                                                                         LogInData = UserName,
-                                                                         Password = Password
-                                                                     });
-        ServiceResponse<string>? response = 
-            await responseMessage.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        HttpResponseMessage responseMessage = await HttpClient.IssueTokenByPassword(UserName, 
+                                                                                    Password);
+        ServiceResponse<IssueTokenResponse>? response = 
+            await responseMessage.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
 
         if (response is null || response.Data is null)
         {
             throw new Exception();
         }
 
-        HttpClient.SetAccessToken(response.Data);
+        HttpClient.SetAccessToken(response.Data.AccessToken);
 
         int existingLogsCount = Faker.Random.Int(min: 5, max: 10);
         int defaultLogCount = Faker.Random.Int(min: 0, max: existingLogsCount - 1);

@@ -17,8 +17,6 @@ namespace TaskManagerBackend.Application.Tests.Services.Auth;
 
 public class AuthServiceTestBase : UnitTestsBase
 {
-    private const string DefaultToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzEwNjA2MTUzfQ.Qr4baSoGgjHXUkHQ4ILRJTGBXUA4d_l7fQzV_dLV899n-K2O5hAelYl1zMM3cVEMeAk-4NwRlsJZpfb-dPMnlA";
-
     protected Mock<ICryptographyService> AuthProviderMock { get; private set; }
     protected Mock<IUserRepository> UserRepositoryMock { get; private set; }
     protected Mock<IEmailValidator> EmailServiceMock { get; private set; }
@@ -69,50 +67,5 @@ public class AuthServiceTestBase : UnitTestsBase
     protected Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request)
     {
         return CreateAuthService().SignUp(request);
-    }
-        
-    protected void SetUpUserRepositoryMock(int? userId = null, byte[]? passwordHash = null, byte[]? passwordSalt = null)
-    {
-        UserPasswordData? result = null;
-            
-        if (userId != null && passwordHash != null && passwordSalt != null)
-        {
-            result = new UserPasswordData((int) userId, passwordHash, passwordSalt);
-        }
-            
-        UserRepositoryMock.Setup(o => o.GetUserPasswordData(It.IsAny<string>()))
-                          .ReturnsAsync(result);
-    }
-
-    protected void SetUpAuthProviderMock(bool isPasswordHashCorrect = true, string token = DefaultToken)
-    {
-        AuthProviderMock.Setup(o => o.VerifyPasswordHash(It.IsAny<string>(), 
-                                                         It.IsAny<byte[]>(), 
-                                                         It.IsAny<byte[]>()))
-                        .Returns(isPasswordHashCorrect);
-        AuthProviderMock.Setup(o => o.IssueAccessToken(It.IsAny<int>()))
-                        .Returns(token);
-    }
-
-    [Obsolete($"{nameof(IssueToken)} method must be used to issue both Access and Refresh tokens")]
-    protected Task<ServiceResponse<string>> LogIn(UserLogInRequest? request = null)
-    {
-        request ??= new UserLogInRequest()
-                    {
-                        LogInData = Faker.Internet.UserName(),
-                        Password = Faker.Internet.Password()
-                    };
-        return CreateAuthService().LogIn(request);
-    }
-    
-    protected Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest? request = null)
-    {
-        request ??= new IssueTokenRequest()
-                    {
-                        GrantType = "password",
-                        UserName = Faker.Internet.UserName(),
-                        Password = Faker.Internet.Password()
-                    };
-        return CreateAuthService().IssueToken(request);
     }
 }

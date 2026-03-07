@@ -8,7 +8,7 @@ public class IssueTokenRequest
     public required string GrantType { get; init; }
     
     [JsonPropertyName("username")]
-    public string? UserName { get; init; }
+    public string? Username { get; init; }
     
     [JsonPropertyName("password")]
     public string? Password { get; init; }

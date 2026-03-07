@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.User;
 using TaskManagerBackend.Application.Features.User.Dtos;
@@ -29,14 +28,8 @@ public class WhenGettingUser : UserTestBase
                                               Password = Faker.Internet.Password()
                                           };
         await HttpClient.SignUp(signUpRequest);
-        IssueTokenRequest logInRequest = new()
-                                         {
-                                             GrantType = AuthService.PasswordGrantType,
-                                             UserName = UserName, 
-                                             Password = Password,
-                                             RefreshToken = null
-                                         };
-        HttpResponseMessage issueTokenResponse = await HttpClient.IssueToken(logInRequest);
+        HttpResponseMessage issueTokenResponse = await HttpClient.IssueTokenByPassword(UserName,
+                                                                                       Password);
         ServiceResponse<IssueTokenResponse>? issueTokenContent = await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
         issueTokenContent.Should().NotBeNull();
         issueTokenContent.Data.Should().NotBeNull();
@@ -65,14 +58,8 @@ public class WhenGettingUser : UserTestBase
                                               Password = Faker.Internet.Password()
                                           };
         await HttpClient.SignUp(signUpRequest);
-        IssueTokenRequest logInRequest = new()
-                                         {
-                                             GrantType = AuthService.PasswordGrantType,
-                                             UserName = signUpRequest.UserName, 
-                                             Password = signUpRequest.Password,
-                                             RefreshToken = null
-                                         };
-        HttpResponseMessage issueTokenResponse = await HttpClient.IssueToken(logInRequest);
+        HttpResponseMessage issueTokenResponse = await HttpClient.IssueTokenByPassword(signUpRequest.UserName,
+                                                                                       signUpRequest.Password);
         ServiceResponse<IssueTokenResponse>? issueTokenContent = await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
         issueTokenContent.Should().NotBeNull();
         issueTokenContent.Data.Should().NotBeNull();
