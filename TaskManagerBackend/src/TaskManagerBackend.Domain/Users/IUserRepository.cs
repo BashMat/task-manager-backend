@@ -1,4 +1,6 @@
-﻿namespace TaskManagerBackend.Domain.Users;
+﻿using TaskManagerBackend.Domain.Auth;
+
+namespace TaskManagerBackend.Domain.Users;
 
 public interface IUserRepository
 {
