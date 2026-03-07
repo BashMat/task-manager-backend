@@ -37,19 +37,6 @@ public class AuthController : ControllerBase
         return ConvertServiceResponse(response);
     }
     
-    [HttpPost("login")]
-    [Obsolete("/api/auth/token endpoint must be used to issue both Access and Refresh tokens")]
-    public async Task<IActionResult> LogIn([FromBody] UserLogInRequest requestData)
-    {
-        _logger.LogTrace("Start POST /api/auth/login request processing");
-            
-        ServiceResponse<string> response = await _authService.LogIn(requestData);
-            
-        _logger.LogTrace("Finish POST /api/auth/login request processing");
-            
-        return ConvertServiceResponse(response);
-    }
-    
     [HttpPost("token")]
     public async Task<IActionResult> IssueToken([FromBody] IssueTokenRequest requestData)
     {

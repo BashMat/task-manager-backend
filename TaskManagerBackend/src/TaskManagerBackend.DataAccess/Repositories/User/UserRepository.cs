@@ -67,12 +67,12 @@ public class UserRepository : IUserRepository
         return data;
     }
     
-    public async Task<UserPasswordData?> GetUserPasswordData(string logInData)
+    public async Task<UserPasswordData?> GetUserPasswordData(string username)
     {
         _logger.LogInformation("Starting getting user password data");
 
-        UserPasswordData? data = await _dbContext.Users.Where(u => u.UserName == logInData ||
-                                                                   u.Email == logInData)
+        UserPasswordData? data = await _dbContext.Users.Where(u => u.UserName == username ||
+                                                                   u.Email == username)
                                                        .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
                                                        .FirstOrDefaultAsync();
 

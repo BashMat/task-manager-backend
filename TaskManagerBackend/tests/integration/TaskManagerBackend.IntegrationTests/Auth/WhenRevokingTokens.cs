@@ -20,26 +20,17 @@ public class WhenRevokingTokens : AuthorizationTestBase
     [Fact]
     public async Task IssuingTokenWithRefreshTokenGrantTypeIsUnsuccessfulIfTokensWereRevoked()
     {
-        IssueTokenRequest issueTokenByPasswordRequest = new()
-                                                        {
-                                                            GrantType = AuthService.PasswordGrantType,
-                                                            UserName = UserName,
-                                                            Password = Password
-                                                        };
-        HttpResponseMessage responseWithInitialTokens = await HttpClient.IssueToken(issueTokenByPasswordRequest);
+        HttpResponseMessage responseWithInitialTokens = await HttpClient.IssueTokenByPassword(UserName,
+                                                                                              Password);
         ServiceResponse<IssueTokenResponse>? contentWithInitialTokens =
             await responseWithInitialTokens.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
         contentWithInitialTokens.Should().NotBeNull();
         contentWithInitialTokens.Data.Should().NotBeNull();
-        IssueTokenRequest issueTokenByTokenRequest = new()
-                                                     {
-                                                         GrantType = AuthService.RefreshTokenGrantType,
-                                                         RefreshToken = contentWithInitialTokens.Data.RefreshToken
-                                                     };
+        contentWithInitialTokens.Data.RefreshToken.Should().NotBeNull();
         HttpClient.SetAccessToken(contentWithInitialTokens.Data.AccessToken);
         await HttpClient.RevokeToken();
         
-        HttpResponseMessage response = await HttpClient.IssueToken(issueTokenByTokenRequest);
+        HttpResponseMessage response = await HttpClient.IssueTokenByRefreshToken(contentWithInitialTokens.Data.RefreshToken);
         ProblemDetails? content =
             await response.Content.ReadFromJsonAsync<ProblemDetails>();
 

@@ -77,39 +77,13 @@ public class AuthService : IAuthService
 
         return response;
     }
-
-    [Obsolete($"{nameof(IssueToken)} method must be used to issue both Access and Refresh tokens")]
-    public async Task<ServiceResponse<string>> LogIn(UserLogInRequest requestData)
-    {
-        UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.LogInData);
-
-        if (data is null)
-        {
-            _logger.LogTrace("User does not exist");
-
-            return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
-                                               message: InvalidCredentialsMessage);
-        }
-
-        if (_cryptographyService.VerifyPasswordHash(requestData.Password, data.PasswordHash, data.PasswordSalt))
-        {
-            _logger.LogTrace("Password hash was verified");
-            
-            return _cryptographyService.IssueAccessToken(data.UserId);
-        }
-
-        _logger.LogTrace("Password hash was not verified");
-
-        return new ServiceResponse<string>(actionResult: ActionResults.Unauthorized,
-                                           message: InvalidCredentialsMessage);
-    }
     
     public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData)
     {
         return requestData switch
                {
                    // TODO: Add explicit domain classes to enforce nullability rules
-                   { GrantType: PasswordGrantType, UserName: not null, Password: not null } => 
+                   { GrantType: PasswordGrantType, Username: not null, Password: not null } => 
                        await IssueTokenByPassword(requestData),
                    { GrantType: RefreshTokenGrantType, RefreshToken: not null } => 
                        await IssueTokenByRefreshToken(requestData),
@@ -156,7 +130,7 @@ public class AuthService : IAuthService
 
     private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenRequest requestData)
     {
-        UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.UserName!);
+        UserPasswordData? data = await _userRepository.GetUserPasswordData(requestData.Username!);
 
         if (data is null)
         {

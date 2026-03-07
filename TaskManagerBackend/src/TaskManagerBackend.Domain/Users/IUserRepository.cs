@@ -5,7 +5,7 @@ public interface IUserRepository
     Task CreateUser(NewUser newUser);
     Task<MinimalUserData?> GetMinimalUserData(int id);
     Task<UserPasswordData?> GetUserPasswordData(int userId);
-    Task<UserPasswordData?> GetUserPasswordData(string logInData);
+    Task<UserPasswordData?> GetUserPasswordData(string username);
     
     Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, 
                                                     Guid refreshTokenId);

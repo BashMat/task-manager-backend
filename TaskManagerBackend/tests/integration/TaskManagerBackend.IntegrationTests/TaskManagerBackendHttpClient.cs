@@ -2,6 +2,7 @@
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
@@ -43,19 +44,31 @@ public class TaskManagerBackendHttpClient
         return await _httpClient.PostAsJsonAsync("api/auth/signup", request);
     }
     
-    public async Task<HttpResponseMessage> IssueToken(IssueTokenRequest request)
+    public async Task<HttpResponseMessage> IssueTokenByPassword(string username,
+                                                                string password)
     {
+        IssueTokenRequest request = new()
+                                    {
+                                        GrantType = AuthService.PasswordGrantType,
+                                        Username = username,
+                                        Password = password
+                                    };
+        return await _httpClient.PostAsJsonAsync("api/auth/token", request);
+    }
+    
+    public async Task<HttpResponseMessage> IssueTokenByRefreshToken(string refreshToken)
+    {
+        IssueTokenRequest request = new()
+                                    {
+                                        GrantType = AuthService.RefreshTokenGrantType,
+                                        RefreshToken = refreshToken
+                                    };
         return await _httpClient.PostAsJsonAsync("api/auth/token", request);
     }
     
     public async Task<HttpResponseMessage> RevokeToken()
     {
         return await _httpClient.PostAsync("api/auth/revoke", null);
-    }
-
-    public async Task<HttpResponseMessage> LogIn(UserLogInRequest request)
-    {
-        return await _httpClient.PostAsJsonAsync("api/auth/login", request);
     }
 
     #endregion

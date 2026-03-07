@@ -25,16 +25,13 @@ public class WhenGettingCurrentUser : UserTestBase
                                               Password = Faker.Internet.Password()
                                           };
         await HttpClient.SignUp(signUpRequest);
-        UserLogInRequest logInRequest = new()
-                                   {
-                                       LogInData = UserName, 
-                                       Password = Password
-                                   };
-        HttpResponseMessage logInResponse = await HttpClient.LogIn(logInRequest);
-        ServiceResponse<string>? logInContent = await logInResponse.Content.ReadFromJsonAsync<ServiceResponse<string>>();
-        logInContent.Should().NotBeNull();
-        logInContent.Data.Should().NotBeNull();
-        HttpClient.SetAccessToken(logInContent.Data);
+        HttpResponseMessage issueTokenResponse = await HttpClient.IssueTokenByPassword(UserName, 
+                                                                                       Password);
+        ServiceResponse<IssueTokenResponse>? issueTokenContent = await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
+        issueTokenContent.Should().NotBeNull();
+        issueTokenContent.Data.Should().NotBeNull();
+        HttpClient.SetAccessToken(issueTokenContent.Data.AccessToken);
+        
         HttpResponseMessage response = await HttpClient.GetCurrentUserData();
         ServiceResponse<GetUserDataResponse>? content = 
             await response.Content.ReadFromJsonAsync<ServiceResponse<GetUserDataResponse>>();
