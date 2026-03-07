@@ -9,7 +9,7 @@ namespace TaskManagerBackend.Application.Features.Auth;
 
 public interface IAuthService
 {
-    Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest requestData);
-    Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest requestData);
+    Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request);
+    Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest request);
     Task RevokeTokens(int userId);
 }
