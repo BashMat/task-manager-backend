@@ -16,7 +16,7 @@ public class UserRepository(TaskManagerDbContext dbContext,
                             IDateTimeService dateTimeService,
                             ILogger<UserRepository> logger) : IUserRepository
 {
-    public async Task<MinimalUserData> CreateUser(NewUser newUser)
+    public async Task<MinimalUserData> CreateUser(NewUser newUser, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting inserting user data");
 
@@ -30,7 +30,7 @@ public class UserRepository(TaskManagerDbContext dbContext,
                                         UpdatedAt = newUser.UpdatedAt
                                     };
         dbContext.Users.Add(user);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         
         logger.LogInformation("Finishing inserting user data");
 
@@ -39,29 +39,29 @@ public class UserRepository(TaskManagerDbContext dbContext,
                                    user.Email);
     }
 
-    public async Task<MinimalUserData?> GetMinimalUserData(int id)
+    public async Task<MinimalUserData?> GetMinimalUserData(int id, CancellationToken cancellationToken)
     {
         return await dbContext.Users.Where(u => u.Id == id)
                               .Select(u => new MinimalUserData(u.Id,
                                                                u.UserName,
                                                                u.Email))
-                              .FirstOrDefaultAsync();
+                              .FirstOrDefaultAsync(cancellationToken);
     }
     
-    public async Task<UserPasswordData?> GetUserPasswordData(int userId)
+    public async Task<UserPasswordData?> GetUserPasswordData(int userId, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting getting user password data");
 
         UserPasswordData? data = await dbContext.Users.Where(u => u.Id == userId)
                                                 .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
-                                                .FirstOrDefaultAsync();
+                                                .FirstOrDefaultAsync(cancellationToken);
 
         logger.LogInformation("Finishing getting user password data");
         
         return data;
     }
     
-    public async Task<UserPasswordData?> GetUserPasswordData(string username)
+    public async Task<UserPasswordData?> GetUserPasswordData(string username, CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting getting user password data");
 
@@ -70,26 +70,30 @@ public class UserRepository(TaskManagerDbContext dbContext,
                                                 .Select(u => new UserPasswordData(u.Id,
                                                                                   u.PasswordHash,
                                                                                   u.PasswordSalt))
-                                                .FirstOrDefaultAsync();
+                                                .FirstOrDefaultAsync(cancellationToken);
 
         logger.LogInformation("Finishing getting user password data");
         
         return data;
     }
 
-    public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, Guid refreshTokenId)
+    public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, Guid refreshTokenId,
+                                                                 CancellationToken cancellationToken)
     {
         return await dbContext.RefreshTokens.AnyAsync(rt => rt.Id == refreshTokenId &&
                                                             rt.UserId == userId &&
-                                                            dateTimeService.UtcNow < rt.ExpiresAt);
+                                                            dateTimeService.UtcNow < rt.ExpiresAt,
+                                                      cancellationToken);
     }
 
-    public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
+    public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email,
+                                                               CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting checking if user exists by user name or email");
 
         bool result = await dbContext.Users.AnyAsync(u => u.UserName == userName ||
-                                                          u.Email == email);
+                                                          u.Email == email,
+                                                     cancellationToken);
 
         logger.LogInformation("Finishing checking if user exists by user name or email");
             
@@ -97,9 +101,11 @@ public class UserRepository(TaskManagerDbContext dbContext,
     }
     
     public async Task<bool> UpdatePasswordData(UserPasswordData newPasswordData,
-                                               DateTime updatedAt)
+                                               DateTime updatedAt,
+                                               CancellationToken cancellationToken)
     {
-        Database.Models.User? dbUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == newPasswordData.UserId);
+        Database.Models.User? dbUser = await dbContext.Users.SingleOrDefaultAsync(u => u.Id == newPasswordData.UserId,
+                                                                                  cancellationToken);
 
         if (dbUser is null)
         {
@@ -110,7 +116,7 @@ public class UserRepository(TaskManagerDbContext dbContext,
         dbUser.PasswordSalt = newPasswordData.PasswordSalt;
         dbUser.UpdatedAt = updatedAt;
         
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return true;
     }
@@ -119,7 +125,8 @@ public class UserRepository(TaskManagerDbContext dbContext,
 
     public async Task CreateUserRefreshToken(int userId,
                                              RefreshTokenData refreshTokenData,
-                                             Guid? invalidatedRefreshTokenId)
+                                             Guid? invalidatedRefreshTokenId,
+                                             CancellationToken cancellationToken)
     {
         RefreshToken token = new()
                              {
@@ -138,16 +145,16 @@ public class UserRepository(TaskManagerDbContext dbContext,
         
         dbContext.RefreshTokens.Add(token);
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
     
-    public async Task DeleteUserRefreshTokens(int userId)
+    public async Task DeleteUserRefreshTokens(int userId, CancellationToken cancellationToken)
     {
         IQueryable<RefreshToken> previousUserTokens = 
             dbContext.RefreshTokens.Where(rt => rt.UserId == userId);
         dbContext.RefreshTokens.RemoveRange(previousUserTokens);
         
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     #endregion

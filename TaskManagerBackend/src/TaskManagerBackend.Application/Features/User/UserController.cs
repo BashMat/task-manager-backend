@@ -18,12 +18,13 @@ public class UserController(IUserService userService,
                             ILogger<UserController> logger) : ControllerBase
 {
     [HttpGet("current")]
-    public async Task<IActionResult> GetCurrentUserData()
+    public async Task<IActionResult> GetCurrentUserData(CancellationToken cancellationToken)
     {
         logger.LogTrace("Start GET /api/users/current request processing");
         
         ServiceResponse<GetUserDataResponse> response = await userService.GetUserDataById(UserId, 
-                                                                                           UserId);
+                                                                                           UserId,
+                                                                                           cancellationToken);
         
         logger.LogTrace("Finish GET /api/users/current request processing");
         
@@ -31,12 +32,14 @@ public class UserController(IUserService userService,
     }
     
     [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetUserDataById([FromRoute] int userId)
+    public async Task<IActionResult> GetUserDataById([FromRoute] int userId,
+                                                     CancellationToken cancellationToken)
     {
         logger.LogTrace($"Start GET /api/users/{userId} request processing");
         
         ServiceResponse<GetUserDataResponse> response = await userService.GetUserDataById(UserId, 
-                                                                                           userId);
+                                                                                           userId,
+                                                                                           cancellationToken);
         
         logger.LogTrace($"Finish GET /api/users/{userId} request processing");
         
@@ -44,12 +47,14 @@ public class UserController(IUserService userService,
     }
     
     [HttpPost("update-password")]
-    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request,
+                                                    CancellationToken cancellationToken)
     {
         logger.LogTrace("Start POST /api/users/update-password request processing");
         
         ServiceResponse<bool> response = await userService.UpdatePassword(UserId, 
-                                                                           request);
+                                                                           request,
+                                                                           cancellationToken);
         
         logger.LogTrace("Finish POST /api/users/update-password request processing");
         

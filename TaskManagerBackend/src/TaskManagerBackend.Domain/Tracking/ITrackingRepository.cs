@@ -13,30 +13,40 @@ public interface ITrackingRepository
     #region Tracking Logs
 
     // TODO: Perhaps nullability is excessive
-    Task<TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog logToInsert);
-    Task<List<TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId);
-    Task<TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId);
-    Task<List<TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId, int trackingLogId);
+    Task<TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog logToInsert, CancellationToken cancellationToken);
+    Task<List<TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId, CancellationToken cancellationToken);
+    Task<TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId, CancellationToken cancellationToken);
+    Task<List<TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
+                                                              int trackingLogId,
+                                                              CancellationToken cancellationToken);
 
     #endregion
     
     #region Tracking Log Entries
 
     // TODO: Perhaps nullability is excessive
-    Task<TrackingLogEntry.TrackingLogEntry?> CreateTrackingLogEntry(NewTrackingLogEntry logEntryToInsert);
-    Task<List<TrackingLogEntry.TrackingLogEntry>> GetAllTrackingLogEntries(int userId);
-    Task<TrackingLogEntry.TrackingLogEntry?> GetTrackingLogEntryById(int trackingLogEntryId);
-    Task<TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int trackingLogEntryId, 
-                                                                        UpdatableTrackingLogEntry updatableTrackingLogEntry);
-    Task<List<TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId, int trackingLogEntryId);
+    Task<TrackingLogEntry.TrackingLogEntry?> CreateTrackingLogEntry(NewTrackingLogEntry logEntryToInsert,
+                                                                    CancellationToken cancellationToken);
+    Task<List<TrackingLogEntry.TrackingLogEntry>> GetAllTrackingLogEntries(int userId, 
+                                                                           CancellationToken cancellationToken);
+    Task<TrackingLogEntry.TrackingLogEntry?> GetTrackingLogEntryById(int trackingLogEntryId,
+                                                                     CancellationToken cancellationToken);
+    Task<TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int trackingLogEntryId,
+                                                                        UpdatableTrackingLogEntry updatableTrackingLogEntry,
+                                                                        CancellationToken cancellationToken);
+    Task<List<TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId,
+                                                                             int trackingLogEntryId,
+                                                                             CancellationToken cancellationToken);
 
     #endregion
 
     #region Tracking Log Entry Statuses
 
     // TODO: Perhaps nullability is excessive
-    Task<TrackingLogEntryStatus.TrackingLogEntryStatus?> CreateTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert);
-    Task<List<TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId);
+    Task<TrackingLogEntryStatus.TrackingLogEntryStatus?> CreateTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert, 
+                                                                                      CancellationToken cancellationToken);
+    Task<List<TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId,
+                                                                                               CancellationToken cancellationToken);
 
     #endregion
 }

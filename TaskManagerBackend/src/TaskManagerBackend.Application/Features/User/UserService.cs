@@ -17,8 +17,9 @@ public class UserService(IUserRepository userRepository,
 {
     public const string AccessDeniedMessage = "Cannot see this User profile";
 
-    public async Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId, 
-                                                                            int userId)
+    public async Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId,
+                                                                            int userId,
+                                                                            CancellationToken cancellationToken)
     {
         // TODO: Implement better privacy options
         if (userId != currentUserId)
@@ -27,7 +28,7 @@ public class UserService(IUserRepository userRepository,
                                                             message: AccessDeniedMessage);
         }
         
-        MinimalUserData? user = await userRepository.GetMinimalUserData(userId);
+        MinimalUserData? user = await userRepository.GetMinimalUserData(userId, cancellationToken);
 
         if (user is null)
         {
@@ -42,7 +43,8 @@ public class UserService(IUserRepository userRepository,
                                                         });
     }
     
-    public async Task<ServiceResponse<bool>> UpdatePassword(int currentUserId, UpdatePasswordRequest request)
+    public async Task<ServiceResponse<bool>> UpdatePassword(int currentUserId, UpdatePasswordRequest request,
+                                                            CancellationToken cancellationToken)
     {
         if (currentUserId != request.UserId)
         {
@@ -51,7 +53,7 @@ public class UserService(IUserRepository userRepository,
                                              AccessDeniedMessage);
         }
 
-        UserPasswordData? currentPasswordData = await userRepository.GetUserPasswordData(request.UserId);
+        UserPasswordData? currentPasswordData = await userRepository.GetUserPasswordData(request.UserId, cancellationToken);
 
         if (currentPasswordData is null)
         {
@@ -74,7 +76,7 @@ public class UserService(IUserRepository userRepository,
         
         UserPasswordData newPasswordData = new(request.UserId, newPasswordHash, newPasswordSalt);
         bool isUpdateSuccessful = await userRepository.UpdatePasswordData(newPasswordData, 
-                                                                           dateTimeService.UtcNow);
+                                                                           dateTimeService.UtcNow, cancellationToken);
 
         if (isUpdateSuccessful)
         {
