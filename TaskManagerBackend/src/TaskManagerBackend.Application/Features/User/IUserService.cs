@@ -9,7 +9,10 @@ namespace TaskManagerBackend.Application.Features.User;
 
 public interface IUserService
 {
-    Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId, int userId);
+    Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId,
+                                                               int userId,
+                                                               CancellationToken cancellationToken);
     Task<ServiceResponse<bool>> UpdatePassword(int currentUserId,
-                                               UpdatePasswordRequest request);
+                                               UpdatePasswordRequest request,
+                                               CancellationToken cancellationToken);
 }

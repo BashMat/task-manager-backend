@@ -121,6 +121,7 @@ public class WhenSigningUp : AuthServiceTestBase
                                                                           newUserToBeCreated.PasswordSalt ==
                                                                           createdUser.PasswordSalt &&
                                                                           newUserToBeCreated.PasswordHash ==
-                                                                          createdUser.PasswordHash)));
+                                                                          createdUser.PasswordHash),
+                                                    It.IsAny<CancellationToken>()));
     }
 }
