@@ -6,27 +6,20 @@ namespace TaskManagerBackend.Application.Exceptions;
 ///     Represents main exception handler in ASP. NET Core application
 ///     used by the exception handler middleware.
 /// </summary>
-public class GlobalExceptionHandler : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    private readonly ILogger<GlobalExceptionHandler> _logger;
-
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
-    {
-        _logger = logger;
-    }
-
     public ValueTask<bool> TryHandleAsync(HttpContext httpContext,
                                           Exception exception,
                                           CancellationToken cancellationToken)
     {
         if (exception is IApplicationException ex)
         {
-            _logger.LogError(exception, "Application exception logged in global exception handler:");
+            logger.LogError(exception, "Application exception logged in global exception handler:");
             httpContext.Response.StatusCode = MapExceptionToStatusCode(ex);
         }
         else
         {
-            _logger.LogError(exception, "Unrecognised system exception logged in global exception handler:");
+            logger.LogError(exception, "Unrecognised system exception logged in global exception handler:");
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         }
 
@@ -44,7 +37,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             case InvalidTokenException:
                 return StatusCodes.Status401Unauthorized;
             default:
-                _logger.LogError("Unrecognised application error");
+                logger.LogError("Unrecognised application error");
                 return StatusCodes.Status500InternalServerError;
         }
     }

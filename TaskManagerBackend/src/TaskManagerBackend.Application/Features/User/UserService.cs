@@ -11,23 +11,12 @@ using TaskManagerBackend.Domain.Users;
 
 namespace TaskManagerBackend.Application.Features.User;
 
-public class UserService : IUserService
+public class UserService(IUserRepository userRepository,
+                         ICryptographyService cryptographyService,
+                         IDateTimeService dateTimeService) : IUserService
 {
     public const string AccessDeniedMessage = "Cannot see this User profile";
-    
-    private readonly IUserRepository _userRepository;
-    private readonly ICryptographyService _cryptographyService;
-    private readonly IDateTimeService _dateTimeService;
-    
-    public UserService(IUserRepository userRepository,
-                       ICryptographyService cryptographyService,
-                       IDateTimeService dateTimeService) 
-    {
-        _userRepository = userRepository;
-        _cryptographyService = cryptographyService;
-        _dateTimeService = dateTimeService;
-    }
-    
+
     public async Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId, 
                                                                             int userId)
     {
@@ -38,7 +27,7 @@ public class UserService : IUserService
                                                             message: AccessDeniedMessage);
         }
         
-        MinimalUserData? user = await _userRepository.GetMinimalUserData(userId);
+        MinimalUserData? user = await userRepository.GetMinimalUserData(userId);
 
         if (user is null)
         {
@@ -62,7 +51,7 @@ public class UserService : IUserService
                                              AccessDeniedMessage);
         }
 
-        UserPasswordData? currentPasswordData = await _userRepository.GetUserPasswordData(request.UserId);
+        UserPasswordData? currentPasswordData = await userRepository.GetUserPasswordData(request.UserId);
 
         if (currentPasswordData is null)
         {
@@ -72,7 +61,7 @@ public class UserService : IUserService
                                              AccessDeniedMessage);
         }
 
-        if (!_cryptographyService.VerifyPasswordHash(request.OldPassword, currentPasswordData.PasswordHash, currentPasswordData.PasswordSalt))
+        if (!cryptographyService.VerifyPasswordHash(request.OldPassword, currentPasswordData.PasswordHash, currentPasswordData.PasswordSalt))
         {
             // TODO: Use better message and result type
             return new ServiceResponse<bool>(false,
@@ -81,11 +70,11 @@ public class UserService : IUserService
         }
         
         (byte[] newPasswordHash, byte[] newPasswordSalt) =
-            _cryptographyService.CreatePasswordHashAndSalt(request.NewPassword);
+            cryptographyService.CreatePasswordHashAndSalt(request.NewPassword);
         
         UserPasswordData newPasswordData = new(request.UserId, newPasswordHash, newPasswordSalt);
-        bool isUpdateSuccessful = await _userRepository.UpdatePasswordData(newPasswordData, 
-                                                                           _dateTimeService.UtcNow);
+        bool isUpdateSuccessful = await userRepository.UpdatePasswordData(newPasswordData, 
+                                                                           dateTimeService.UtcNow);
 
         if (isUpdateSuccessful)
         {
