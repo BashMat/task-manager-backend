@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Application.Utility.Security;
 
 #endregion
 
@@ -31,21 +32,14 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         get
         {
-            string? claimValue = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            int? userId = HttpContext.User.Claims.GetClaimValueOrNullAsInt(ClaimTypes.NameIdentifier);
 
-            if (claimValue is null)
+            if (userId is null)
             {
                 throw new InvalidTokenException(InvalidTokenExceptionMessage);
             }
-
-            try
-            {
-                return Convert.ToInt32(claimValue);
-            }
-            catch
-            {
-                throw new InvalidTokenException(InvalidTokenExceptionMessage);
-            }
+            
+            return userId.Value;
         }
     }
     
