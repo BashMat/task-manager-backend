@@ -18,42 +18,42 @@ public static class MappingExtensions
                                    user.Email);
     }
 
-    public static TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
+    public static TrackingLogEntryStatus.TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
     {
-        return new TrackingLogEntryStatus(trackingLogEntryStatus.Id,
-                                          trackingLogEntryStatus.Title,
-                                          trackingLogEntryStatus.Description,
-                                          trackingLogEntryStatus.TrackingLogId);
+        return new TrackingLogEntryStatus.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
+                                                                 trackingLogEntryStatus.Title,
+                                                                 trackingLogEntryStatus.Description,
+                                                                 trackingLogEntryStatus.TrackingLogId);
     }
 
-    public static Domain.Tracking.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
+    public static Domain.Tracking.TrackingLogEntry.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
     {
-        return new Domain.Tracking.TrackingLogEntry(trackingLogEntry.Id,
-                                                    trackingLogEntry.Title,
-                                                    trackingLogEntry.Description,
-                                                    trackingLogEntry.TrackingLogId,
-                                                    trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
-                                                    trackingLogEntry.Priority,
-                                                    trackingLogEntry.OrderIndex,
-                                                    trackingLogEntry.CreatedByNavigation.ToDomain(),
-                                                    trackingLogEntry.CreatedAt,
-                                                    trackingLogEntry.UpdatedByNavigation.ToDomain(),
-                                                    trackingLogEntry.UpdatedAt);
+        return new Domain.Tracking.TrackingLogEntry.TrackingLogEntry(trackingLogEntry.Id,
+                                                                     trackingLogEntry.Title,
+                                                                     trackingLogEntry.Description,
+                                                                     trackingLogEntry.TrackingLogId,
+                                                                     trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
+                                                                     trackingLogEntry.Priority,
+                                                                     trackingLogEntry.OrderIndex,
+                                                                     trackingLogEntry.CreatedByNavigation.ToDomain(),
+                                                                     trackingLogEntry.CreatedAt,
+                                                                     trackingLogEntry.UpdatedByNavigation.ToDomain(),
+                                                                     trackingLogEntry.UpdatedAt);
     }
 
-    public static Domain.Tracking.TrackingLog ToDomain(this TrackingLog trackingLog)
+    public static Domain.Tracking.TrackingLog.TrackingLog ToDomain(this TrackingLog trackingLog)
     {
-        return new Domain.Tracking.TrackingLog(trackingLog.Id,
-                                               trackingLog.Title,
-                                               trackingLog.Description,
-                                               trackingLog.CreatedByNavigation.ToDomain(),
-                                               trackingLog.CreatedAt,
-                                               trackingLog.UpdatedByNavigation.ToDomain(),
-                                               trackingLog.UpdatedAt,
-                                               trackingLog.TrackingLogEntryStatuses.Select(s => s.ToDomain())
-                                                          .ToList(),
-                                               trackingLog.TrackingLogEntries
-                                                          .Select(entry => entry.ToDomain())
-                                                          .ToList());
+        return new Domain.Tracking.TrackingLog.TrackingLog(trackingLog.Id,
+                                                           trackingLog.Title,
+                                                           trackingLog.Description,
+                                                           trackingLog.CreatedByNavigation.ToDomain(),
+                                                           trackingLog.CreatedAt,
+                                                           trackingLog.UpdatedByNavigation.ToDomain(),
+                                                           trackingLog.UpdatedAt,
+                                                           trackingLog.TrackingLogEntryStatuses.Select(s => s.ToDomain())
+                                                                      .ToList(),
+                                                           trackingLog.TrackingLogEntries
+                                                                      .Select(entry => entry.ToDomain())
+                                                                      .ToList());
     }
 }
