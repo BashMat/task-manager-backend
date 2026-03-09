@@ -4,7 +4,7 @@ namespace TaskManagerBackend.Domain.Users;
 
 public interface IUserRepository
 {
-    Task CreateUser(NewUser newUser);
+    Task<MinimalUserData> CreateUser(NewUser newUser);
     Task<MinimalUserData?> GetMinimalUserData(int id);
     Task<UserPasswordData?> GetUserPasswordData(int userId);
     Task<UserPasswordData?> GetUserPasswordData(string username);

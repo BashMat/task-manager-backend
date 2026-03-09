@@ -44,8 +44,20 @@ public class AuthServiceTestBase : UnitTestsBase
         EmailServiceMock.Setup(o => o.Validate(It.IsAny<string>()))
                         .Returns(isEmailAddressFormatCorrect);
     }
+    
+    protected void SetUpCreateUser(MinimalUserData createdUser)
+    {
+        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>()))
+                          .ReturnsAsync(createdUser);
+    }
+    
+    protected void SetUpFailedUserCreation()
+    {
+        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>()))
+                          .ThrowsAsync(new Exception());
+    }
         
-    protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists = false)
+    protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists)
     {
         UserRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(), 
                                                                            It.IsAny<string>()))

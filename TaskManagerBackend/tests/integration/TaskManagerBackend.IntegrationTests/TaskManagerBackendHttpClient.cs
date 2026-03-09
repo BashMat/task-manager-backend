@@ -46,6 +46,16 @@ public class TaskManagerBackendHttpClient
         return await _httpClient.PostAsJsonAsync("api/auth/signup", request);
     }
     
+    public async Task<UserSignUpResponse> SignUpAndValidate(UserSignUpRequest request)
+    {
+        HttpResponseMessage signUpResponse = await SignUp(request);
+        ServiceResponse<UserSignUpResponse>? signUpContent = 
+            await signUpResponse.Content.ReadFromJsonAsync<ServiceResponse<UserSignUpResponse>>();
+        signUpContent.Should().NotBeNull();
+        signUpContent.Data.Should().NotBeNull();
+        return signUpContent.Data;
+    }
+    
     public async Task<HttpResponseMessage> IssueTokenByPassword(string username,
                                                                 string password)
     {
