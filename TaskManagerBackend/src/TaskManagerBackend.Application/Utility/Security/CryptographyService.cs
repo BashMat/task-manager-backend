@@ -16,21 +16,10 @@ using TaskManagerBackend.Domain.Auth;
 namespace TaskManagerBackend.Application.Utility.Security;
 
 /// <inheritdoc/>
-public class CryptographyService : ICryptographyService
+public class CryptographyService(IDateTimeService dateTimeService,
+                                 IOptionsMonitor<TokensConfiguration> tokensConfiguration,
+                                 ILogger<CryptographyService> logger) : ICryptographyService
 {
-    private readonly IDateTimeService _dateTimeService;
-    private readonly IOptionsMonitor<TokensConfiguration> _tokensConfiguration;
-    private readonly ILogger<CryptographyService> _logger;
-
-    public CryptographyService(IDateTimeService dateTimeService,
-                               IOptionsMonitor<TokensConfiguration> tokensConfiguration,
-                               ILogger<CryptographyService> logger)
-    {
-        _dateTimeService = dateTimeService;
-        _tokensConfiguration = tokensConfiguration;
-        _logger = logger;
-    }
-    
     public ValueTuple<byte[], byte[]> CreatePasswordHashAndSalt(string password)
     {
         using HMACSHA512 hmac = new();
@@ -47,7 +36,7 @@ public class CryptographyService : ICryptographyService
     
     public string IssueAccessToken(int userId)
     {
-        DateTime issuedAt = _dateTimeService.UtcNow;
+        DateTime issuedAt = dateTimeService.UtcNow;
         DateTime expiresAt = GetAccessTokenExpirationDateTime();
         
         return IssueTokenAsString(userId, null, issuedAt, expiresAt);
@@ -56,7 +45,7 @@ public class CryptographyService : ICryptographyService
     public RefreshTokenData IssueRefreshToken(int userId)
     {
         Guid tokenId = Guid.NewGuid();
-        DateTime issuedAt = _dateTimeService.UtcNow;
+        DateTime issuedAt = dateTimeService.UtcNow;
         DateTime expiresAt = GetRefreshTokenExpirationDateTime();
 
         return new RefreshTokenData(userId,
@@ -101,7 +90,7 @@ public class CryptographyService : ICryptographyService
 
     private SecurityKey GetSigningKey()
     {
-        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokensConfiguration.CurrentValue.Secret));
+        return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokensConfiguration.CurrentValue.Secret));
     }
     
     public TokenValidationParameters GetValidationParameters()
@@ -130,7 +119,7 @@ public class CryptographyService : ICryptographyService
         }
         catch (Exception e)
         {
-            _logger.LogError(e.Message);
+            logger.LogError(e.Message);
             return null;
         }
     }
@@ -167,7 +156,7 @@ public class CryptographyService : ICryptographyService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            logger.LogError(ex.Message);
             return new ServiceResponse<RefreshTokenData>(actionResult: ActionResults.Unauthorized,
                                                          message: AuthService.InvalidCredentialsMessage);
         }
@@ -175,11 +164,11 @@ public class CryptographyService : ICryptographyService
 
     private DateTime GetAccessTokenExpirationDateTime()
     {
-        return _dateTimeService.UtcNow.AddMinutes(_tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutesAsDouble);
+        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutesAsDouble);
     }
     
     private DateTime GetRefreshTokenExpirationDateTime()
     {
-        return _dateTimeService.UtcNow.AddMinutes(_tokensConfiguration.CurrentValue.RefreshTokenLifeTimeInMinutesAsDouble);
+        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.RefreshTokenLifeTimeInMinutesAsDouble);
     }
 }

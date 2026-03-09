@@ -32,15 +32,8 @@ namespace TaskManagerBackend.Application;
 /// <summary>
 ///     Represents helping class to configure application.
 /// </summary>
-public class Startup
+public class Startup(IConfiguration configuration)
 {
-    private readonly IConfiguration _configuration;
-
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public void ConfigureBuilder(WebApplicationBuilder builder)
     {
         SetUpConfiguration(builder);
@@ -73,7 +66,7 @@ public class Startup
         builder.Host.UseNLog();
 
         builder.Services.AddDbContext<TaskManagerDbContext>(options =>
-                                                                options.UseSqlServer(_configuration
+                                                                options.UseSqlServer(configuration
                                                                                      .GetConnectionString(ConfigurationKeys
                                                                                                               .TaskManagerDbConnectionString)));
         
@@ -102,13 +95,13 @@ public class Startup
     {
         BuildConnectionStrings();
         ValidateConfiguration();
-        builder.Services.Configure<TokensConfiguration>(_configuration.GetRequiredSection(ConfigurationKeys.TokensSection));
+        builder.Services.Configure<TokensConfiguration>(configuration.GetRequiredSection(ConfigurationKeys.TokensSection));
         builder.Services.ConfigureOptions<JwtBearerOptionsConfigurator>();
     }
 
     private void ValidateConfiguration()
     {
-        IConfigurationSection configurationSection = _configuration.GetRequiredSection(ConfigurationKeys.TokensSection);
+        IConfigurationSection configurationSection = configuration.GetRequiredSection(ConfigurationKeys.TokensSection);
         
         if (string.IsNullOrWhiteSpace(configurationSection[ConfigurationKeys.SecretKey]))
         {
@@ -125,8 +118,8 @@ public class Startup
 
     private void BuildConnectionStrings()
     {
-        IConfigurationSection connectionStringsDataSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsDataSection);
-        IConfigurationSection connectionStringsSection = _configuration.GetSection(ConfigurationKeys.ConnectionStringsSection);
+        IConfigurationSection connectionStringsDataSection = configuration.GetSection(ConfigurationKeys.ConnectionStringsDataSection);
+        IConfigurationSection connectionStringsSection = configuration.GetSection(ConfigurationKeys.ConnectionStringsSection);
 
         if (!connectionStringsSection.Exists() || !connectionStringsDataSection.Exists())
         {
@@ -151,7 +144,7 @@ public class Startup
                 connectionStringBuilder.ConnectTimeout = data.ConnectionTimeout ?? connectionStringBuilder.ConnectTimeout;
             }
 
-            _configuration[connectionString.Path] = connectionStringBuilder.ConnectionString;
+            configuration[connectionString.Path] = connectionStringBuilder.ConnectionString;
         }
     }
 

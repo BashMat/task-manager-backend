@@ -8,18 +8,12 @@ using TaskManagerBackend.Application.Utility.Security;
 
 namespace TaskManagerBackend.Application.Utility.Configuration;
 
-public class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBearerOptions>
+public class JwtBearerOptionsConfigurator(ICryptographyService cryptographyService)
+    : IConfigureNamedOptions<JwtBearerOptions>
 {
-    private readonly ICryptographyService _cryptographyService;
-
-    public JwtBearerOptionsConfigurator(ICryptographyService cryptographyService)
-    {
-        _cryptographyService = cryptographyService;
-    }
-
     public void Configure(JwtBearerOptions options)
     {
-        options.TokenValidationParameters = _cryptographyService.GetValidationParameters();
+        options.TokenValidationParameters = cryptographyService.GetValidationParameters();
     }
 
     public void Configure(string? name, JwtBearerOptions options)
