@@ -38,6 +38,7 @@ public class WhenSigningUp : AuthServiceTestBase
     {
         SetUpValidateEmailAddressFormat();
         SetUpCheckIfUserExistsByUserNameOrEmail(true);
+        SetUpFailedUserCreation();
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
@@ -58,10 +59,11 @@ public class WhenSigningUp : AuthServiceTestBase
     public async Task ServiceReturnsResponseWithNotNullDataIfUserDoesNotExist()
     {
         SetUpValidateEmailAddressFormat();
-        SetUpCheckIfUserExistsByUserNameOrEmail();
+        SetUpCheckIfUserExistsByUserNameOrEmail(false);
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
+        SetUpCreateUser(new MinimalUserData(1, TestUserName, TestEmail));
         UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
@@ -77,10 +79,10 @@ public class WhenSigningUp : AuthServiceTestBase
     }
         
     [Fact]
-    public async Task ServiceInsertsCorrectUser()
+    public async Task ServiceCreatesCorrectUser()
     {
         SetUpValidateEmailAddressFormat();
-        SetUpCheckIfUserExistsByUserNameOrEmail();
+        SetUpCheckIfUserExistsByUserNameOrEmail(false);
         DateTime utcNow = Faker.Date.Between(DateTime.UtcNow.AddYears(-20), DateTime.UtcNow.AddYears(20));
         SetUpDateTimeService(utcNow);
         byte[] passwordHash = { 1 };
@@ -89,6 +91,7 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
+        SetUpCreateUser(new MinimalUserData(1, TestUserName, TestEmail));
         UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
@@ -96,19 +99,28 @@ public class WhenSigningUp : AuthServiceTestBase
                                            Password = TestPassword
                                        };
         NewUser newUserToBeCreated = new(DateTimeServiceMock.Object,
-                                   TestUserName,
-                                   TestEmail,
-                                   passwordHash,
-                                   passwordSalt);
+                                         TestUserName,
+                                         TestEmail,
+                                         passwordHash,
+                                         passwordSalt);
 
-        await SignUp(request);
+        ServiceResponse<UserSignUpResponse> response = await SignUp(request);
 
-        UserRepositoryMock.Verify(o => o.CreateUser(It.Is<NewUser>(createdUser 
-                                                                => newUserToBeCreated.UserName == createdUser.UserName &&
-                                                                   newUserToBeCreated.Email == createdUser.Email &&
-                                                                   newUserToBeCreated.CreatedAt == createdUser.CreatedAt &&
-                                                                   newUserToBeCreated.UpdatedAt == createdUser.UpdatedAt &&
-                                                                   newUserToBeCreated.PasswordSalt == createdUser.PasswordSalt &&
-                                                                   newUserToBeCreated.PasswordHash == createdUser.PasswordHash)));
+        response.Data!.UserName.Should().Be(TestUserName);
+        response.Data!.Email.Should().Be(TestEmail);
+        response.Success.Should().BeTrue();
+        UserRepositoryMock.Verify(o => o.CreateUser(It.Is<NewUser>(createdUser
+                                                                       => newUserToBeCreated.UserName ==
+                                                                          createdUser.UserName &&
+                                                                          newUserToBeCreated.Email ==
+                                                                          createdUser.Email &&
+                                                                          newUserToBeCreated.CreatedAt ==
+                                                                          createdUser.CreatedAt &&
+                                                                          newUserToBeCreated.UpdatedAt ==
+                                                                          createdUser.UpdatedAt &&
+                                                                          newUserToBeCreated.PasswordSalt ==
+                                                                          createdUser.PasswordSalt &&
+                                                                          newUserToBeCreated.PasswordHash ==
+                                                                          createdUser.PasswordHash)));
     }
 }

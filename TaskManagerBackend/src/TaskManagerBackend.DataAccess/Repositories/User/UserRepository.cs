@@ -16,7 +16,7 @@ public class UserRepository(TaskManagerDbContext dbContext,
                             IDateTimeService dateTimeService,
                             ILogger<UserRepository> logger) : IUserRepository
 {
-    public async Task CreateUser(NewUser newUser)
+    public async Task<MinimalUserData> CreateUser(NewUser newUser)
     {
         logger.LogInformation("Starting inserting user data");
 
@@ -33,6 +33,10 @@ public class UserRepository(TaskManagerDbContext dbContext,
         await dbContext.SaveChangesAsync();
         
         logger.LogInformation("Finishing inserting user data");
+
+        return new MinimalUserData(user.Id,
+                                   user.UserName,
+                                   user.Email);
     }
 
     public async Task<MinimalUserData?> GetMinimalUserData(int id)

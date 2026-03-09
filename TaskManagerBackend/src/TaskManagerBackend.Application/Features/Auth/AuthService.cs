@@ -51,12 +51,13 @@ public class AuthService(ICryptographyService cryptographyService,
             cryptographyService.CreatePasswordHashAndSalt(request.Password);
             
         NewUser newUser = new(dateTimeService, request.UserName, request.Email, passwordHash, passwordSalt);
-        await userRepository.CreateUser(newUser);
+        MinimalUserData user = await userRepository.CreateUser(newUser);
 
         UserSignUpResponse response = new()
                                       {
-                                          UserName = request.UserName,
-                                          Email = request.Email
+                                          Id = user.Id,
+                                          UserName = user.UserName,
+                                          Email = user.Email
                                       };
 
         logger.LogTrace("Finish user registration");
