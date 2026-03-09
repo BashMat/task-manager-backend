@@ -14,5 +14,5 @@ public class IssueTokenResponse
     public int ExpiresIn { get; init; }
     
     [JsonPropertyName("refresh_token")]
-    public string? RefreshToken { get; init; }
+    public required string RefreshToken { get; init; }
 }

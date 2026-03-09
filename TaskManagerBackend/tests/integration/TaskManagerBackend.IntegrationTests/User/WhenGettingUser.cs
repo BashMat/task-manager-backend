@@ -28,12 +28,7 @@ public class WhenGettingUser : UserTestBase
                                               Password = Faker.Internet.Password()
                                           };
         await HttpClient.SignUp(signUpRequest);
-        HttpResponseMessage issueTokenResponse = await HttpClient.IssueTokenByPassword(UserName,
-                                                                                       Password);
-        ServiceResponse<IssueTokenResponse>? issueTokenContent = await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
-        issueTokenContent.Should().NotBeNull();
-        issueTokenContent.Data.Should().NotBeNull();
-        HttpClient.SetAccessToken(issueTokenContent.Data.AccessToken);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(UserName, Password);
         
         HttpResponseMessage response = await HttpClient.GetUserDataById(UserId);
         ServiceResponse<GetUserDataResponse>? content = 
@@ -58,12 +53,7 @@ public class WhenGettingUser : UserTestBase
                                               Password = Faker.Internet.Password()
                                           };
         await HttpClient.SignUp(signUpRequest);
-        HttpResponseMessage issueTokenResponse = await HttpClient.IssueTokenByPassword(signUpRequest.UserName,
-                                                                                       signUpRequest.Password);
-        ServiceResponse<IssueTokenResponse>? issueTokenContent = await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
-        issueTokenContent.Should().NotBeNull();
-        issueTokenContent.Data.Should().NotBeNull();
-        HttpClient.SetAccessToken(issueTokenContent.Data.AccessToken);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName, signUpRequest.Password);
         
         HttpResponseMessage response = await HttpClient.GetUserDataById(UserId);
         ProblemDetails? content = 
