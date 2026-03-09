@@ -14,6 +14,7 @@ public class TrackingLogEntryCreateRequest
     
     [Range(Constants.MinIdentifier, int.MaxValue)]
     public int TrackingLogId { get; init; }
+    
     [Range(Constants.MinIdentifier, int.MaxValue)]
     public int StatusId { get; init; }
     
