@@ -84,17 +84,6 @@ public class UserRepository(TaskManagerDbContext dbContext,
                                                             dateTimeService.UtcNow < rt.ExpiresAt);
     }
 
-    public async Task<bool> CheckIfUserExistsById(int id)
-    {
-        logger.LogInformation("Starting checking if user exists by ID");
-        
-        bool result = await dbContext.Users.AnyAsync(u => u.Id == id);
-        
-        logger.LogInformation("Finishing checking if user exists by ID");
-
-        return result;
-    }
-
     public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email)
     {
         logger.LogInformation("Starting checking if user exists by user name or email");
