@@ -32,7 +32,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                          CreatedAt = dateTimeService.UtcNow
                                      };
 
-        TrackingLog? log = await trackingRepository.InsertTrackingLog(logToInsert);
+        TrackingLog? log = await trackingRepository.CreateTrackingLog(logToInsert);
         TrackingLogGetResponse? response = log?.ToDto();
 
         if (response is null)
@@ -89,7 +89,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                    CreatedAt = dateTimeService.UtcNow
                                                };
         
-        TrackingLogEntry? entry = await trackingRepository.InsertTrackingLogEntry(logEntryToInsert);
+        TrackingLogEntry? entry = await trackingRepository.CreateTrackingLogEntry(logEntryToInsert);
         TrackingLogEntryGetResponse? response = entry?.ToDto();
 
         if (response is null)
@@ -191,7 +191,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                        CreatedAt = dateTimeService.UtcNow
                                                    };
 
-        TrackingLogEntryStatus? status = await trackingRepository.InsertTrackingLogEntryStatus(statusToInsert);
+        TrackingLogEntryStatus? status = await trackingRepository.CreateTrackingLogEntryStatus(statusToInsert);
         TrackingLogEntryStatusGetResponse? response = status?.ToDto();
 
         if (response is null)
