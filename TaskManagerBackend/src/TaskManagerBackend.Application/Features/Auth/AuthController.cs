@@ -17,11 +17,12 @@ public class AuthController(IAuthService authService,
                             ILogger<AuthController> logger) : ControllerBase
 {
     [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest requestData)
+    public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest requestData,
+                                            CancellationToken cancellationToken)
     {
         logger.LogTrace("Start processing POST /api/auth/signup request");
             
-        ServiceResponse<UserSignUpResponse> response = await authService.SignUp(requestData);
+        ServiceResponse<UserSignUpResponse> response = await authService.SignUp(requestData, cancellationToken);
             
         logger.LogTrace("Finish processing POST /api/auth/signup request");
 
@@ -29,11 +30,12 @@ public class AuthController(IAuthService authService,
     }
     
     [HttpPost("token")]
-    public async Task<IActionResult> IssueToken([FromBody] IssueTokenRequest requestData)
+    public async Task<IActionResult> IssueToken([FromBody] IssueTokenRequest requestData,
+                                                CancellationToken cancellationToken)
     {
         logger.LogTrace($"Start POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
-        ServiceResponse<IssueTokenResponse> response = await authService.IssueToken(requestData);
+        ServiceResponse<IssueTokenResponse> response = await authService.IssueToken(requestData, cancellationToken);
             
         logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
@@ -43,11 +45,11 @@ public class AuthController(IAuthService authService,
     // TODO: Add functionality to revoke token for selected device
     [HttpPost("revoke")]
     [Authorize]
-    public async Task<IActionResult> RevokeTokens()
+    public async Task<IActionResult> RevokeTokens(CancellationToken cancellationToken)
     {
         logger.LogTrace("Start POST /api/auth/revoke request processing");
             
-        await authService.RevokeTokens(UserId);
+        await authService.RevokeTokens(UserId, cancellationToken);
             
         logger.LogTrace("Finish POST /api/auth/revoke request processing");
             

@@ -26,7 +26,8 @@ public class AuthService(ICryptographyService cryptographyService,
     public const string PasswordGrantType = "password";
     public const string RefreshTokenGrantType = "refresh_token";
 
-    public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request)
+    public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request,
+                                                                  CancellationToken cancellationToken)
     {
         // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
         if (!emailValidator.Validate(request.Email))
@@ -37,7 +38,7 @@ public class AuthService(ICryptographyService cryptographyService,
                                                            message: InvalidEmailAddressMessage);
         }
 
-        if (await userRepository.CheckIfUserExistsByUserNameOrEmail(request.UserName, request.Email))
+        if (await userRepository.CheckIfUserExistsByUserNameOrEmail(request.UserName, request.Email, cancellationToken))
         {
             logger.LogTrace("User already exists");
             
@@ -51,7 +52,7 @@ public class AuthService(ICryptographyService cryptographyService,
             cryptographyService.CreatePasswordHashAndSalt(request.Password);
             
         NewUser newUser = new(dateTimeService, request.UserName, request.Email, passwordHash, passwordSalt);
-        MinimalUserData user = await userRepository.CreateUser(newUser);
+        MinimalUserData user = await userRepository.CreateUser(newUser, cancellationToken);
 
         UserSignUpResponse response = new()
                                       {
@@ -65,12 +66,13 @@ public class AuthService(ICryptographyService cryptographyService,
         return response;
     }
     
-    public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest request)
+    public async Task<ServiceResponse<IssueTokenResponse>> IssueToken(IssueTokenRequest request,
+                                                                      CancellationToken cancellationToken)
     {
         switch (request)
         {
             case { GrantType: PasswordGrantType, Username: not null, Password: not null }:
-                return await IssueTokenByPassword(new IssueTokenByPasswordRequest(request.Username, request.Password));
+                return await IssueTokenByPassword(new IssueTokenByPasswordRequest(request.Username, request.Password), cancellationToken);
             case { GrantType: RefreshTokenGrantType, RefreshToken: not null }:
             {
                 ServiceResponse<RefreshTokenData> refreshTokenResponse = 
@@ -78,7 +80,7 @@ public class AuthService(ICryptographyService cryptographyService,
 
                 return refreshTokenResponse.Success switch
                        {
-                           true => await IssueTokenByRefreshToken(new IssueTokenByRefreshTokenRequest(refreshTokenResponse.Data!)),
+                           true => await IssueTokenByRefreshToken(new IssueTokenByRefreshTokenRequest(refreshTokenResponse.Data!), cancellationToken),
                            false => new ServiceResponse<IssueTokenResponse>(actionResult: refreshTokenResponse.ActionResult,
                                                                             message: refreshTokenResponse.Message)
                        };
@@ -88,13 +90,16 @@ public class AuthService(ICryptographyService cryptographyService,
         }
     }
     
-    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenByRefreshTokenRequest request)
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByRefreshToken(IssueTokenByRefreshTokenRequest request,
+                                                                                     CancellationToken cancellationToken)
     {
         if (await userRepository.CheckIfUserHasNonExpiredRefreshToken(request.RefreshToken.UserId, 
-                                                                       request.RefreshToken.TokenId))
+                                                                       request.RefreshToken.TokenId,
+                                                                       cancellationToken))
         {
             return await IssueToken(request.RefreshToken.UserId,
-                                    request.RefreshToken.TokenId);
+                                    request.RefreshToken.TokenId,
+                                    cancellationToken);
         }
             
         logger.LogTrace("Refresh token is invalid");
@@ -103,9 +108,10 @@ public class AuthService(ICryptographyService cryptographyService,
                                                        message: InvalidCredentialsMessage);
     }
 
-    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenByPasswordRequest request)
+    private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenByPasswordRequest request,
+                                                                                 CancellationToken cancellationToken)
     {
-        UserPasswordData? data = await userRepository.GetUserPasswordData(request.Username);
+        UserPasswordData? data = await userRepository.GetUserPasswordData(request.Username, cancellationToken);
 
         if (data is null)
         {
@@ -119,7 +125,7 @@ public class AuthService(ICryptographyService cryptographyService,
         {
             logger.LogTrace("Password hash was verified");
             
-            return await IssueToken(data.UserId);
+            return await IssueToken(data.UserId, null, cancellationToken);
         }
 
         logger.LogTrace("Password hash was not verified");
@@ -129,13 +135,15 @@ public class AuthService(ICryptographyService cryptographyService,
     }
     
     private async Task<IssueTokenResponse> IssueToken(int userId,
-                                                      Guid? invalidatedRefreshTokenId = null)
+                                                      Guid? invalidatedRefreshTokenId,
+                                                      CancellationToken cancellationToken)
     {
         string accessToken = cryptographyService.IssueAccessToken(userId);
         RefreshTokenData refreshToken = cryptographyService.IssueRefreshToken(userId);
         await userRepository.CreateUserRefreshToken(userId, 
                                                      refreshToken, 
-                                                     invalidatedRefreshTokenId);
+                                                     invalidatedRefreshTokenId,
+                                                     cancellationToken);
                 
         return new IssueTokenResponse
                {
@@ -146,8 +154,8 @@ public class AuthService(ICryptographyService cryptographyService,
                };
     }
     
-    public async Task RevokeTokens(int userId)
+    public async Task RevokeTokens(int userId, CancellationToken cancellationToken)
     {
-        await userRepository.DeleteUserRefreshTokens(userId);
+        await userRepository.DeleteUserRefreshTokens(userId, cancellationToken);
     }
 }

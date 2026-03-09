@@ -47,20 +47,23 @@ public class AuthServiceTestBase : UnitTestsBase
     
     protected void SetUpCreateUser(MinimalUserData createdUser)
     {
-        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>()))
+        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>(),
+                                                   It.IsAny<CancellationToken>()))
                           .ReturnsAsync(createdUser);
     }
     
     protected void SetUpFailedUserCreation()
     {
-        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>()))
+        UserRepositoryMock.Setup(o => o.CreateUser(It.IsAny<NewUser>(),
+                                                   It.IsAny<CancellationToken>()))
                           .ThrowsAsync(new Exception());
     }
         
     protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists)
     {
         UserRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(), 
-                                                                           It.IsAny<string>()))
+                                                                           It.IsAny<string>(),
+                                                                           It.IsAny<CancellationToken>()))
                           .ReturnsAsync(userExists);
     }
 
@@ -78,6 +81,6 @@ public class AuthServiceTestBase : UnitTestsBase
 
     protected Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request)
     {
-        return CreateAuthService().SignUp(request);
+        return CreateAuthService().SignUp(request, CancellationToken.None);
     }
 }

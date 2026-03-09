@@ -4,25 +4,29 @@ namespace TaskManagerBackend.Domain.Users;
 
 public interface IUserRepository
 {
-    Task<MinimalUserData> CreateUser(NewUser newUser);
-    Task<MinimalUserData?> GetMinimalUserData(int id);
-    Task<UserPasswordData?> GetUserPasswordData(int userId);
-    Task<UserPasswordData?> GetUserPasswordData(string username);
+    Task<MinimalUserData> CreateUser(NewUser newUser, CancellationToken cancellationToken);
+    Task<MinimalUserData?> GetMinimalUserData(int id, CancellationToken cancellationToken);
+    Task<UserPasswordData?> GetUserPasswordData(int userId, CancellationToken cancellationToken);
+    Task<UserPasswordData?> GetUserPasswordData(string username, CancellationToken cancellationToken);
     
-    Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, 
-                                                    Guid refreshTokenId);
-    Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, 
-                                                  string email);
+    Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId,
+                                                    Guid refreshTokenId,
+                                                    CancellationToken cancellationToken);
+    Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName,
+                                                  string email,
+                                                  CancellationToken cancellationToken);
     
     Task<bool> UpdatePasswordData(UserPasswordData newPasswordData,
-                                  DateTime updatedAt);
+                                  DateTime updatedAt,
+                                  CancellationToken cancellationToken);
 
     #region Tokens
 
     Task CreateUserRefreshToken(int userId,
                                 RefreshTokenData refreshTokenData,
-                                Guid? invalidatedRefreshTokenId);
-    Task DeleteUserRefreshTokens(int userId);
+                                Guid? invalidatedRefreshTokenId,
+                                CancellationToken cancellationToken);
+    Task DeleteUserRefreshTokens(int userId, CancellationToken cancellationToken);
 
     #endregion
 }
