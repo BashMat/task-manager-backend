@@ -4,7 +4,6 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Exceptions;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Domain;
 
 #endregion
 
