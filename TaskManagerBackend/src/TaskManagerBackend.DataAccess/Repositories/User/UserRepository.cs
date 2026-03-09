@@ -38,10 +38,10 @@ public class UserRepository(TaskManagerDbContext dbContext,
     public async Task<MinimalUserData?> GetMinimalUserData(int id)
     {
         return await dbContext.Users.Where(u => u.Id == id)
-                                     .Select(u => new MinimalUserData(u.Id,
-                                                                      u.UserName,
-                                                                      u.Email))
-                                     .FirstOrDefaultAsync();
+                              .Select(u => new MinimalUserData(u.Id,
+                                                               u.UserName,
+                                                               u.Email))
+                              .FirstOrDefaultAsync();
     }
     
     public async Task<UserPasswordData?> GetUserPasswordData(int userId)
@@ -49,8 +49,8 @@ public class UserRepository(TaskManagerDbContext dbContext,
         logger.LogInformation("Starting getting user password data");
 
         UserPasswordData? data = await dbContext.Users.Where(u => u.Id == userId)
-                                                       .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
-                                                       .FirstOrDefaultAsync();
+                                                .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
+                                                .FirstOrDefaultAsync();
 
         logger.LogInformation("Finishing getting user password data");
         
@@ -62,9 +62,11 @@ public class UserRepository(TaskManagerDbContext dbContext,
         logger.LogInformation("Starting getting user password data");
 
         UserPasswordData? data = await dbContext.Users.Where(u => u.UserName == username ||
-                                                                   u.Email == username)
-                                                       .Select(u => new UserPasswordData(u.Id, u.PasswordHash, u.PasswordSalt))
-                                                       .FirstOrDefaultAsync();
+                                                                  u.Email == username)
+                                                .Select(u => new UserPasswordData(u.Id,
+                                                                                  u.PasswordHash,
+                                                                                  u.PasswordSalt))
+                                                .FirstOrDefaultAsync();
 
         logger.LogInformation("Finishing getting user password data");
         
@@ -73,9 +75,9 @@ public class UserRepository(TaskManagerDbContext dbContext,
 
     public async Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId, Guid refreshTokenId)
     {
-        return await dbContext.RefreshTokens.AnyAsync(rt => rt.Id == refreshTokenId && 
-                                                             rt.UserId == userId && 
-                                                             dateTimeService.UtcNow < rt.ExpiresAt);
+        return await dbContext.RefreshTokens.AnyAsync(rt => rt.Id == refreshTokenId &&
+                                                            rt.UserId == userId &&
+                                                            dateTimeService.UtcNow < rt.ExpiresAt);
     }
 
     public async Task<bool> CheckIfUserExistsById(int id)
@@ -94,7 +96,7 @@ public class UserRepository(TaskManagerDbContext dbContext,
         logger.LogInformation("Starting checking if user exists by user name or email");
 
         bool result = await dbContext.Users.AnyAsync(u => u.UserName == userName ||
-                                                           u.Email == email);
+                                                          u.Email == email);
 
         logger.LogInformation("Finishing checking if user exists by user name or email");
             
