@@ -19,7 +19,7 @@ public class WhenUpdatingPassword : UserTestBase
     public WhenUpdatingPassword(MsSqlTests fixture) : base(fixture) { }
 
     [Fact]
-    public async Task UpdatingPasswordIsSuccessfulIfUserUpdateTheirPassword()
+    public async Task UpdatingPasswordIsSuccessfulIfUserUpdatesTheirPassword()
     {
         UserSignUpRequest signUpRequest = new() 
                                           {
@@ -27,13 +27,14 @@ public class WhenUpdatingPassword : UserTestBase
                                               UserName = Faker.Internet.UserName(), 
                                               Password = Faker.Internet.Password()
                                           };
-        await HttpClient.SignUp(signUpRequest);
-        await HttpClient.IssueTokenByPasswordAndSetAuthorization(UserName, Password);
+        UserSignUpResponse signUpResponse = await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
         
         HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
                                                                        {
-                                                                           UserId = UserId,
-                                                                           OldPassword = Password,
+                                                                           UserId = signUpResponse.Id,
+                                                                           OldPassword = signUpRequest.Password,
                                                                            NewPassword = Faker.Internet.Password()
                                                                        });
         ServiceResponse<bool>? content = 
@@ -47,6 +48,104 @@ public class WhenUpdatingPassword : UserTestBase
     }
     
     [Fact]
+    public async Task UpdatingPasswordIsUnsuccessfulIfUserUpdatesTheirPasswordAndUserIdIsInvalid()
+    {
+        UserSignUpRequest signUpRequest = new() 
+                                          {
+                                              Email = Faker.Internet.Email(),
+                                              UserName = Faker.Internet.UserName(), 
+                                              Password = Faker.Internet.Password()
+                                          };
+        await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
+        
+        HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
+                                                                       {
+                                                                           UserId = Faker.Random.Int(max: -1),
+                                                                           OldPassword = signUpRequest.Password,
+                                                                           NewPassword = Faker.Internet.Password()
+                                                                       });
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
+    
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public async Task UpdatingPasswordIsUnsuccessfulIfUserUpdatesTheirPasswordAndNewPasswordIsTooShort(int passwordLength)
+    {
+        UserSignUpRequest signUpRequest = new() 
+                                          {
+                                              Email = Faker.Internet.Email(),
+                                              UserName = Faker.Internet.UserName(), 
+                                              Password = Faker.Internet.Password()
+                                          };
+        UserSignUpResponse signUpResponse = await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
+        
+        HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
+                                                                       {
+                                                                           UserId = signUpResponse.Id,
+                                                                           OldPassword = signUpRequest.Password,
+                                                                           NewPassword = Faker.Internet.Password(length: passwordLength)
+                                                                       });
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
+    
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public async Task UpdatingPasswordIsUnsuccessfulIfUserUpdatesTheirPasswordAndOldPasswordIsTooShort(int passwordLength)
+    {
+        UserSignUpRequest signUpRequest = new() 
+                                          {
+                                              Email = Faker.Internet.Email(),
+                                              UserName = Faker.Internet.UserName(), 
+                                              Password = Faker.Internet.Password()
+                                          };
+        UserSignUpResponse signUpResponse = await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
+        
+        HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
+                                                                       {
+                                                                           UserId = signUpResponse.Id,
+                                                                           OldPassword = Faker.Internet.Password(length: passwordLength),
+                                                                           NewPassword = Faker.Internet.Password()
+                                                                       });
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Title.Should().Be(ValidationErrorTitle);
+    }
+    
+    [Fact]
     public async Task UpdatingPasswordIsUnsuccessfulIfUserUpdatesOtherUserPassword()
     {
         UserSignUpRequest signUpRequest = new() 
@@ -55,13 +154,14 @@ public class WhenUpdatingPassword : UserTestBase
                                               UserName = Faker.Internet.UserName(), 
                                               Password = Faker.Internet.Password()
                                           };
-        await HttpClient.SignUp(signUpRequest);
-        await HttpClient.IssueTokenByPasswordAndSetAuthorization(UserName, Password);
+        await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
         
         HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
                                                                        {
-                                                                           UserId = 2,
-                                                                           OldPassword = signUpRequest.Password,
+                                                                           UserId = UserId,
+                                                                           OldPassword = Password,
                                                                            NewPassword = Faker.Internet.Password()
                                                                        });
         ProblemDetails? content = 
@@ -82,12 +182,13 @@ public class WhenUpdatingPassword : UserTestBase
                                               UserName = Faker.Internet.UserName(), 
                                               Password = Faker.Internet.Password()
                                           };
-        await HttpClient.SignUp(signUpRequest);
-        await HttpClient.IssueTokenByPasswordAndSetAuthorization(UserName, Password);
+        UserSignUpResponse signUpResponse = await HttpClient.SignUpAndValidate(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(signUpRequest.UserName,
+                                                                 signUpRequest.Password);
         
         HttpResponseMessage response = await HttpClient.UpdatePassword(new UpdatePasswordRequest
                                                                        {
-                                                                           UserId = UserId,
+                                                                           UserId = signUpResponse.Id,
                                                                            OldPassword = Faker.Internet.Password(),
                                                                            NewPassword = Faker.Internet.Password()
                                                                        });
