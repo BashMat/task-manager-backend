@@ -2,12 +2,14 @@
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using FluentAssertions;
 using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Features.User.Dtos;
+using TaskManagerBackend.Application.Utility;
 
 #endregion
 
@@ -64,6 +66,24 @@ public class TaskManagerBackendHttpClient
                                         RefreshToken = refreshToken
                                     };
         return await _httpClient.PostAsJsonAsync("api/auth/token", request);
+    }
+    
+    public async Task<IssueTokenResponse> IssueTokenByPasswordAndSetAuthorization(string username,
+                                                                                  string password)
+    {
+        IssueTokenRequest request = new()
+                                    {
+                                        GrantType = AuthService.PasswordGrantType,
+                                        Username = username,
+                                        Password = password
+                                    };
+        HttpResponseMessage issueTokenResponse = await _httpClient.PostAsJsonAsync("api/auth/token", request);
+        ServiceResponse<IssueTokenResponse>? issueTokenContent = 
+            await issueTokenResponse.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
+        issueTokenContent.Should().NotBeNull();
+        issueTokenContent.Data.Should().NotBeNull();
+        SetAccessToken(issueTokenContent.Data.AccessToken);
+        return issueTokenContent.Data;
     }
     
     public async Task<HttpResponseMessage> RevokeToken()

@@ -20,17 +20,10 @@ public class WhenRevokingTokens : AuthorizationTestBase
     [Fact]
     public async Task IssuingTokenWithRefreshTokenGrantTypeIsUnsuccessfulIfTokensWereRevoked()
     {
-        HttpResponseMessage responseWithInitialTokens = await HttpClient.IssueTokenByPassword(UserName,
-                                                                                              Password);
-        ServiceResponse<IssueTokenResponse>? contentWithInitialTokens =
-            await responseWithInitialTokens.Content.ReadFromJsonAsync<ServiceResponse<IssueTokenResponse>>();
-        contentWithInitialTokens.Should().NotBeNull();
-        contentWithInitialTokens.Data.Should().NotBeNull();
-        contentWithInitialTokens.Data.RefreshToken.Should().NotBeNull();
-        HttpClient.SetAccessToken(contentWithInitialTokens.Data.AccessToken);
+        IssueTokenResponse issueTokenResponse = await HttpClient.IssueTokenByPasswordAndSetAuthorization(UserName, Password);
         await HttpClient.RevokeToken();
         
-        HttpResponseMessage response = await HttpClient.IssueTokenByRefreshToken(contentWithInitialTokens.Data.RefreshToken);
+        HttpResponseMessage response = await HttpClient.IssueTokenByRefreshToken(issueTokenResponse.RefreshToken);
         ProblemDetails? content =
             await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
