@@ -7,29 +7,22 @@ using TaskManagerBackend.Domain;
 
 namespace TaskManagerBackend.Application.Utility;
 
-public class ServiceResponse<T>
+public class ServiceResponse<T>(T? data = default,
+                                ActionResults actionResult = ActionResults.Success,
+                                string? message = null)
 {
-    public ServiceResponse(T? data = default,
-                           ActionResults actionResult = ActionResults.Success,
-                           string? message = null)
-    {
-        Data = data;
-        ActionResult = actionResult;
-        Message = message;
-    }
-    
     public static implicit operator ServiceResponse<T>(T? data)
     {
         return new ServiceResponse<T>(data);
     }
     
-    public T? Data { get; init; }
+    public T? Data { get; init; } = data;
     public bool Success => Data is not null && ActionResult == ActionResults.Success;
-    public string? Message { get; init; }
-    
+    public string? Message { get; init; } = message;
+
     [JsonIgnore]
-    public ActionResults ActionResult { get; init; }
-    
+    public ActionResults ActionResult { get; init; } = actionResult;
+
     [JsonIgnore]
     public int? HttpStatusCode => MapActionResultToStatusCode();
     

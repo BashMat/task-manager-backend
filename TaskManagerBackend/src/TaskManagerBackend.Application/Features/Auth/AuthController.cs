@@ -13,26 +13,17 @@ namespace TaskManagerBackend.Application.Features.Auth;
 [ApiController]
 [Route("api/auth")]
 [EnableCors]
-public class AuthController : ControllerBase
+public class AuthController(IAuthService authService, 
+                            ILogger<AuthController> logger) : ControllerBase
 {
-    private readonly IAuthService _authService;
-    private readonly ILogger<AuthController> _logger;
-
-    public AuthController(IAuthService authService, 
-                          ILogger<AuthController> logger)
-    {
-        _authService = authService;
-        _logger = logger;
-    }
-    
     [HttpPost("signup")]
     public async Task<IActionResult> SignUp([FromBody] UserSignUpRequest requestData)
     {
-        _logger.LogTrace("Start processing POST /api/auth/signup request");
+        logger.LogTrace("Start processing POST /api/auth/signup request");
             
-        ServiceResponse<UserSignUpResponse> response = await _authService.SignUp(requestData);
+        ServiceResponse<UserSignUpResponse> response = await authService.SignUp(requestData);
             
-        _logger.LogTrace("Finish processing POST /api/auth/signup request");
+        logger.LogTrace("Finish processing POST /api/auth/signup request");
 
         return HandleServiceResponse(response);
     }
@@ -40,11 +31,11 @@ public class AuthController : ControllerBase
     [HttpPost("token")]
     public async Task<IActionResult> IssueToken([FromBody] IssueTokenRequest requestData)
     {
-        _logger.LogTrace($"Start POST /api/auth/token request processing for grant_type {requestData.GrantType}");
+        logger.LogTrace($"Start POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
-        ServiceResponse<IssueTokenResponse> response = await _authService.IssueToken(requestData);
+        ServiceResponse<IssueTokenResponse> response = await authService.IssueToken(requestData);
             
-        _logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
+        logger.LogTrace($"Finish POST /api/auth/token request processing for grant_type {requestData.GrantType}");
             
         return HandleServiceResponse(response);
     }
@@ -54,11 +45,11 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> RevokeTokens()
     {
-        _logger.LogTrace("Start POST /api/auth/revoke request processing");
+        logger.LogTrace("Start POST /api/auth/revoke request processing");
             
-        await _authService.RevokeTokens(UserId);
+        await authService.RevokeTokens(UserId);
             
-        _logger.LogTrace("Finish POST /api/auth/revoke request processing");
+        logger.LogTrace("Finish POST /api/auth/revoke request processing");
             
         return Ok();
     }

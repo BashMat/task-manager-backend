@@ -7,15 +7,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TaskManagerBackend.Domain.Validation;
 
-public class EmailValidator : IEmailValidator
+public class EmailValidator(ILogger<EmailValidator> logger) : IEmailValidator
 {
-    private readonly ILogger<EmailValidator> _logger;
-    
-    public EmailValidator(ILogger<EmailValidator> logger)
-    {
-        _logger = logger;
-    }
-    
     public bool Validate(string emailAddress)
     {
         try
@@ -24,7 +17,7 @@ public class EmailValidator : IEmailValidator
         }
         catch (Exception e)
         {
-            _logger.LogWarning(e, "User specified incorrect email address");
+            logger.LogWarning(e, "User specified incorrect email address");
             return false;
         }
     }
