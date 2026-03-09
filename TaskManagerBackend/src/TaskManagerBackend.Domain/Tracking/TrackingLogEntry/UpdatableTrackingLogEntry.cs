@@ -1,6 +1,6 @@
 ﻿using TaskManagerBackend.Common.Services;
 
-namespace TaskManagerBackend.Domain.Tracking;
+namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 
 public class UpdatableTrackingLogEntry
 {

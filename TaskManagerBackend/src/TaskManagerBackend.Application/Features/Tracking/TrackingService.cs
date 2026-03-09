@@ -7,6 +7,9 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Tracking;
+using TaskManagerBackend.Domain.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
 
 #endregion
 
