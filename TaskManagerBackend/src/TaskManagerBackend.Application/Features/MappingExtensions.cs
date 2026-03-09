@@ -22,7 +22,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogEntryStatusGetResponse ToDto(this Domain.Tracking.TrackingLogEntryStatus trackingLogEntryStatus)
+    public static TrackingLogEntryStatusGetResponse ToDto(this Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus trackingLogEntryStatus)
     {
         return new TrackingLogEntryStatusGetResponse
                {
@@ -33,7 +33,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogEntryGetResponse ToDto(this Domain.Tracking.TrackingLogEntry trackingLogEntry)
+    public static TrackingLogEntryGetResponse ToDto(this Domain.Tracking.TrackingLogEntry.TrackingLogEntry trackingLogEntry)
     {
         return new TrackingLogEntryGetResponse
                {
@@ -51,7 +51,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogGetResponse ToDto(this Domain.Tracking.TrackingLog trackingLog)
+    public static TrackingLogGetResponse ToDto(this Domain.Tracking.TrackingLog.TrackingLog trackingLog)
     {
         return new TrackingLogGetResponse
                {

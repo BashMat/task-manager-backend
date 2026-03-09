@@ -4,7 +4,7 @@ using TaskManagerBackend.Domain.Users;
 
 #endregion
 
-namespace TaskManagerBackend.Domain.Tracking;
+namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 
 public class TrackingLogEntry
 {
@@ -12,7 +12,7 @@ public class TrackingLogEntry
                             string title,
                             string? description,
                             int trackingLogId,
-                            TrackingLogEntryStatus status,
+                            TrackingLogEntryStatus.TrackingLogEntryStatus status,
                             int? priority,
                             decimal orderIndex,
                             MinimalUserData createdBy,
@@ -40,7 +40,7 @@ public class TrackingLogEntry
 
     public int TrackingLogId { get; init; }
 
-    public TrackingLogEntryStatus Status { get; init; }
+    public TrackingLogEntryStatus.TrackingLogEntryStatus Status { get; init; }
 
     public int? Priority { get; init; }
 
