@@ -60,12 +60,7 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                                                                                            int trackingLogId,
                                                                                            CancellationToken cancellationToken)
     {
-        int deletedCount = await dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync(cancellationToken);
-
-        if (deletedCount == 0)
-        {
-            return new List<Domain.Tracking.TrackingLog.TrackingLog>();
-        }
+        await dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync(cancellationToken);
 
         return await GetAllTrackingLogs(userId, cancellationToken);
     }
@@ -149,13 +144,7 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                                                                                                           int trackingLogEntryId,
                                                                                                           CancellationToken cancellationToken)
     {
-        int deletedCount = await dbContext.TrackingLogEntries.FilterById(trackingLogEntryId)
-                                          .ExecuteDeleteAsync(cancellationToken);
-
-        if (deletedCount == 0)
-        {
-            return new List<Domain.Tracking.TrackingLogEntry.TrackingLogEntry>();
-        }
+        await dbContext.TrackingLogEntries.FilterById(trackingLogEntryId).ExecuteDeleteAsync(cancellationToken);
 
         return await GetAllTrackingLogEntries(userId, cancellationToken);
     }
