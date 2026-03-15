@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿#region Usings
+
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using TaskManagerBackend.Application.Utility;
+
+#endregion
 
 namespace TaskManagerBackend.Application.Exceptions;
 
@@ -8,37 +14,31 @@ namespace TaskManagerBackend.Application.Exceptions;
 /// </summary>
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    public ValueTask<bool> TryHandleAsync(HttpContext httpContext,
-                                          Exception exception,
-                                          CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext,
+                                                Exception exception,
+                                                CancellationToken cancellationToken)
     {
+        var problemDetails = new ProblemDetails();
+        
         if (exception is IApplicationException ex)
         {
             logger.LogError(exception, "Application exception logged in global exception handler:");
-            httpContext.Response.StatusCode = MapExceptionToStatusCode(ex);
+            problemDetails.Title = ex.ResponseMessage;
+            problemDetails.Status = ex.ActionResult.ToStatusCodesOrNull() ?? StatusCodes.Status500InternalServerError;
         }
         else
         {
-            logger.LogError(exception, "Unrecognised system exception logged in global exception handler:");
-            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            logger.LogError(exception, "Unknown system exception logged in global exception handler:");
+            problemDetails.Title = "Internal Server Error";
+            problemDetails.Status = StatusCodes.Status500InternalServerError;
+            problemDetails.Detail = "Something went wrong. Try again later or contact service provider.";
         }
 
-        return new ValueTask<bool>(true);
-    }
+        httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-    private int MapExceptionToStatusCode(IApplicationException applicationException)
-    {
-        // TODO: Implement better mapping
-        // Interface should describe internal domain error code,
-        // and it should be mapped to status code. Currently exception itself is mapped.
-
-        switch (applicationException)
-        {
-            case InvalidTokenException:
-                return StatusCodes.Status401Unauthorized;
-            default:
-                logger.LogError("Unrecognised application error");
-                return StatusCodes.Status500InternalServerError;
-        }
+        await httpContext.Response
+                         .WriteAsJsonAsync(problemDetails, cancellationToken);
+        
+        return true;
     }
 }
