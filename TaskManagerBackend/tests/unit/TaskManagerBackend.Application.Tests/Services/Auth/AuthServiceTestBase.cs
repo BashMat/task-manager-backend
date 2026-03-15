@@ -8,7 +8,6 @@ using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Domain.Validation;
 using TaskManagerBackend.Tests.Common;
 
 #endregion
@@ -19,14 +18,12 @@ public class AuthServiceTestBase : UnitTestsBase
 {
     protected Mock<ICryptographyService> AuthProviderMock { get; private set; }
     protected Mock<IUserRepository> UserRepositoryMock { get; private set; }
-    protected Mock<IEmailValidator> EmailServiceMock { get; private set; }
     protected Mock<IDateTimeService> DateTimeServiceMock { get; private set; }
 
     protected AuthServiceTestBase()
     {
         AuthProviderMock = new Mock<ICryptographyService>();
         UserRepositoryMock = new Mock<IUserRepository>();
-        EmailServiceMock = new Mock<IEmailValidator>();
         DateTimeServiceMock = new Mock<IDateTimeService>();
     }
 
@@ -34,15 +31,8 @@ public class AuthServiceTestBase : UnitTestsBase
     {
         return new AuthService(AuthProviderMock.Object,
                                UserRepositoryMock.Object,
-                               EmailServiceMock.Object,
                                DateTimeServiceMock.Object,
                                Mock.Of<ILogger<AuthService>>());
-    }
-
-    protected void SetUpValidateEmailAddressFormat(bool isEmailAddressFormatCorrect = true)
-    {
-        EmailServiceMock.Setup(o => o.Validate(It.IsAny<string>()))
-                        .Returns(isEmailAddressFormatCorrect);
     }
     
     protected void SetUpCreateUser(MinimalUserData createdUser)
