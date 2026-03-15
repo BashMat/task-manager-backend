@@ -1,6 +1,4 @@
-﻿using TaskManagerBackend.Domain;
-
-namespace TaskManagerBackend.Application.Exceptions;
+﻿namespace TaskManagerBackend.Domain;
 
 /// <summary>
 ///     Represents interface for all application exceptions.

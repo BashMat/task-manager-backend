@@ -6,6 +6,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStat
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain;
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Tracking.TrackingLog;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
@@ -28,13 +29,10 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                  TrackingLogCreateRequest request,
                                                                                  CancellationToken cancellationToken)
     {
-        NewTrackingLog logToInsert = new()
-                                     {
-                                         Title = request.Title,
-                                         Description = request.Description,
-                                         CreatedById = userId,
-                                         CreatedAt = dateTimeService.UtcNow
-                                     };
+        NewTrackingLog logToInsert = new(StringAttribute.CreateRequired(request.Title),
+                                         StringAttribute.CreateOptional(request.Description),
+                                         userId,
+                                         dateTimeService.UtcNow);
 
         TrackingLog? log = await trackingRepository.CreateTrackingLog(logToInsert, cancellationToken);
         TrackingLogGetResponse? response = log?.ToDto();
