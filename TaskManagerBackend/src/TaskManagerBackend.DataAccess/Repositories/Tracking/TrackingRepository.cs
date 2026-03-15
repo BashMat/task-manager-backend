@@ -18,17 +18,17 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
 {
     #region Tracking Log
 
-    public async Task<Domain.Tracking.TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog logToInsert, 
+    public async Task<Domain.Tracking.TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog newTrackingLog, 
                                                                                   CancellationToken cancellationToken)
     {
         TrackingLog trackingLog = new()
                                   {
-                                      Title = logToInsert.Title,
-                                      Description = logToInsert.Description,
-                                      CreatedBy = logToInsert.CreatedById,
-                                      CreatedAt = logToInsert.CreatedAt,
-                                      UpdatedBy = logToInsert.CreatedById,
-                                      UpdatedAt = logToInsert.CreatedAt
+                                      Title = newTrackingLog.Title.Value,
+                                      Description = newTrackingLog.Description?.Value,
+                                      CreatedBy = newTrackingLog.CreatedById,
+                                      CreatedAt = newTrackingLog.CreatedAt,
+                                      UpdatedBy = newTrackingLog.CreatedById,
+                                      UpdatedAt = newTrackingLog.CreatedAt
                                   };
         dbContext.TrackingLogs.Add(trackingLog);
         await dbContext.SaveChangesAsync(cancellationToken);
