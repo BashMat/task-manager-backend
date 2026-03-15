@@ -1,7 +1,7 @@
-﻿namespace TaskManagerBackend.Application.Exceptions;
+﻿using TaskManagerBackend.Domain;
 
-// TODO: Implement common properties and methods for global exception handling: Status Codes, messages, etc.
-// Should separate inner application exception message (for logging) and client error message.
+namespace TaskManagerBackend.Application.Exceptions;
+
 /// <summary>
 ///     Represents interface for all application exceptions.
 ///     Every custom exception has to implement it to indicate that it is a processed exception
@@ -9,5 +9,6 @@
 /// </summary>
 public interface IApplicationException
 {
-    
+    ActionResults ActionResult { get; }
+    string ResponseMessage { get; }
 }

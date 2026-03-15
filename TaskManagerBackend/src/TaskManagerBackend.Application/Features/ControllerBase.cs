@@ -15,8 +15,6 @@ namespace TaskManagerBackend.Application.Features;
 /// </summary>
 public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 {
-    private const string InvalidTokenExceptionMessage = "Invalid token: user id was not provided or is invalid. Possibly it was requested in method that does not require token, which may mean error in endpoint configuration.";
-
     /// <summary>
     ///     Returns User id from token provided with HTTP request. If token is not available, exception is thrown. 
     /// </summary>
@@ -36,7 +34,7 @@ public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
 
             if (userId is null)
             {
-                throw new InvalidTokenException(InvalidTokenExceptionMessage);
+                throw new InvalidTokenException();
             }
             
             return userId.Value;
