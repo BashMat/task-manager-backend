@@ -13,7 +13,7 @@ public interface ITrackingRepository
     #region Tracking Logs
 
     // TODO: Perhaps nullability is excessive
-    Task<TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog logToInsert, CancellationToken cancellationToken);
+    Task<TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog newTrackingLog, CancellationToken cancellationToken);
     Task<List<TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId, CancellationToken cancellationToken);
     Task<TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId, CancellationToken cancellationToken);
     Task<List<TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
