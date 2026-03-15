@@ -6,6 +6,7 @@ using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Auth;
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 
 #endregion
@@ -22,8 +23,8 @@ public class UserRepository(TaskManagerDbContext dbContext,
 
         Database.Models.User user = new()
                                     {
-                                        UserName = newUser.UserName,
-                                        Email = newUser.Email,
+                                        UserName = newUser.Usernames.AccountName.Value,
+                                        Email = newUser.Usernames.Email.Value,
                                         PasswordHash = newUser.PasswordHash,
                                         PasswordSalt = newUser.PasswordSalt,
                                         CreatedAt = newUser.CreatedAt,
@@ -35,16 +36,16 @@ public class UserRepository(TaskManagerDbContext dbContext,
         logger.LogInformation("Finishing inserting user data");
 
         return new MinimalUserData(user.Id,
-                                   user.UserName,
-                                   user.Email);
+                                   new Usernames(StringAttribute.CreateRequired(user.UserName),
+                                                 StringAttribute.CreateRequired(user.Email)));
     }
 
     public async Task<MinimalUserData?> GetMinimalUserData(int id, CancellationToken cancellationToken)
     {
         return await dbContext.Users.Where(u => u.Id == id)
                               .Select(u => new MinimalUserData(u.Id,
-                                                               u.UserName,
-                                                               u.Email))
+                                                               new Usernames(StringAttribute.CreateRequired(u.UserName),
+                                                                             StringAttribute.CreateRequired(u.Email))))
                               .FirstOrDefaultAsync(cancellationToken);
     }
     
@@ -86,13 +87,13 @@ public class UserRepository(TaskManagerDbContext dbContext,
                                                       cancellationToken);
     }
 
-    public async Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName, string email,
-                                                               CancellationToken cancellationToken)
+    public async Task<bool> CheckIfUserExistsByUsername(Usernames usernames,
+                                                        CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting checking if user exists by user name or email");
 
-        bool result = await dbContext.Users.AnyAsync(u => u.UserName == userName ||
-                                                          u.Email == email,
+        bool result = await dbContext.Users.AnyAsync(u => u.UserName == usernames.AccountName.Value ||
+                                                          u.Email == usernames.Email.Value,
                                                      cancellationToken);
 
         logger.LogInformation("Finishing checking if user exists by user name or email");

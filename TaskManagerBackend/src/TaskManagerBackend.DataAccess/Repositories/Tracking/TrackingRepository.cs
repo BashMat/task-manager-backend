@@ -74,8 +74,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
     {
         TrackingLogEntry entry = new()
                                  {
-                                     Title = logEntryToInsert.Title,
-                                     Description = logEntryToInsert.Description,
+                                     Title = logEntryToInsert.Title.Value,
+                                     Description = logEntryToInsert.Description?.Value,
                                      TrackingLogId = logEntryToInsert.TrackingLogId,
                                      StatusId = logEntryToInsert.StatusId,
                                      Priority = logEntryToInsert.Priority,
@@ -127,14 +127,15 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
             return null;
         }
 
-        entry.Title = updatableTrackingLogEntry.Title;
-        entry.Description = updatableTrackingLogEntry.Description;
+        entry.Title = updatableTrackingLogEntry.Title.Value;
+        entry.Description = updatableTrackingLogEntry.Description?.Value;
         entry.TrackingLogId = updatableTrackingLogEntry.TrackingLogId;
         entry.StatusId = updatableTrackingLogEntry.StatusId;
         entry.Priority = updatableTrackingLogEntry.Priority;
         entry.OrderIndex = (decimal)updatableTrackingLogEntry.OrderIndex;
         entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
         entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
+        
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return await GetTrackingLogEntryById(trackingLogEntryId, cancellationToken);
@@ -157,22 +158,19 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                                                                                                                    CancellationToken cancellationToken)
     {
         TrackingLogEntryStatus trackingLogEntryStatus = new()
-                        {
-                            Title = statusToInsert.Title,
-                            Description = statusToInsert.Description,
-                            TrackingLogId = statusToInsert.TrackingLogId,
-                            CreatedBy = statusToInsert.CreatedById,
-                            CreatedAt = statusToInsert.CreatedAt,
-                            UpdatedBy = statusToInsert.CreatedById,
-                            UpdatedAt = statusToInsert.CreatedAt
-                        };
+                                                        {
+                                                            Title = statusToInsert.Title.Value,
+                                                            Description = statusToInsert.Description?.Value,
+                                                            TrackingLogId = statusToInsert.TrackingLogId,
+                                                            CreatedBy = statusToInsert.CreatedById,
+                                                            CreatedAt = statusToInsert.CreatedAt,
+                                                            UpdatedBy = statusToInsert.CreatedById,
+                                                            UpdatedAt = statusToInsert.CreatedAt
+                                                        };
         dbContext.TrackingLogEntryStatuses.Add(trackingLogEntryStatus);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return new Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
-                                                          trackingLogEntryStatus.Title,
-                                                          trackingLogEntryStatus.Description,
-                                                          trackingLogEntryStatus.TrackingLogId);
+        return trackingLogEntryStatus.ToDomain();
     }
 
     public async Task<List<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId, 

@@ -17,8 +17,8 @@ public static class MappingExtensions
         return new UserInfoDto
                {
                    Id = user.Id,
-                   UserName = user.UserName,
-                   Email = user.Email
+                   UserName = user.Usernames.AccountName.Value,
+                   Email = user.Usernames.Email.Value
                };
     }
 
@@ -27,8 +27,8 @@ public static class MappingExtensions
         return new TrackingLogEntryStatusGetResponse
                {
                    Id = trackingLogEntryStatus.Id,
-                   Title = trackingLogEntryStatus.Title,
-                   Description = trackingLogEntryStatus.Description,
+                   Title = trackingLogEntryStatus.Title.Value,
+                   Description = trackingLogEntryStatus.Description?.Value,
                    TrackingLogId = trackingLogEntryStatus.TrackingLogId
                };
     }
@@ -38,8 +38,8 @@ public static class MappingExtensions
         return new TrackingLogEntryGetResponse
                {
                    Id = trackingLogEntry.Id,
-                   Title = trackingLogEntry.Title,
-                   Description = trackingLogEntry.Description,
+                   Title = trackingLogEntry.Title.Value,
+                   Description = trackingLogEntry.Description?.Value,
                    TrackingLogId = trackingLogEntry.TrackingLogId,
                    Status = trackingLogEntry.Status.ToDto(),
                    Priority = trackingLogEntry.Priority,
@@ -56,8 +56,8 @@ public static class MappingExtensions
         return new TrackingLogGetResponse
                {
                    Id = trackingLog.Id,
-                   Title = trackingLog.Title,
-                   Description = trackingLog.Description,
+                   Title = trackingLog.Title.Value,
+                   Description = trackingLog.Description?.Value,
                    CreatedAt = trackingLog.CreatedAt,
                    CreatedBy = trackingLog.CreatedBy.ToDto(),
                    UpdatedAt = trackingLog.UpdatedAt,

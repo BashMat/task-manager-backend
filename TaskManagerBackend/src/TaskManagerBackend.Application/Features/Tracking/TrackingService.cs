@@ -84,17 +84,14 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                            TrackingLogEntryCreateRequest request, 
                                                                                            CancellationToken cancellationToken)
     {
-        NewTrackingLogEntry logEntryToInsert = new()
-                                               {
-                                                   Title = request.Title,
-                                                   Description = request.Description,
-                                                   TrackingLogId = request.TrackingLogId,
-                                                   StatusId = request.StatusId,
-                                                   Priority = request.Priority,
-                                                   OrderIndex = request.OrderIndex,
-                                                   CreatedById = userId,
-                                                   CreatedAt = dateTimeService.UtcNow
-                                               };
+        NewTrackingLogEntry logEntryToInsert = new(StringAttribute.CreateRequired(request.Title),
+                                                   StringAttribute.CreateOptional(request.Description),
+                                                   request.TrackingLogId,
+                                                   request.StatusId,
+                                                   request.Priority,
+                                                   request.OrderIndex,
+                                                   userId,
+                                                   dateTimeService.UtcNow);
         
         TrackingLogEntry? entry = await trackingRepository.CreateTrackingLogEntry(logEntryToInsert, cancellationToken);
         TrackingLogEntryGetResponse? response = entry?.ToDto();
@@ -152,18 +149,14 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                     message: UpdateConflict);
         }
 
-        UpdatableTrackingLogEntry updatableTrackingLogEntry = new()
-                                                              {
-                                                                  Title = request.Title,
-                                                                  Description = request.Description,
-                                                                  TrackingLogId = request.TrackingLogId,
-                                                                  StatusId = request.StatusId,
-                                                                  Priority = request.Priority,
-                                                                  OrderIndex = request.OrderIndex,
-                                                              };
-
-        updatableTrackingLogEntry.SetUpdatedData(userId,
-                                                 dateTimeService);
+        UpdatableTrackingLogEntry updatableTrackingLogEntry = new(StringAttribute.CreateRequired(request.Title),
+                                                                  StringAttribute.CreateOptional(request.Description),
+                                                                  request.TrackingLogId,
+                                                                  request.StatusId,
+                                                                  request.Priority,
+                                                                  request.OrderIndex,
+                                                                  userId,
+                                                                  dateTimeService.UtcNow);
 
         TrackingLogEntry? updatedEntry = 
             await trackingRepository.UpdateTrackingLogEntryById(id, updatableTrackingLogEntry, cancellationToken);
@@ -194,14 +187,11 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                                   TrackingLogEntryStatusCreateRequest request,
                                                                                                   CancellationToken cancellationToken)
     {
-        NewTrackingLogEntryStatus statusToInsert = new()
-                                                   {
-                                                       Title = request.Title,
-                                                       Description = request.Description,
-                                                       TrackingLogId = request.TrackingLogId,
-                                                       CreatedById = userId,
-                                                       CreatedAt = dateTimeService.UtcNow
-                                                   };
+        NewTrackingLogEntryStatus statusToInsert = new(StringAttribute.CreateRequired(request.Title),
+                                                       StringAttribute.CreateOptional(request.Description),
+                                                       request.TrackingLogId,
+                                                       userId,
+                                                       dateTimeService.UtcNow);
 
         TrackingLogEntryStatus? status = await trackingRepository.CreateTrackingLogEntryStatus(statusToInsert, cancellationToken);
         TrackingLogEntryStatusGetResponse? response = status?.ToDto();
