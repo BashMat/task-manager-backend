@@ -193,7 +193,6 @@ public class Startup(IConfiguration configuration)
         
         // Vertical feature slice
         // Auth and users:
-        services.AddScoped<IEmailValidator, EmailValidator>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
