@@ -24,21 +24,5 @@ public class ServiceResponse<T>(T? data = default,
     public ActionResults ActionResult { get; init; } = actionResult;
 
     [JsonIgnore]
-    public int? HttpStatusCode => MapActionResultToStatusCode();
-    
-    private int? MapActionResultToStatusCode()
-    {
-        return ActionResult switch
-               {
-                   ActionResults.Success => StatusCodes.Status200OK,
-                   ActionResults.UserError => StatusCodes.Status400BadRequest,
-                   ActionResults.Unauthorized => StatusCodes.Status401Unauthorized,
-                   ActionResults.AccessDenied => StatusCodes.Status403Forbidden,
-                   ActionResults.ResourceNotFound => StatusCodes.Status404NotFound,
-                   ActionResults.DataConflict => StatusCodes.Status409Conflict,
-                   ActionResults.NotImplemented => StatusCodes.Status501NotImplemented,
-                   ActionResults.ServerError => StatusCodes.Status500InternalServerError,
-                   _ => null
-               };
-    }
+    public int? HttpStatusCode => ActionResult.ToStatusCodesOrNull();
 }
