@@ -44,29 +44,6 @@ public class WhenSigningUp : AuthorizationTestBase
     }
     
     [Fact]
-    public async Task SignUpIsUnsuccessfulIfEmailIsInvalidAndStandardValidationIsPassed()
-    {
-        string userName = Faker.Internet.UserName();
-        const string IncorrectEmail = "This is an invalid email@This is an invalid email?";
-        string password = Faker.Internet.Password(length: 10);
-        UserSignUpRequest request = new()
-                                       {
-                                           UserName = userName, 
-                                           Email = IncorrectEmail,
-                                           Password = password
-                                       };
-
-        HttpResponseMessage response = await HttpClient.SignUp(request);
-        ProblemDetails? content = 
-            await response.Content.ReadFromJsonAsync<ProblemDetails>();
-
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        content.Should().NotBeNull();
-        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Detail.Should().Be(AuthService.InvalidEmailAddressMessage);
-    }
-    
-    [Fact]
     public async Task SignUpIsUnsuccessfulIfUserNameAlreadyExists()
     {
         string email = Faker.Internet.Email();

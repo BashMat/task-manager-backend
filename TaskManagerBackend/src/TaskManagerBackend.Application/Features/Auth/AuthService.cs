@@ -8,7 +8,6 @@ using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Auth;
 using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Domain.Validation;
 
 #endregion
 
@@ -16,7 +15,6 @@ namespace TaskManagerBackend.Application.Features.Auth;
 
 public class AuthService(ICryptographyService cryptographyService,
                          IUserRepository userRepository,
-                         IEmailValidator emailValidator,
                          IDateTimeService dateTimeService,
                          ILogger<AuthService> logger) : IAuthService
 {
@@ -32,14 +30,6 @@ public class AuthService(ICryptographyService cryptographyService,
     {
         Usernames newUsernames = new Usernames(StringAttribute.CreateRequired(request.UserName),
                                                StringAttribute.CreateRequired(request.Email));
-        // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
-        if (!emailValidator.Validate(newUsernames.Email.Value))
-        {
-            logger.LogTrace("Invalid email address format");
-            
-            return new ServiceResponse<UserSignUpResponse>(actionResult: ActionResults.UserError,
-                                                           message: InvalidEmailAddressMessage);
-        }
 
         if (await userRepository.CheckIfUserExistsByUsername(newUsernames, cancellationToken))
         {

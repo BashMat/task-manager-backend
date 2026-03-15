@@ -15,29 +15,8 @@ namespace TaskManagerBackend.Application.Tests.Services.Auth;
 public class WhenSigningUp : AuthServiceTestBase
 {
     [Fact]
-    public async Task ServiceReturnsResponseWithMessageAndNullDataIfUserEmailAddressHasInvalidFormat()
-    {
-        SetUpValidateEmailAddressFormat(false);
-        const string TestUserName = "user";
-        const string TestEmail = "email";
-        const string TestPassword = "password";
-        UserSignUpRequest request = new()
-                                       {
-                                           UserName = TestUserName, 
-                                           Email = TestEmail,
-                                           Password = TestPassword
-                                       };
-
-        ServiceResponse<UserSignUpResponse> response = await SignUp(request);
-
-        response.Data.Should().BeNull();
-        response.Success.Should().BeFalse();
-    }
-        
-    [Fact]
     public async Task ServiceReturnsResponseWithMessageAndNullDataIfUserAlreadyExists()
     {
-        SetUpValidateEmailAddressFormat();
         SetUpCheckIfUserExistsByUserNameOrEmail(true);
         SetUpFailedUserCreation();
         const string TestUserName = "user";
@@ -59,7 +38,6 @@ public class WhenSigningUp : AuthServiceTestBase
     [Fact]
     public async Task ServiceReturnsResponseWithNotNullDataIfUserDoesNotExist()
     {
-        SetUpValidateEmailAddressFormat();
         SetUpCheckIfUserExistsByUserNameOrEmail(false);
         const string TestUserName = "user";
         const string TestEmail = "email";
@@ -84,7 +62,6 @@ public class WhenSigningUp : AuthServiceTestBase
     [Fact]
     public async Task ServiceCreatesCorrectUser()
     {
-        SetUpValidateEmailAddressFormat();
         SetUpCheckIfUserExistsByUserNameOrEmail(false);
         DateTime utcNow = Faker.Date.Between(DateTime.UtcNow.AddYears(-20), DateTime.UtcNow.AddYears(20));
         SetUpDateTimeService(utcNow);
