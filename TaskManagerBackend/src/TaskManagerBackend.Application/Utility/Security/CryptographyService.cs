@@ -64,16 +64,17 @@ public class CryptographyService(IDateTimeService dateTimeService,
     {
         List<Claim> claims =
         [
-            new(Claims.Sub, userId.ToString()),
+            new(Claims.Sub, userId.ToString(), ClaimValueTypes.Integer),
             new(Claims.IssuedAt,
-                ((DateTimeOffset) issuedAt).ToUnixTimeSeconds().ToString())
+                ((DateTimeOffset) issuedAt).ToUnixTimeSeconds().ToString(),
+                ClaimValueTypes.Integer)
         ];
 
         string? tokenIdAsStringOrNull = tokenId?.ToString();
         
         if (tokenIdAsStringOrNull is not null)
         {
-            claims.Add(new Claim(Claims.TokenId, tokenIdAsStringOrNull));
+            claims.Add(new Claim(Claims.TokenId, tokenIdAsStringOrNull, ClaimValueTypes.String));
         }
         
         SecurityKey key = GetSigningKey();
