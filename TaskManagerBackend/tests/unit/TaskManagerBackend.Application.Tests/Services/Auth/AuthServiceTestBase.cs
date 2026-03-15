@@ -61,9 +61,8 @@ public class AuthServiceTestBase : UnitTestsBase
         
     protected void SetUpCheckIfUserExistsByUserNameOrEmail(bool userExists)
     {
-        UserRepositoryMock.Setup(o => o.CheckIfUserExistsByUserNameOrEmail(It.IsAny<string>(), 
-                                                                           It.IsAny<string>(),
-                                                                           It.IsAny<CancellationToken>()))
+        UserRepositoryMock.Setup(o => o.CheckIfUserExistsByUsername(It.IsAny<Usernames>(),
+                                                                    It.IsAny<CancellationToken>()))
                           .ReturnsAsync(userExists);
     }
 

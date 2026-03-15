@@ -1,10 +1,12 @@
-﻿namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
+﻿using TaskManagerBackend.Domain.Data;
+
+namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
 
 public class TrackingLogEntryStatus
 {
     public TrackingLogEntryStatus(int id,
-                                  string title,
-                                  string? description,
+                                  StringAttribute title,
+                                  StringAttribute? description,
                                   int trackingLogId)
     {
         Id = id;
@@ -14,10 +16,7 @@ public class TrackingLogEntryStatus
     }
 
     public int Id { get; init; }
-
-    public string Title { get; init; }
-
-    public string? Description { get; init; }
-
+    public StringAttribute Title { get; init; }
+    public StringAttribute? Description { get; init; }
     public int TrackingLogId { get; init; }
 }

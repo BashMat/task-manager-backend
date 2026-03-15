@@ -1,5 +1,6 @@
 ﻿#region
 
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 
 #endregion
@@ -9,8 +10,8 @@ namespace TaskManagerBackend.Domain.Tracking.TrackingLog;
 public class TrackingLog
 {
     public TrackingLog(int id,
-                       string title,
-                       string? description,
+                       StringAttribute title,
+                       StringAttribute? description,
                        MinimalUserData createdBy,
                        DateTime createdAt,
                        MinimalUserData updatedBy,
@@ -30,8 +31,8 @@ public class TrackingLog
     }
     
     public int Id { get; init; }
-    public string Title { get; init; }
-    public string? Description { get; init; }
+    public StringAttribute Title { get; init; }
+    public StringAttribute? Description { get; init; }
     public IReadOnlyCollection<TrackingLogEntryStatus.TrackingLogEntryStatus> TrackingLogEntryStatuses { get; init; }
     public IReadOnlyCollection<TrackingLogEntry.TrackingLogEntry> TrackingLogEntries { get; init; }
     public MinimalUserData CreatedBy { get; init; }
