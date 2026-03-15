@@ -6,6 +6,7 @@ using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Auth;
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Validation;
 
@@ -29,8 +30,10 @@ public class AuthService(ICryptographyService cryptographyService,
     public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request,
                                                                   CancellationToken cancellationToken)
     {
+        Usernames newUsernames = new Usernames(StringAttribute.CreateRequired(request.UserName),
+                                               StringAttribute.CreateRequired(request.Email));
         // TODO: Think about usage. When validation is added via attributes, there is already attribute for email address. Perhaps should modify.
-        if (!emailValidator.Validate(request.Email))
+        if (!emailValidator.Validate(newUsernames.Email.Value))
         {
             logger.LogTrace("Invalid email address format");
             
@@ -38,7 +41,7 @@ public class AuthService(ICryptographyService cryptographyService,
                                                            message: InvalidEmailAddressMessage);
         }
 
-        if (await userRepository.CheckIfUserExistsByUserNameOrEmail(request.UserName, request.Email, cancellationToken))
+        if (await userRepository.CheckIfUserExistsByUsername(newUsernames, cancellationToken))
         {
             logger.LogTrace("User already exists");
             
@@ -51,14 +54,17 @@ public class AuthService(ICryptographyService cryptographyService,
         (byte[] passwordHash, byte[] passwordSalt) =
             cryptographyService.CreatePasswordHashAndSalt(request.Password);
             
-        NewUser newUser = new(dateTimeService, request.UserName, request.Email, passwordHash, passwordSalt);
+        NewUser newUser = new(dateTimeService,
+                              newUsernames,
+                              passwordHash,
+                              passwordSalt);
         MinimalUserData user = await userRepository.CreateUser(newUser, cancellationToken);
 
         UserSignUpResponse response = new()
                                       {
                                           Id = user.Id,
-                                          UserName = user.UserName,
-                                          Email = user.Email
+                                          UserName = user.Usernames.AccountName.Value,
+                                          Email = user.Usernames.Email.Value
                                       };
 
         logger.LogTrace("Finish user registration");

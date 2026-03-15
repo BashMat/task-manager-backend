@@ -4,6 +4,7 @@ using FluentAssertions;
 using Moq;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 using Xunit;
 
@@ -63,7 +64,9 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        SetUpCreateUser(new MinimalUserData(1, TestUserName, TestEmail));
+        SetUpCreateUser(new MinimalUserData(1,
+                                            new Usernames(StringAttribute.CreateRequired(TestUserName),
+                                                          StringAttribute.CreateRequired(TestEmail))));
         UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
@@ -91,7 +94,9 @@ public class WhenSigningUp : AuthServiceTestBase
         const string TestUserName = "user";
         const string TestEmail = "email";
         const string TestPassword = "password";
-        SetUpCreateUser(new MinimalUserData(1, TestUserName, TestEmail));
+        SetUpCreateUser(new MinimalUserData(1,
+                                            new Usernames(StringAttribute.CreateRequired(TestUserName),
+                                                          StringAttribute.CreateRequired(TestEmail))));
         UserSignUpRequest request = new()
                                        {
                                            UserName = TestUserName, 
@@ -99,8 +104,8 @@ public class WhenSigningUp : AuthServiceTestBase
                                            Password = TestPassword
                                        };
         NewUser newUserToBeCreated = new(DateTimeServiceMock.Object,
-                                         TestUserName,
-                                         TestEmail,
+                                         new Usernames(StringAttribute.CreateRequired(TestUserName),
+                                                       StringAttribute.CreateRequired(TestEmail)),
                                          passwordHash,
                                          passwordSalt);
 
@@ -110,10 +115,8 @@ public class WhenSigningUp : AuthServiceTestBase
         response.Data!.Email.Should().Be(TestEmail);
         response.Success.Should().BeTrue();
         UserRepositoryMock.Verify(o => o.CreateUser(It.Is<NewUser>(createdUser
-                                                                       => newUserToBeCreated.UserName ==
-                                                                          createdUser.UserName &&
-                                                                          newUserToBeCreated.Email ==
-                                                                          createdUser.Email &&
+                                                                       => newUserToBeCreated.Usernames ==
+                                                                          createdUser.Usernames &&
                                                                           newUserToBeCreated.CreatedAt ==
                                                                           createdUser.CreatedAt &&
                                                                           newUserToBeCreated.UpdatedAt ==

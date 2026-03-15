@@ -1,5 +1,6 @@
 ﻿#region
 
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 
 #endregion
@@ -9,8 +10,8 @@ namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 public class TrackingLogEntry
 {
     public TrackingLogEntry(int id,
-                            string title,
-                            string? description,
+                            StringAttribute title,
+                            StringAttribute? description,
                             int trackingLogId,
                             TrackingLogEntryStatus.TrackingLogEntryStatus status,
                             int? priority,
@@ -34,9 +35,8 @@ public class TrackingLogEntry
     }
 
     public int Id { get; init; }
-    public string Title { get; init; }
-
-    public string? Description { get; init; }
+    public StringAttribute Title { get; init; }
+    public StringAttribute? Description { get; init; }
 
     public int TrackingLogId { get; init; }
 

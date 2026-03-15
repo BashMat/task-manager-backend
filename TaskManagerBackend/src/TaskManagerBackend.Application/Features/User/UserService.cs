@@ -39,7 +39,7 @@ public class UserService(IUserRepository userRepository,
         return new ServiceResponse<GetUserDataResponse>(new GetUserDataResponse
                                                         {
                                                             Id = user.Id,
-                                                            UserName = user.UserName
+                                                            UserName = user.Usernames.AccountName.Value
                                                         });
     }
     

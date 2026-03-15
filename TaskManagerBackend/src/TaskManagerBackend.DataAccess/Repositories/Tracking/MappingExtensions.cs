@@ -1,5 +1,6 @@
 ﻿#region
 
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
@@ -14,23 +15,23 @@ public static class MappingExtensions
     public static MinimalUserData ToDomain(this Database.Models.User user)
     {
         return new MinimalUserData(user.Id,
-                                   user.UserName,
-                                   user.Email);
+                                   new Usernames(StringAttribute.CreateRequired(user.UserName),
+                                                 StringAttribute.CreateRequired(user.Email)));
     }
 
     public static TrackingLogEntryStatus.TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
     {
         return new TrackingLogEntryStatus.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
-                                                                 trackingLogEntryStatus.Title,
-                                                                 trackingLogEntryStatus.Description,
+                                                                 StringAttribute.CreateRequired(trackingLogEntryStatus.Title),
+                                                                 StringAttribute.CreateOptional(trackingLogEntryStatus.Description),
                                                                  trackingLogEntryStatus.TrackingLogId);
     }
 
     public static Domain.Tracking.TrackingLogEntry.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
     {
         return new Domain.Tracking.TrackingLogEntry.TrackingLogEntry(trackingLogEntry.Id,
-                                                                     trackingLogEntry.Title,
-                                                                     trackingLogEntry.Description,
+                                                                     StringAttribute.CreateRequired(trackingLogEntry.Title),
+                                                                     StringAttribute.CreateOptional(trackingLogEntry.Description),
                                                                      trackingLogEntry.TrackingLogId,
                                                                      trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
                                                                      trackingLogEntry.Priority,
@@ -44,8 +45,8 @@ public static class MappingExtensions
     public static Domain.Tracking.TrackingLog.TrackingLog ToDomain(this TrackingLog trackingLog)
     {
         return new Domain.Tracking.TrackingLog.TrackingLog(trackingLog.Id,
-                                                           trackingLog.Title,
-                                                           trackingLog.Description,
+                                                           StringAttribute.CreateRequired(trackingLog.Title),
+                                                           StringAttribute.CreateOptional(trackingLog.Description),
                                                            trackingLog.CreatedByNavigation.ToDomain(),
                                                            trackingLog.CreatedAt,
                                                            trackingLog.UpdatedByNavigation.ToDomain(),

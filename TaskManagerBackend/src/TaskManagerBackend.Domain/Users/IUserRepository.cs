@@ -12,9 +12,8 @@ public interface IUserRepository
     Task<bool> CheckIfUserHasNonExpiredRefreshToken(int userId,
                                                     Guid refreshTokenId,
                                                     CancellationToken cancellationToken);
-    Task<bool> CheckIfUserExistsByUserNameOrEmail(string userName,
-                                                  string email,
-                                                  CancellationToken cancellationToken);
+    Task<bool> CheckIfUserExistsByUsername(Usernames usernames,
+                                           CancellationToken cancellationToken);
     
     Task<bool> UpdatePasswordData(UserPasswordData newPasswordData,
                                   DateTime updatedAt,

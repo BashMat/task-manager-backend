@@ -1,6 +1,7 @@
 ﻿#region Usings
 
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Data;
 
 #endregion
 
@@ -8,26 +9,23 @@ namespace TaskManagerBackend.Domain.Users;
 
 public class NewUser
 {
-    public string UserName { get; }
-    public string Email { get; }
-    public DateTime CreatedAt { get; }
-    public DateTime UpdatedAt { get; }
-    public byte[] PasswordHash { get; }
-    public byte[] PasswordSalt { get; }
-
     public NewUser(IDateTimeService dateTimeService,
-                   string userName,
-                   string email,
+                   Usernames usernames,
                    byte[] passwordHash,
                    byte[] passwordSalt)
     {
         DateTime utcNow = dateTimeService.UtcNow;
 
-        UserName = userName;
-        Email = email;
+        Usernames = usernames;
         CreatedAt = utcNow;
         UpdatedAt = utcNow;
         PasswordHash = passwordHash;
         PasswordSalt = passwordSalt;
     }
+    
+    public Usernames Usernames { get; }
+    public DateTime CreatedAt { get; }
+    public DateTime UpdatedAt { get; }
+    public byte[] PasswordHash { get; }
+    public byte[] PasswordSalt { get; }
 }
