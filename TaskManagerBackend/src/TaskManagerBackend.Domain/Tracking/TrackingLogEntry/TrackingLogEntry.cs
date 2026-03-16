@@ -7,50 +7,35 @@ using TaskManagerBackend.Domain.Users;
 
 namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 
-public class TrackingLogEntry
+public class TrackingLogEntry(int id,
+                              StringAttribute title,
+                              StringAttribute? description,
+                              int trackingLogId,
+                              TrackingLogEntryStatus.TrackingLogEntryStatus status,
+                              int? priority,
+                              decimal orderIndex,
+                              MinimalUserData createdBy,
+                              DateTime createdAt,
+                              MinimalUserData updatedBy,
+                              DateTime updatedAt)
 {
-    public TrackingLogEntry(int id,
-                            StringAttribute title,
-                            StringAttribute? description,
-                            int trackingLogId,
-                            TrackingLogEntryStatus.TrackingLogEntryStatus status,
-                            int? priority,
-                            decimal orderIndex,
-                            MinimalUserData createdBy,
-                            DateTime createdAt,
-                            MinimalUserData updatedBy,
-                            DateTime updatedAt)
-    {
-        Id = id;
-        Title = title;
-        Description = description;
-        TrackingLogId = trackingLogId;
-        Status = status;
-        Priority = priority;
-        OrderIndex = orderIndex;
-        CreatedBy = createdBy;
-        CreatedAt = createdAt;
-        UpdatedBy = updatedBy;
-        UpdatedAt = updatedAt;
-    }
+    public int Id { get; } = id;
+    public StringAttribute Title { get; } = title;
+    public StringAttribute? Description { get; } = description;
 
-    public int Id { get; init; }
-    public StringAttribute Title { get; init; }
-    public StringAttribute? Description { get; init; }
+    public int TrackingLogId { get; } = trackingLogId;
 
-    public int TrackingLogId { get; init; }
+    public TrackingLogEntryStatus.TrackingLogEntryStatus Status { get; } = status;
 
-    public TrackingLogEntryStatus.TrackingLogEntryStatus Status { get; init; }
+    public int? Priority { get; } = priority;
 
-    public int? Priority { get; init; }
+    public decimal OrderIndex { get; } = orderIndex;
 
-    public decimal OrderIndex { get; init; }
+    public MinimalUserData CreatedBy { get; } = createdBy;
 
-    public MinimalUserData CreatedBy { get; init; }
+    public DateTime CreatedAt { get; } = createdAt;
 
-    public DateTime CreatedAt { get; init; }
+    public MinimalUserData UpdatedBy { get; } = updatedBy;
 
-    public MinimalUserData UpdatedBy { get; init; }
-
-    public DateTime UpdatedAt { get; init; }
+    public DateTime UpdatedAt { get; } = updatedAt;
 }

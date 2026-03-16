@@ -2,21 +2,13 @@
 
 namespace TaskManagerBackend.Domain.Tracking.TrackingLog;
 
-public class NewTrackingLog
+public class NewTrackingLog(StringAttribute title,
+                            StringAttribute? description,
+                            int createdById,
+                            DateTime createdAt)
 {
-    public NewTrackingLog(StringAttribute title,
-                          StringAttribute? description,
-                          int createdById,
-                          DateTime createdAt)
-    {
-        Title = title;
-        Description = description;
-        CreatedById = createdById;
-        CreatedAt = createdAt;
-    }
-    
-    public StringAttribute Title { get; }
-    public StringAttribute? Description { get; }
-    public int CreatedById { get; }
-    public DateTime CreatedAt { get; }
+    public StringAttribute Title { get; } = title;
+    public StringAttribute? Description { get; } = description;
+    public int CreatedById { get; } = createdById;
+    public DateTime CreatedAt { get; } = createdAt;
 }
