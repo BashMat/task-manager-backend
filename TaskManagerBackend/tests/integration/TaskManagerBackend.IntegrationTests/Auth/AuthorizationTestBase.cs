@@ -1,12 +1,6 @@
-﻿#region Usings
+﻿namespace TaskManagerBackend.IntegrationTests.Auth;
 
-using Xunit;
-
-#endregion
-
-namespace TaskManagerBackend.IntegrationTests.Auth;
-
-public class AuthorizationTestBase : IntegrationTestBase, IClassFixture<MsSqlTests>, IDisposable
+public class AuthorizationTestBase : IntegrationTestBase
 {
     protected AuthorizationTestBase(MsSqlTests fixture) : base(fixture) { }
 }

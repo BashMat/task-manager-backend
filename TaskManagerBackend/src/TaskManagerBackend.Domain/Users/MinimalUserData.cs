@@ -1,16 +1,8 @@
-﻿using TaskManagerBackend.Domain.Data;
+﻿namespace TaskManagerBackend.Domain.Users;
 
-namespace TaskManagerBackend.Domain.Users;
-
-public class MinimalUserData
+public class MinimalUserData(int id,
+                             Usernames usernames)
 {
-    public MinimalUserData(int id,
-                           Usernames usernames)
-    {
-        Id = id;
-        Usernames = usernames;
-    }
-    
-    public int Id { get; init; }
-    public Usernames Usernames { get; init; }
+    public int Id { get; } = id;
+    public Usernames Usernames { get; } = usernames;
 }

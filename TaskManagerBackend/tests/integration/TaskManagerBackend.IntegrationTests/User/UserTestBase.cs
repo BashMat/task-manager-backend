@@ -1,12 +1,6 @@
-﻿#region Usings
+﻿namespace TaskManagerBackend.IntegrationTests.User;
 
-using Xunit;
-
-#endregion
-
-namespace TaskManagerBackend.IntegrationTests.User;
-
-public class UserTestBase : IntegrationTestBase, IClassFixture<MsSqlTests>, IDisposable
+public class UserTestBase : IntegrationTestBase
 {
     protected UserTestBase(MsSqlTests fixture) : base(fixture) { }
 }

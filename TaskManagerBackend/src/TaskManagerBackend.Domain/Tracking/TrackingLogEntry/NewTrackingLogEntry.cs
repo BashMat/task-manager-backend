@@ -2,33 +2,21 @@
 
 namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 
-public class NewTrackingLogEntry
+public class NewTrackingLogEntry(StringAttribute title,
+                                 StringAttribute? description,
+                                 int trackingLogId,
+                                 int statusId,
+                                 int? priority,
+                                 double orderIndex,
+                                 int createdById,
+                                 DateTime createdAt)
 {
-    public NewTrackingLogEntry(StringAttribute title,
-                               StringAttribute? description,
-                               int trackingLogId,
-                               int statusId,
-                               int? priority,
-                               double orderIndex,
-                               int createdById,
-                               DateTime createdAt)
-    {
-        Title = title;
-        Description = description;
-        TrackingLogId = trackingLogId;
-        StatusId = statusId;
-        Priority = priority;
-        OrderIndex = orderIndex;
-        CreatedById = createdById;
-        CreatedAt = createdAt;
-    }
-    
-    public StringAttribute Title { get; init; }
-    public StringAttribute? Description { get; init; }
-    public int TrackingLogId { get; init; }
-    public int StatusId { get; init; }
-    public int? Priority { get; init; }
-    public double OrderIndex { get; init; }
-    public int CreatedById { get; init; }
-    public DateTime CreatedAt { get; init; }
+    public StringAttribute Title { get; } = title;
+    public StringAttribute? Description { get; } = description;
+    public int TrackingLogId { get; } = trackingLogId;
+    public int StatusId { get; } = statusId;
+    public int? Priority { get; } = priority;
+    public double OrderIndex { get; } = orderIndex;
+    public int CreatedById { get; } = createdById;
+    public DateTime CreatedAt { get; } = createdAt;
 }
