@@ -1,7 +1,6 @@
 ﻿#region Usings
 
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Data;
 
 #endregion
 

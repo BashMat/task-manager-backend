@@ -2,7 +2,6 @@
 
 using System.Net.Http.Json;
 using FluentAssertions;
-using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
@@ -14,9 +13,7 @@ using Xunit;
 namespace TaskManagerBackend.IntegrationTests.Tracking;
 
 public class TrackingTestBase : IntegrationTestBase,
-                                IClassFixture<MsSqlTests>,
-                                IAsyncLifetime,
-                                IDisposable
+                                IAsyncLifetime
 {
     protected TrackingLogGetResponse? DefaultTrackingLog;
     protected TrackingLogEntryStatusGetResponse? DefaultTrackingLogEntryStatus;
