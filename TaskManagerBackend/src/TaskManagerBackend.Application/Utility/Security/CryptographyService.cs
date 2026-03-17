@@ -145,7 +145,7 @@ public class CryptographyService(IDateTimeService dateTimeService,
 
             if (userId is null || tokenId is null || expiresAt is null || issuedAt is null)
             {
-                return new ServiceResponse<RefreshTokenData>(actionResult: ActionResults.Unauthorized,
+                return new ServiceResponse<RefreshTokenData>(actionResultType: ActionResultType.Unauthenticated,
                                                              message: AuthService.InvalidCredentialsMessage);
             }
             
@@ -158,7 +158,7 @@ public class CryptographyService(IDateTimeService dateTimeService,
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-            return new ServiceResponse<RefreshTokenData>(actionResult: ActionResults.Unauthorized,
+            return new ServiceResponse<RefreshTokenData>(actionResultType: ActionResultType.Unauthenticated,
                                                          message: AuthService.InvalidCredentialsMessage);
         }
     }

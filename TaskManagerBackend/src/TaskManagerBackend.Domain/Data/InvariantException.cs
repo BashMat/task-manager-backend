@@ -1,7 +1,7 @@
 ﻿namespace TaskManagerBackend.Domain.Data;
 
-public class InvariantException(ActionResults actionResult, string message) : Exception(message), IApplicationException
+public class InvariantException(ActionResultType actionResultType, string message) : Exception(message), IApplicationException
 {
-    public ActionResults ActionResult { get; } = actionResult;
+    public ActionResultType ActionResultType { get; } = actionResultType;
     public string ResponseMessage => base.Message;
 }

@@ -10,7 +10,7 @@ public class InvalidTokenException() : Exception(InvalidTokenLogMessage), IAppli
     private const string InvalidTokenResponseMessage = "Invalid token";
     private const string InvalidTokenLogMessage = "Invalid token: user id was not provided or is invalid. Possibly it was requested in method that does not require token, which may mean error in endpoint configuration.";
 
-    public ActionResults ActionResult => ActionResults.Unauthorized;
+    public ActionResultType ActionResultType => ActionResultType.Unauthenticated;
 
     public string ResponseMessage => InvalidTokenResponseMessage;
 }
