@@ -23,13 +23,13 @@ public class TrackingLog
         //  For example, during reading we may omit validation, expecting data from database being valid
         if (trackingLogEntryStatuses.Distinct().Count() != trackingLogEntryStatuses.Select(o => o.Id).Distinct().Count())
         {
-            throw new InvariantException(ActionResults.DataConflict,
+            throw new InvariantException(ActionResultType.DataConflict,
                                          "Duplicate Tracking Log Entry Statuses are forbidden.");
         }
         
         if (trackingLogEntries.Distinct().Count() != trackingLogEntries.Select(o => o.Id).Distinct().Count())
         {
-            throw new InvariantException(ActionResults.DataConflict,
+            throw new InvariantException(ActionResultType.DataConflict,
                                          "Duplicate Tracking Log Entries are forbidden.");
         }
         

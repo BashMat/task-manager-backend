@@ -28,7 +28,7 @@ public class WhenCreatingRequired : StringAttributeTestBase
         
         Func<StringAttribute> action = () => StringAttribute.CreateRequired(fakeNotNullValue);
 
-        action.Should().ThrowExactly<InvariantException>().And.ActionResult.Should().Be(ActionResults.UserError);
+        action.Should().ThrowExactly<InvariantException>().And.ActionResultType.Should().Be(ActionResultType.UserError);
     }
     
     [Fact]

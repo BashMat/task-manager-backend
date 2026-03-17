@@ -8,7 +8,7 @@ using TaskManagerBackend.Domain;
 namespace TaskManagerBackend.Application.Utility;
 
 public class ServiceResponse<T>(T? data = default,
-                                ActionResults actionResult = ActionResults.Success,
+                                ActionResultType? actionResultType = null,
                                 string? message = null)
 {
     public static implicit operator ServiceResponse<T>(T? data)
@@ -17,12 +17,12 @@ public class ServiceResponse<T>(T? data = default,
     }
     
     public T? Data { get; init; } = data;
-    public bool Success => Data is not null && ActionResult == ActionResults.Success;
+    public bool Success => Data is not null && ActionResultType == ActionResultType.Success;
     public string? Message { get; init; } = message;
 
     [JsonIgnore]
-    public ActionResults ActionResult { get; init; } = actionResult;
+    public ActionResultType ActionResultType { get; init; } = actionResultType ?? ActionResultType.Success;
 
     [JsonIgnore]
-    public int? HttpStatusCode => ActionResult.ToStatusCodesOrNull();
+    public int? HttpStatusCode => ActionResultType.ToStatusCodesOrNull();
 }

@@ -35,7 +35,7 @@ public class AuthService(ICryptographyService cryptographyService,
         {
             logger.LogTrace("User already exists");
             
-            return new ServiceResponse<UserSignUpResponse>(actionResult: ActionResults.DataConflict,
+            return new ServiceResponse<UserSignUpResponse>(actionResultType: ActionResultType.DataConflict,
                                                            message: UserAlreadyExistsMessage);
         }
 
@@ -77,12 +77,12 @@ public class AuthService(ICryptographyService cryptographyService,
                 return refreshTokenResponse.Success switch
                        {
                            true => await IssueTokenByRefreshToken(new IssueTokenByRefreshTokenRequest(refreshTokenResponse.Data!), cancellationToken),
-                           false => new ServiceResponse<IssueTokenResponse>(actionResult: refreshTokenResponse.ActionResult,
+                           false => new ServiceResponse<IssueTokenResponse>(actionResultType: refreshTokenResponse.ActionResultType,
                                                                             message: refreshTokenResponse.Message)
                        };
             }
             default:
-                return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.UserError);
+                return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.UserError);
         }
     }
     
@@ -100,7 +100,7 @@ public class AuthService(ICryptographyService cryptographyService,
             
         logger.LogTrace("Refresh token is invalid");
 
-        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+        return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
                                                        message: InvalidCredentialsMessage);
     }
 
@@ -113,7 +113,7 @@ public class AuthService(ICryptographyService cryptographyService,
         {
             logger.LogTrace("User does not exist");
 
-            return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+            return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
                                                            message: InvalidCredentialsMessage);
         }
 
@@ -126,7 +126,7 @@ public class AuthService(ICryptographyService cryptographyService,
 
         logger.LogTrace("Password hash was not verified");
 
-        return new ServiceResponse<IssueTokenResponse>(actionResult: ActionResults.Unauthorized,
+        return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
                                                        message: InvalidCredentialsMessage);
     }
     

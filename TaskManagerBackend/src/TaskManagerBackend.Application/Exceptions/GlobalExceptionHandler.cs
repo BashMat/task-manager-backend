@@ -19,13 +19,13 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
                                                 Exception exception,
                                                 CancellationToken cancellationToken)
     {
-        var problemDetails = new ProblemDetails();
+        ProblemDetails problemDetails = new();
         
         if (exception is IApplicationException ex)
         {
             logger.LogError(exception, "Application exception logged in global exception handler:");
             problemDetails.Title = ex.ResponseMessage;
-            problemDetails.Status = ex.ActionResult.ToStatusCodesOrNull() ?? StatusCodes.Status500InternalServerError;
+            problemDetails.Status = ex.ActionResultType.ToStatusCodesOrNull() ?? StatusCodes.Status500InternalServerError;
         }
         else
         {
