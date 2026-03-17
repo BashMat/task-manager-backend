@@ -1,48 +1,55 @@
 ﻿namespace TaskManagerBackend.Domain;
 
 /// <summary>
-///     Provides values to describe typical results of actions.
+///     Provides type to describe result of action.
 /// </summary>
-public enum ActionResults
+public record ActionResultType
 {
+    private ActionResultType(string name)
+    {
+        Name = name;
+    }
+    
+    public string Name { get; init; }
+
     /// <summary>
     ///     Represents common successful result.
     /// </summary>
-    Success,
+    public static ActionResultType Success { get; } = new(nameof(Success));
     
     /// <summary>
     ///     Represents error on user side like invalid format of passed data.
     ///     Such errors must be checked on client side, but server side also checks them to prevent API misusage.
     /// </summary>
-    UserError,
+    public static ActionResultType UserError { get; } = new(nameof(UserError));
     
     /// <summary>
-    ///     Represents error when user can not provide authentication or authorization data,
+    ///     Represents error when user can not provide authentication data
     ///     or invalid data was provided.
     /// </summary>
-    Unauthorized,
+    public static ActionResultType Unauthenticated { get; } = new(nameof(Unauthenticated));
     
     /// <summary>
     ///     Represents error when valid user has no access to resource or action.
     /// </summary>
-    AccessDenied,
+    public static ActionResultType Unauthorized { get; } = new(nameof(Unauthorized));
     
     /// <summary>
     ///     Represents error when trying request action on non-existing resource.
     /// </summary>
-    ResourceNotFound,
+    public static ActionResultType ResourceNotFound { get; } = new(nameof(ResourceNotFound));
     
     /// <summary>
     ///     Represents error during write-action, for example, due to multi-user conflicting actions
     ///     or when valid data was passed, but domain rules forbid action.
     /// </summary>
-    DataConflict,
+    public static ActionResultType DataConflict { get; } = new(nameof(DataConflict));
     
     /// <summary>
     ///     Represents error occuring during requesting not developed functionality.
     ///     MUST be used only during development and unavailable to common user.
     /// </summary>
-    NotImplemented,
+    public static ActionResultType NotImplemented { get; } = new(nameof(NotImplemented));
     
     // TODO: Reconsider usages
     /// <summary>
@@ -51,5 +58,5 @@ public enum ActionResults
     /// <remarks>
     ///     Usually this should be an actual Exception.
     /// </remarks>
-    ServerError
+    public static ActionResultType ServerError { get; } = new(nameof(ServerError));
 }

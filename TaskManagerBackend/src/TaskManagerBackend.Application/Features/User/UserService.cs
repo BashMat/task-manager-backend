@@ -24,7 +24,7 @@ public class UserService(IUserRepository userRepository,
         // TODO: Implement better privacy options
         if (userId != currentUserId)
         {
-            return new ServiceResponse<GetUserDataResponse>(actionResult: ActionResults.AccessDenied,
+            return new ServiceResponse<GetUserDataResponse>(actionResultType: ActionResultType.Unauthorized,
                                                             message: AccessDeniedMessage);
         }
         
@@ -32,7 +32,7 @@ public class UserService(IUserRepository userRepository,
 
         if (user is null)
         {
-            return new ServiceResponse<GetUserDataResponse>(actionResult: ActionResults.ResourceNotFound,
+            return new ServiceResponse<GetUserDataResponse>(actionResultType: ActionResultType.ResourceNotFound,
                                                             message: $"User with id {userId} not found");
         }
 
@@ -49,7 +49,7 @@ public class UserService(IUserRepository userRepository,
         if (currentUserId != request.UserId)
         {
             return new ServiceResponse<bool>(false,
-                                             ActionResults.AccessDenied,
+                                             ActionResultType.Unauthorized,
                                              AccessDeniedMessage);
         }
 
@@ -59,7 +59,7 @@ public class UserService(IUserRepository userRepository,
         {
             // TODO: Use better message and result type
             return new ServiceResponse<bool>(false,
-                                             ActionResults.AccessDenied,
+                                             ActionResultType.Unauthorized,
                                              AccessDeniedMessage);
         }
 
@@ -67,7 +67,7 @@ public class UserService(IUserRepository userRepository,
         {
             // TODO: Use better message and result type
             return new ServiceResponse<bool>(false,
-                                             ActionResults.AccessDenied,
+                                             ActionResultType.Unauthorized,
                                              AccessDeniedMessage);
         }
         
@@ -84,7 +84,7 @@ public class UserService(IUserRepository userRepository,
         }
         
         return new ServiceResponse<bool>(false,
-                                         ActionResults.ServerError,
+                                         ActionResultType.ServerError,
                                          "Unexpected error occurred. Try again later or contact support.");
     }
 }

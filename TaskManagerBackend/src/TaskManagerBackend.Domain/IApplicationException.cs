@@ -7,6 +7,6 @@
 /// </summary>
 public interface IApplicationException
 {
-    ActionResults ActionResult { get; }
+    ActionResultType ActionResultType { get; }
     string ResponseMessage { get; }
 }

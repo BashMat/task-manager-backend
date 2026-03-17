@@ -7,7 +7,7 @@ public record StringAttribute
         if (string.IsNullOrWhiteSpace(value))
         {
             // TODO: Should consider processing possible case of invalid data in database
-            throw new InvariantException(ActionResults.UserError,
+            throw new InvariantException(ActionResultType.UserError,
                                          "String attribute cannot be null or empty");
         }
         
