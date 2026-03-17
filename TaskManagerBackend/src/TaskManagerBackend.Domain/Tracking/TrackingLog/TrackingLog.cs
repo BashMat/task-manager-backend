@@ -19,6 +19,20 @@ public class TrackingLog
                        IReadOnlyCollection<TrackingLogEntryStatus.TrackingLogEntryStatus> trackingLogEntryStatuses,
                        IReadOnlyCollection<TrackingLogEntry.TrackingLogEntry> trackingLogEntries)
     {
+        // TODO: Should consider splitting usage for read and write models.
+        //  For example, during reading we may omit validation, expecting data from database being valid
+        if (trackingLogEntryStatuses.Distinct().Count() != trackingLogEntryStatuses.Select(o => o.Id).Distinct().Count())
+        {
+            throw new InvariantException(ActionResults.DataConflict,
+                                         "Duplicate Tracking Log Entry Statuses are forbidden.");
+        }
+        
+        if (trackingLogEntries.Distinct().Count() != trackingLogEntries.Select(o => o.Id).Distinct().Count())
+        {
+            throw new InvariantException(ActionResults.DataConflict,
+                                         "Duplicate Tracking Log Entries are forbidden.");
+        }
+        
         Id = id;
         Title = title;
         Description = description;
