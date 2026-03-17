@@ -2,13 +2,7 @@
 
 namespace TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
 
-public class TrackingLogEntryStatus(int id,
-                                    StringAttribute title,
-                                    StringAttribute? description,
-                                    int trackingLogId)
-{
-    public int Id { get; } = id;
-    public StringAttribute Title { get; } = title;
-    public StringAttribute? Description { get; } = description;
-    public int TrackingLogId { get; } = trackingLogId;
-}
+public record TrackingLogEntryStatus(int Id,
+                                     StringAttribute Title,
+                                     StringAttribute? Description,
+                                     int TrackingLogId);
