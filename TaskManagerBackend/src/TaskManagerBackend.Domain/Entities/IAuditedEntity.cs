@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.DataAccess.Database;
+﻿namespace TaskManagerBackend.Domain.Entities;
 
 public interface IAuditedEntity : IEntity
 {

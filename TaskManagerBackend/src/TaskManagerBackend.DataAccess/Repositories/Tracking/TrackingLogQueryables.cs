@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
+using TaskManagerBackend.Domain.Entities;
 
 namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
 
