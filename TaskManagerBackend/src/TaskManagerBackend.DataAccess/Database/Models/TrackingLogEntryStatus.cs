@@ -1,4 +1,6 @@
-﻿namespace TaskManagerBackend.DataAccess.Database.Models;
+﻿using TaskManagerBackend.Domain.Entities;
+
+namespace TaskManagerBackend.DataAccess.Database.Models;
 
 public partial class TrackingLogEntryStatus : IAuditedEntity
 {
