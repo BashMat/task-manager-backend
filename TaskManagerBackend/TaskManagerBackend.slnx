@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TaskManagerBackend.Application/TaskManagerBackend.Application.csproj" />
+    <Project Path="src/TaskManagerBackend.Common/TaskManagerBackend.Common.csproj" />
+    <Project Path="src/TaskManagerBackend.DataAccess/TaskManagerBackend.DataAccess.csproj" />
+    <Project Path="src/TaskManagerBackend.Domain/TaskManagerBackend.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TaskManagerBackend.Tests.Common/TaskManagerBackend.Tests.Common.csproj" />
+  </Folder>
+  <Folder Name="/tests/integration/">
+    <Project Path="tests/integration/TaskManagerBackend.IntegrationTests/TaskManagerBackend.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/tests/unit/">
+    <Project Path="tests/unit/TaskManagerBackend.Application.Tests/TaskManagerBackend.Application.Tests.csproj" />
+    <Project Path="tests/unit/TaskManagerBackend.Domain.Tests/TaskManagerBackend.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
