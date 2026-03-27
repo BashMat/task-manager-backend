@@ -4,10 +4,10 @@ using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Auth;
 using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Workflow;
 
 #endregion
 
@@ -17,11 +17,7 @@ public class AuthService(ICryptographyService cryptographyService,
                          IUserRepository userRepository,
                          IDateTimeService dateTimeService,
                          ILogger<AuthService> logger) : IAuthService
-{
-    public const string UserAlreadyExistsMessage = "Username and/or Email already exists";
-    public const string InvalidCredentialsMessage = "Invalid credentials";
-    public const string InvalidEmailAddressMessage = "Email address has invalid format";
-    
+{ 
     public const string PasswordGrantType = "password";
     public const string RefreshTokenGrantType = "refresh_token";
 
@@ -36,7 +32,7 @@ public class AuthService(ICryptographyService cryptographyService,
             logger.LogTrace("User already exists");
             
             return new ServiceResponse<UserSignUpResponse>(actionResultType: ActionResultType.DataConflict,
-                                                           message: UserAlreadyExistsMessage);
+                                                           message: MessageResources.UserAlreadyExistsMessage);
         }
 
         logger.LogTrace("Start user registration");
@@ -101,7 +97,7 @@ public class AuthService(ICryptographyService cryptographyService,
         logger.LogTrace("Refresh token is invalid");
 
         return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
-                                                       message: InvalidCredentialsMessage);
+                                                       message: MessageResources.InvalidCredentialsMessage);
     }
 
     private async Task<ServiceResponse<IssueTokenResponse>> IssueTokenByPassword(IssueTokenByPasswordRequest request,
@@ -114,7 +110,7 @@ public class AuthService(ICryptographyService cryptographyService,
             logger.LogTrace("User does not exist");
 
             return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
-                                                           message: InvalidCredentialsMessage);
+                                                           message: MessageResources.InvalidCredentialsMessage);
         }
 
         if (cryptographyService.VerifyPasswordHash(request.Password, data.PasswordHash, data.PasswordSalt))
@@ -127,7 +123,7 @@ public class AuthService(ICryptographyService cryptographyService,
         logger.LogTrace("Password hash was not verified");
 
         return new ServiceResponse<IssueTokenResponse>(actionResultType: ActionResultType.Unauthenticated,
-                                                       message: InvalidCredentialsMessage);
+                                                       message: MessageResources.InvalidCredentialsMessage);
     }
     
     private async Task<IssueTokenResponse> IssueToken(int userId,

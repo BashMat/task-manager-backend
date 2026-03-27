@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion
@@ -62,7 +62,7 @@ public class WhenSigningUp : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Conflict);
-        content.Detail.Should().Be(AuthService.UserAlreadyExistsMessage);
+        content.Detail.Should().Be(MessageResources.UserAlreadyExistsMessage);
     }
     
     [Fact]
@@ -84,7 +84,7 @@ public class WhenSigningUp : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Conflict);
-        content.Detail.Should().Be(AuthService.UserAlreadyExistsMessage);
+        content.Detail.Should().Be(MessageResources.UserAlreadyExistsMessage);
     }
     
     [Fact]
@@ -107,7 +107,7 @@ public class WhenSigningUp : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
     
     [Fact]
@@ -130,7 +130,7 @@ public class WhenSigningUp : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
     
     [Theory]
@@ -160,6 +160,6 @@ public class WhenSigningUp : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
 }

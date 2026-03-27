@@ -1,4 +1,4 @@
-﻿using TaskManagerBackend.Domain;
+﻿using TaskManagerBackend.Domain.Workflow;
 
 namespace TaskManagerBackend.Application.Exceptions;
 

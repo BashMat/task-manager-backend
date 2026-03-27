@@ -2,6 +2,7 @@
 
 using FluentAssertions;
 using TaskManagerBackend.Domain.Data;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion

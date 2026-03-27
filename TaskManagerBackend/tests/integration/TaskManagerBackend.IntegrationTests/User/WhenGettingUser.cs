@@ -5,9 +5,9 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
-using TaskManagerBackend.Application.Features.User;
 using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion
@@ -62,6 +62,6 @@ public class WhenGettingUser : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Forbidden);
-        content.Detail.Should().Be(UserService.AccessDeniedMessage);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
     }
 }

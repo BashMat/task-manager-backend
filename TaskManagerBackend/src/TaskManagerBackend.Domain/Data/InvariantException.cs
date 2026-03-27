@@ -1,4 +1,6 @@
-﻿namespace TaskManagerBackend.Domain.Data;
+﻿using TaskManagerBackend.Domain.Workflow;
+
+namespace TaskManagerBackend.Domain.Data;
 
 public class InvariantException(ActionResultType actionResultType, string message) : Exception(message), IApplicationException
 {

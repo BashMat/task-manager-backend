@@ -4,8 +4,8 @@ using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Workflow;
 
 #endregion
 
@@ -15,7 +15,7 @@ public class UserService(IUserRepository userRepository,
                          ICryptographyService cryptographyService,
                          IDateTimeService dateTimeService) : IUserService
 {
-    public const string AccessDeniedMessage = "Cannot see this User profile";
+    
 
     public async Task<ServiceResponse<GetUserDataResponse>> GetUserDataById(int currentUserId,
                                                                             int userId,
@@ -25,7 +25,7 @@ public class UserService(IUserRepository userRepository,
         if (userId != currentUserId)
         {
             return new ServiceResponse<GetUserDataResponse>(actionResultType: ActionResultType.Unauthorized,
-                                                            message: AccessDeniedMessage);
+                                                            message: MessageResources.AccessDeniedMessage);
         }
         
         MinimalUserData? user = await userRepository.GetMinimalUserData(userId, cancellationToken);
@@ -33,7 +33,7 @@ public class UserService(IUserRepository userRepository,
         if (user is null)
         {
             return new ServiceResponse<GetUserDataResponse>(actionResultType: ActionResultType.ResourceNotFound,
-                                                            message: $"User with id {userId} not found");
+                                                            message: MessageResources.ResourceDoesNotExist);
         }
 
         return new ServiceResponse<GetUserDataResponse>(new GetUserDataResponse
@@ -50,7 +50,7 @@ public class UserService(IUserRepository userRepository,
         {
             return new ServiceResponse<bool>(false,
                                              ActionResultType.Unauthorized,
-                                             AccessDeniedMessage);
+                                             MessageResources.AccessDeniedMessage);
         }
 
         UserPasswordData? currentPasswordData = await userRepository.GetUserPasswordData(request.UserId, cancellationToken);
@@ -60,7 +60,7 @@ public class UserService(IUserRepository userRepository,
             // TODO: Use better message and result type
             return new ServiceResponse<bool>(false,
                                              ActionResultType.Unauthorized,
-                                             AccessDeniedMessage);
+                                             MessageResources.AccessDeniedMessage);
         }
 
         if (!cryptographyService.VerifyPasswordHash(request.OldPassword, currentPasswordData.PasswordHash, currentPasswordData.PasswordSalt))
@@ -68,7 +68,7 @@ public class UserService(IUserRepository userRepository,
             // TODO: Use better message and result type
             return new ServiceResponse<bool>(false,
                                              ActionResultType.Unauthorized,
-                                             AccessDeniedMessage);
+                                             MessageResources.AccessDeniedMessage);
         }
         
         (byte[] newPasswordHash, byte[] newPasswordSalt) =
