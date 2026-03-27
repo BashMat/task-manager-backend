@@ -61,7 +61,7 @@ public class TaskManagerBackendHttpClient
     {
         IssueTokenRequest request = new()
                                     {
-                                        GrantType = AuthService.PasswordGrantType,
+                                        GrantType = GrantTypes.PasswordGrantType,
                                         Username = username,
                                         Password = password
                                     };
@@ -72,7 +72,7 @@ public class TaskManagerBackendHttpClient
     {
         IssueTokenRequest request = new()
                                     {
-                                        GrantType = AuthService.RefreshTokenGrantType,
+                                        GrantType = GrantTypes.RefreshTokenGrantType,
                                         RefreshToken = refreshToken
                                     };
         return await _httpClient.PostAsJsonAsync("api/auth/token", request);
@@ -83,7 +83,7 @@ public class TaskManagerBackendHttpClient
     {
         IssueTokenRequest request = new()
                                     {
-                                        GrantType = AuthService.PasswordGrantType,
+                                        GrantType = GrantTypes.PasswordGrantType,
                                         Username = username,
                                         Password = password
                                     };

@@ -18,9 +18,6 @@ public class AuthService(ICryptographyService cryptographyService,
                          IDateTimeService dateTimeService,
                          ILogger<AuthService> logger) : IAuthService
 { 
-    public const string PasswordGrantType = "password";
-    public const string RefreshTokenGrantType = "refresh_token";
-
     public async Task<ServiceResponse<UserSignUpResponse>> SignUp(UserSignUpRequest request,
                                                                   CancellationToken cancellationToken)
     {
@@ -63,9 +60,9 @@ public class AuthService(ICryptographyService cryptographyService,
     {
         switch (request)
         {
-            case { GrantType: PasswordGrantType, Username: not null, Password: not null }:
+            case { GrantType: GrantTypes.PasswordGrantType, Username: not null, Password: not null }:
                 return await IssueTokenByPassword(new IssueTokenByPasswordRequest(request.Username, request.Password), cancellationToken);
-            case { GrantType: RefreshTokenGrantType, RefreshToken: not null }:
+            case { GrantType: GrantTypes.RefreshTokenGrantType, RefreshToken: not null }:
             {
                 ServiceResponse<RefreshTokenData> refreshTokenResponse = 
                     cryptographyService.ParseToken(request.RefreshToken);
