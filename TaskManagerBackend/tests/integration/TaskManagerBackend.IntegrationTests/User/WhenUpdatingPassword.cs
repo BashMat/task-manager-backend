@@ -5,9 +5,9 @@ using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
-using TaskManagerBackend.Application.Features.User;
 using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion
@@ -72,7 +72,7 @@ public class WhenUpdatingPassword : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
     
     [Theory]
@@ -107,7 +107,7 @@ public class WhenUpdatingPassword : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
     
     [Theory]
@@ -142,7 +142,7 @@ public class WhenUpdatingPassword : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
-        content.Title.Should().Be(ValidationErrorTitle);
+        content.Title.Should().Be(MessageResources.ValidationErrorTitle);
     }
     
     [Fact]
@@ -170,7 +170,7 @@ public class WhenUpdatingPassword : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Forbidden);
-        content.Detail.Should().Be(UserService.AccessDeniedMessage);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
     }
     
     [Fact]
@@ -198,6 +198,6 @@ public class WhenUpdatingPassword : UserTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Forbidden);
-        content.Detail.Should().Be(UserService.AccessDeniedMessage);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
     }
 }

@@ -5,12 +5,12 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Tracking.TrackingLog;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
+using TaskManagerBackend.Domain.Workflow;
 
 #endregion
 
@@ -19,10 +19,6 @@ namespace TaskManagerBackend.Application.Features.Tracking;
 public class TrackingService(ITrackingRepository trackingRepository,
                              IDateTimeService dateTimeService) : ITrackingService
 {
-    private const string CouldNotCreateMessage = "Could not create resource";
-    private const string ResourceDoesNotExist = "Resource does not exist";
-    private const string UpdateConflict = "Resource was updated";
-
     #region Tracking Logs
 
     public async Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId,
@@ -40,7 +36,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (response is null)
         {
             return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.ServerError,
-                                                               message: CouldNotCreateMessage);
+                                                               message: MessageResources.CouldNotCreateMessage);
         }
 
         return response;
@@ -62,7 +58,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (response is null)
         {
             return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
-                                                               message: ResourceDoesNotExist);
+                                                               message: MessageResources.ResourceDoesNotExist);
         }
 
         return response;
@@ -99,7 +95,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (response is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ServerError,
-                                                                    message: CouldNotCreateMessage);
+                                                                    message: MessageResources.CouldNotCreateMessage);
         }
 
         return response;
@@ -121,7 +117,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (response is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
-                                                                    message: ResourceDoesNotExist);
+                                                                    message: MessageResources.ResourceDoesNotExist);
         }
 
         return response;
@@ -137,7 +133,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (entry is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
-                                                                    message: ResourceDoesNotExist);
+                                                                    message: MessageResources.ResourceDoesNotExist);
         }
 
         // TODO: when resource is created and updated locally immediately,
@@ -146,7 +142,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (entry.UpdatedAt > request.UpdatedAt)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.DataConflict,
-                                                                    message: UpdateConflict);
+                                                                    message: MessageResources.UpdateConflict);
         }
 
         UpdatableTrackingLogEntry updatableTrackingLogEntry = new(StringAttribute.CreateRequired(request.Title),
@@ -164,7 +160,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (updatedEntry is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
-                                                                    message: ResourceDoesNotExist);
+                                                                    message: MessageResources.ResourceDoesNotExist);
         }
         
         return updatedEntry.ToDto();
@@ -199,7 +195,7 @@ public class TrackingService(ITrackingRepository trackingRepository,
         if (response is null)
         {
             return new ServiceResponse<TrackingLogEntryStatusGetResponse>(actionResultType: ActionResultType.ServerError,
-                                                                          message: CouldNotCreateMessage);
+                                                                          message: MessageResources.CouldNotCreateMessage);
         }
 
         return response;

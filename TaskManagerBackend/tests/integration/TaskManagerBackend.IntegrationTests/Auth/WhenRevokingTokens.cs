@@ -4,8 +4,8 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion
@@ -29,6 +29,6 @@ public class WhenRevokingTokens : AuthorizationTestBase
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.Unauthorized);
-        content.Detail.Should().Be(AuthService.InvalidCredentialsMessage);
+        content.Detail.Should().Be(MessageResources.InvalidCredentialsMessage);
     }
 }

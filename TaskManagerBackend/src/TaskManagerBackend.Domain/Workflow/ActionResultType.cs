@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Domain;
+﻿namespace TaskManagerBackend.Domain.Workflow;
 
 /// <summary>
 ///     Provides type to describe result of action.

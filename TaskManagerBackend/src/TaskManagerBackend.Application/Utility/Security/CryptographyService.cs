@@ -6,10 +6,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain;
 using TaskManagerBackend.Domain.Auth;
+using TaskManagerBackend.Domain.Workflow;
 
 #endregion
 
@@ -146,7 +145,7 @@ public class CryptographyService(IDateTimeService dateTimeService,
             if (userId is null || tokenId is null || expiresAt is null || issuedAt is null)
             {
                 return new ServiceResponse<RefreshTokenData>(actionResultType: ActionResultType.Unauthenticated,
-                                                             message: AuthService.InvalidCredentialsMessage);
+                                                             message: MessageResources.InvalidCredentialsMessage);
             }
             
             return new ServiceResponse<RefreshTokenData>(new RefreshTokenData(userId.Value,
@@ -159,7 +158,7 @@ public class CryptographyService(IDateTimeService dateTimeService,
         {
             logger.LogError(ex.Message);
             return new ServiceResponse<RefreshTokenData>(actionResultType: ActionResultType.Unauthenticated,
-                                                         message: AuthService.InvalidCredentialsMessage);
+                                                         message: MessageResources.InvalidCredentialsMessage);
         }
     }
 

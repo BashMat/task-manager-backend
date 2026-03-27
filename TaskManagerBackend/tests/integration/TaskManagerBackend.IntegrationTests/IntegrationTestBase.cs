@@ -15,8 +15,6 @@ public class IntegrationTestBase : CommonTestBase, IClassFixture<MsSqlTests>, ID
     public const string UserName = "test";
     public const string Email = "test@test.test";
     public const string Password = "test-1234";
-
-    public const string ValidationErrorTitle = "One or more validation errors occurred.";
     
     private readonly WebApplicationFactory<TaskManagerBackend.Application.Program> _webApplicationFactory;
 

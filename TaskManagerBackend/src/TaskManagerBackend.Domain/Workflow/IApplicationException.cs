@@ -1,4 +1,4 @@
-﻿namespace TaskManagerBackend.Domain;
+﻿namespace TaskManagerBackend.Domain.Workflow;
 
 /// <summary>
 ///     Represents interface for all application exceptions.
