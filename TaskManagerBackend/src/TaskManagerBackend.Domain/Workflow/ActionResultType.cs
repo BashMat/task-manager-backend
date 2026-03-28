@@ -11,6 +11,8 @@ public record ActionResultType
     }
     
     public string Name { get; init; }
+    public bool IsSuccess => this == Success;
+    public bool IsError => !IsSuccess;
 
     /// <summary>
     ///     Represents common successful result.
