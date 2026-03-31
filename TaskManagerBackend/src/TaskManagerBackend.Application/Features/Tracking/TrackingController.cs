@@ -49,6 +49,15 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
         return HandleServiceResponse(await trackingService.GetTrackingLogById(id, cancellationToken));
     }
     
+    [HttpPost("logs/edit")]
+    public async Task<IActionResult> EditTrackingLog([FromBody] TrackingLogEditRequest request,
+                                                     CancellationToken cancellationToken)
+    {
+        return HandleServiceResponse(await trackingService.EditTrackingLog(UserId, 
+                                                                           request, 
+                                                                           cancellationToken));
+    }
+    
     [HttpDelete("logs/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogById([FromRoute] int id,
                                                            CancellationToken cancellationToken)

@@ -2,6 +2,7 @@
 
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using FluentAssertions;
 using TaskManagerBackend.Application.Features.Auth;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
@@ -10,6 +11,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Application.Utility.Json;
 
 #endregion
 
@@ -118,6 +120,17 @@ public class TaskManagerBackendHttpClient
     public async Task<HttpResponseMessage> GetTrackingLogs()
     {
         return await _httpClient.GetAsync("api/tracking/logs");
+    }
+    
+    public async Task<HttpResponseMessage> EditTrackingLog(TrackingLogEditRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/tracking/logs/edit",
+                                                 request,
+                                                 options: new JsonSerializerOptions
+                                                          {
+                                                              Converters = { new JsonOptionalConverter() },
+                                                              DefaultIgnoreCondition =  System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+                                                          });
     }
 
     public async Task<HttpResponseMessage> DeleteTrackingLogById(int id)

@@ -6,6 +6,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStat
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Data;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Tracking.TrackingLog;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
@@ -62,6 +63,58 @@ public class TrackingService(ITrackingRepository trackingRepository,
         }
 
         return response;
+    }
+
+    public async Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(int userId,
+                                                                               TrackingLogEditRequest request,
+                                                                               CancellationToken cancellationToken)
+    {
+        TrackingLogEntity? log = await trackingRepository.GetTrackingLogEntityById(request.Id, cancellationToken);
+        
+        if (log is null)
+        {
+            return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
+                                                               message: MessageResources.ResourceDoesNotExist);
+        }
+        
+        if (!CanEditTrackingEntity(log, userId))
+        {
+            return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                               message: MessageResources.AccessDeniedMessage);
+        }
+
+        switch (request.Title)
+        {
+            case { HasValue: true, Value: null }:
+                return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                   message: MessageResources.ValidationErrorTitle);
+            case { HasValue: true, Value: not null }:
+            {
+                StringAttribute targetTitle = StringAttribute.CreateRequired(request.Title.Value);
+                log.RenameToByUser(targetTitle,
+                                   userId,
+                                   dateTimeService.UtcNow);
+                break;
+            }
+        }
+
+        if (request.Description.HasValue)
+        {
+            StringAttribute? targetDescription = StringAttribute.CreateOptional(request.Description.Value);
+        
+            log.EditDescriptionToByUser(targetDescription, 
+                                        userId, 
+                                        dateTimeService.UtcNow);
+        }
+        
+        await trackingRepository.Save(log, cancellationToken);
+
+        return await GetTrackingLogById(log.Id, cancellationToken);
+    }
+
+    private bool CanEditTrackingEntity(IAuditedEntity trackingEntity, int userId)
+    {
+        return trackingEntity.CreatedBy == userId;
     }
 
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, 

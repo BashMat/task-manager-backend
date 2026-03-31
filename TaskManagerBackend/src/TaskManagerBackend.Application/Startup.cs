@@ -16,6 +16,7 @@ using TaskManagerBackend.Application.Features.User;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Configuration;
 using TaskManagerBackend.Application.Utility.Health;
+using TaskManagerBackend.Application.Utility.Json;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
@@ -40,7 +41,8 @@ public class Startup(IConfiguration configuration)
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         
         // Add services to the container.
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+               .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonOptionalConverter()));
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
