@@ -16,6 +16,10 @@ public interface ITrackingRepository
     Task<TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog newTrackingLog, CancellationToken cancellationToken);
     Task<List<TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId, CancellationToken cancellationToken);
     Task<TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId, CancellationToken cancellationToken);
+    Task<TrackingLogEntity?> GetTrackingLogEntityById(int trackingLogId,
+                                                            CancellationToken cancellationToken);
+    Task Save(TrackingLogEntity log,
+              CancellationToken cancellationToken);
     Task<List<TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
                                                               int trackingLogId,
                                                               CancellationToken cancellationToken);

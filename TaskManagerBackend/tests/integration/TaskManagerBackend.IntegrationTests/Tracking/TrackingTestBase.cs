@@ -6,6 +6,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
+using TaskManagerBackend.Application.Utility.Json;
 using Xunit;
 
 #endregion
@@ -151,5 +152,19 @@ public class TrackingTestBase : IntegrationTestBase,
         creationResponseContent.Should().NotBeNull();
         creationResponseContent.Data.Should().NotBeNull();
         return creationResponseContent.Data;
+    }
+    
+    protected async Task<HttpResponseMessage> EditTrackingLog(int id,
+                                                              Optional<string> title,
+                                                              Optional<string> description)
+    {
+        TrackingLogEditRequest request = new()
+                                           {
+                                               Id = id,
+                                               Title = title,
+                                               Description = description
+                                           };
+
+        return await HttpClient.EditTrackingLog(request);
     }
 }

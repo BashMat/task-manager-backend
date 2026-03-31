@@ -57,4 +57,15 @@ public static class MappingExtensions
                                                                       .Select(entry => entry.ToDomain())
                                                                       .ToList());
     }
+    
+    public static Domain.Tracking.TrackingLog.TrackingLogEntity ToDomainEntity(this TrackingLog trackingLog)
+    {
+        return new Domain.Tracking.TrackingLog.TrackingLogEntity(trackingLog.Id,
+                                                                 StringAttribute.CreateRequired(trackingLog.Title),
+                                                                 StringAttribute.CreateOptional(trackingLog.Description),
+                                                                 trackingLog.CreatedBy,
+                                                                 trackingLog.CreatedAt,
+                                                                 trackingLog.UpdatedBy,
+                                                                 trackingLog.UpdatedAt);
+    }
 }

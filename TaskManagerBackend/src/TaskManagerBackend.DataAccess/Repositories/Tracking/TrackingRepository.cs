@@ -2,10 +2,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.Domain.Data;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Tracking.TrackingLog;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
+using TaskManagerBackend.Domain.Workflow;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
 using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntryStatus;
@@ -54,6 +56,34 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .SelectEagerly()
                               .Select(log => log.ToDomain())
                               .FirstOrDefaultAsync(cancellationToken);
+    }
+    
+    public async Task<TrackingLogEntity?> GetTrackingLogEntityById(int trackingLogId,
+                                                                   CancellationToken cancellationToken)
+    {
+        return await dbContext.TrackingLogs.FilterById(trackingLogId)
+                              .Select(log => log.ToDomainEntity())
+                              .FirstOrDefaultAsync(cancellationToken);
+    }
+    
+    public async Task Save(TrackingLogEntity log, 
+                           CancellationToken cancellationToken)
+    {
+        TrackingLog? dbLog = await dbContext.TrackingLogs.FilterById(log.Id)
+                                            .FirstOrDefaultAsync(cancellationToken);
+
+        if (dbLog is null)
+        {
+            throw new InvariantException(actionResultType: ActionResultType.DataConflict, 
+                                         message: MessageResources.ResourceDoesNotExist);
+        }
+
+        dbLog.Title = log.Title.Value;
+        dbLog.Description = log.Description?.Value;
+        dbLog.UpdatedBy = log.UpdatedBy;
+        dbLog.UpdatedAt = log.UpdatedAt;
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<List<Domain.Tracking.TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
