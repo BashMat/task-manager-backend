@@ -12,9 +12,11 @@ public class UpdatePasswordRequest
     [Range(Constants.MinIdentifier, int.MaxValue)]
     public int UserId { get; init; }
     
+    [Required]
     [Password]
-    public required string OldPassword { get; init; }
+    public string OldPassword { get; init; } = null!;
     
+    [Required]
     [Password]
-    public required string NewPassword { get; init; }
+    public string NewPassword { get; init; } = null!;
 }
