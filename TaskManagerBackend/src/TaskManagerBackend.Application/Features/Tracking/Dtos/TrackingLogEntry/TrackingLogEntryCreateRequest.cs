@@ -7,7 +7,7 @@ public class TrackingLogEntryCreateRequest
 {
     [Required]
     [MaxLength(Constants.MaxDefaultTextLength)]
-    public required string Title { get; init; }
+    public string Title { get; init; } = null!;
     
     [MaxLength(Constants.MaxLongTextLength)]
     public string? Description { get; init; }

@@ -1,11 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TaskManagerBackend.Application.Features.Auth.Dtos;
 
 public class IssueTokenRequest
 {
+    [Required]
     [JsonPropertyName("grant_type")]
-    public required string GrantType { get; init; }
+    public string GrantType { get; init; } = null!;
     
     [JsonPropertyName("username")]
     public string? Username { get; init; }
