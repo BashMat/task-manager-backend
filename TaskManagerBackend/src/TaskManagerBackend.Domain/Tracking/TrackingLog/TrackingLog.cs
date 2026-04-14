@@ -1,6 +1,7 @@
 ﻿#region
 
 using TaskManagerBackend.Domain.Data;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Users;
 using TaskManagerBackend.Domain.Workflow;
 
@@ -8,7 +9,7 @@ using TaskManagerBackend.Domain.Workflow;
 
 namespace TaskManagerBackend.Domain.Tracking.TrackingLog;
 
-public class TrackingLog
+public class TrackingLog : IAuditedEntityWithMinimalUserData
 {
     public TrackingLog(int id,
                        StringAttribute title,

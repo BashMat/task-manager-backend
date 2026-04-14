@@ -51,18 +51,24 @@ public class TrackingService(ITrackingRepository trackingRepository,
     }
 
     public async Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id,
+                                                                                  int userId,
                                                                                   CancellationToken cancellationToken)
     {
         TrackingLog? log = await trackingRepository.GetTrackingLogById(id, cancellationToken);
-        TrackingLogGetResponse? response = log?.ToDto();
-
-        if (response is null)
+        
+        if (log is null)
         {
             return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
                                                                message: MessageResources.ResourceDoesNotExist);
         }
-
-        return response;
+        
+        if (!CanGetTrackingEntity(log, userId))
+        {
+            return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                               message: MessageResources.AccessDeniedMessage);
+        }
+        
+        return log.ToDto();
     }
 
     public async Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(int userId,
@@ -109,10 +115,15 @@ public class TrackingService(ITrackingRepository trackingRepository,
         
         await trackingRepository.Save(log, cancellationToken);
 
-        return await GetTrackingLogById(log.Id, cancellationToken);
+        return await GetTrackingLogById(log.Id, userId, cancellationToken);
+    }
+    
+    private static bool CanGetTrackingEntity(IAuditedEntityWithMinimalUserData trackingEntity, int userId)
+    {
+        return trackingEntity.CreatedBy.Id == userId;
     }
 
-    private bool CanEditTrackingEntity(IAuditedEntity trackingEntity, int userId)
+    private static bool CanEditTrackingEntity(IAuditedEntity trackingEntity, int userId)
     {
         return trackingEntity.CreatedBy == userId;
     }

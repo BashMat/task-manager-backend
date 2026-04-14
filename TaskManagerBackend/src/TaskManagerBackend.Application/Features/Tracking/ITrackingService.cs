@@ -18,7 +18,9 @@ public interface ITrackingService
                                                                     CancellationToken cancellationToken);
     Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId,
                                                                                    CancellationToken cancellationToken);
-    Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id, CancellationToken cancellationToken);
+    Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id,
+                                                                     int userId,
+                                                                     CancellationToken cancellationToken);
     Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(int userId,
                                                                   TrackingLogEditRequest request,
                                                                   CancellationToken cancellationToken);
