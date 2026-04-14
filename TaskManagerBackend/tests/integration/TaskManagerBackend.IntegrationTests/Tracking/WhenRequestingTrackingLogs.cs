@@ -74,6 +74,34 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
     }
     
     [Fact]
+    public async Task GettingTrackingLogByIdIsFailedIfUserCannotGetTrackingLog()
+    {
+        TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
+        string userName = Faker.Internet.UserName();
+        string email = Faker.Internet.Email();
+        string password = Faker.Internet.Password(length: 10);
+        UserSignUpRequest signUpRequest = new()
+                                          {
+                                              UserName = userName, 
+                                              Email = email,
+                                              Password = password
+                                          };
+
+        await HttpClient.SignUp(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(userName, 
+                                                                 password);
+
+        HttpResponseMessage response = await HttpClient.GetTrackingLogById(createdTrackingLog.Id);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.Forbidden);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
+    }
+    
+    [Fact]
     public async Task GettingTrackingLogsIsSuccessful()
     {
         await CreateTrackingLog();
