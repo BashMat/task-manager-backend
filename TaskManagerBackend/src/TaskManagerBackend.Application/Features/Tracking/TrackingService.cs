@@ -173,18 +173,24 @@ public class TrackingService(ITrackingRepository trackingRepository,
     }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id,
+                                                                                            int userId,
                                                                                             CancellationToken cancellationToken)
     {
         TrackingLogEntry? entry = await trackingRepository.GetTrackingLogEntryById(id, cancellationToken);
-        TrackingLogEntryGetResponse? response = entry?.ToDto();
-
-        if (response is null)
+        
+        if (entry is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
                                                                     message: MessageResources.ResourceDoesNotExist);
         }
+        
+        if (!CanGetTrackingEntity(entry, userId))
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                                    message: MessageResources.AccessDeniedMessage);
+        }
 
-        return response;
+        return entry.ToDto();
     }
 
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,

@@ -3,9 +3,12 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
+using TaskManagerBackend.Domain.Workflow;
 using Xunit;
 
 #endregion
@@ -72,6 +75,35 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Data.Should().BeEquivalentTo(createdTrackingLogEntry);
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
+    }
+    
+    [Fact]
+    public async Task GettingTrackingLogEntryByIdIsFailedIfUserCannotGetTrackingLogEntry()
+    {
+        TrackingLogEntryGetResponse createdTrackingLogEntry = await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id, 
+                                                                                                              DefaultTrackingLogEntryStatus!.Id);
+        string userName = Faker.Internet.UserName();
+        string email = Faker.Internet.Email();
+        string password = Faker.Internet.Password(length: 10);
+        UserSignUpRequest signUpRequest = new()
+                                          {
+                                              UserName = userName, 
+                                              Email = email,
+                                              Password = password
+                                          };
+
+        await HttpClient.SignUp(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(userName, 
+                                                                 password);
+
+        HttpResponseMessage response = await HttpClient.GetTrackingLogEntryById(createdTrackingLogEntry.Id);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.Forbidden);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
     }
     
     [Fact]
