@@ -1,0 +1,17 @@
+﻿{
+  "id": "019e89dc-77d1-7111-b76e-34dc3e23eb57",
+  "title": "Architecture Decision Records (ADRs)",
+  "code": "2026-06-02-1-adr",
+  "date": "2026-06-02",
+  "order": 1,
+  "status": "Active",
+  "authors": [ "bashmat" ],
+  "references": [],
+  "tags": [
+    "docs",
+    "documentation",
+    "architecture",
+    "adr",
+    "architecture-decision-record"
+  ]
+}
