@@ -98,7 +98,9 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     public async Task<IActionResult> GetTrackingLogEntryById([FromRoute] int id,
                                                              CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.GetTrackingLogEntryById(id, cancellationToken));
+        return HandleServiceResponse(await trackingService.GetTrackingLogEntryById(id,
+                                                                                   UserId,
+                                                                                   cancellationToken));
     }
     
     [HttpPut("log-entries/{id:int}")]

@@ -1,6 +1,7 @@
 ﻿#region
 
 using TaskManagerBackend.Domain.Data;
+using TaskManagerBackend.Domain.Entities;
 using TaskManagerBackend.Domain.Users;
 
 #endregion
@@ -17,7 +18,7 @@ public class TrackingLogEntry(int id,
                               MinimalUserData createdBy,
                               DateTime createdAt,
                               MinimalUserData updatedBy,
-                              DateTime updatedAt)
+                              DateTime updatedAt) : IAuditedEntityWithMinimalUserData
 {
     public int Id { get; } = id;
     public StringAttribute Title { get; } = title;
