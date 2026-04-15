@@ -144,25 +144,48 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                            TrackingLogEntryCreateRequest request, 
                                                                                            CancellationToken cancellationToken)
     {
-        NewTrackingLogEntry logEntryToInsert = new(StringAttribute.CreateRequired(request.Title),
-                                                   StringAttribute.CreateOptional(request.Description),
-                                                   request.TrackingLogId,
-                                                   request.StatusId,
-                                                   request.Priority,
-                                                   request.OrderIndex,
-                                                   userId,
-                                                   dateTimeService.UtcNow);
-        
-        TrackingLogEntry? entry = await trackingRepository.CreateTrackingLogEntry(logEntryToInsert, cancellationToken);
-        TrackingLogEntryGetResponse? response = entry?.ToDto();
+        TrackingLogEntity? trackingLog = await trackingRepository.GetTrackingLogEntityById(request.TrackingLogId,
+                                                                                           cancellationToken);
 
-        if (response is null)
+        if (trackingLog is null)
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                    message: MessageResources.CouldNotCreateMessage);
+        }
+
+        if (!CanEditTrackingEntity(trackingLog, userId))
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                                    message: MessageResources.AccessDeniedMessage);
+        }
+
+        TrackingLogEntryStatus? status = await trackingRepository.GetTrackingLogEntryStatusById(request.StatusId,
+                                                                                                cancellationToken);
+
+        if (status is null)
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                    message: MessageResources.CouldNotCreateMessage);
+        }
+        
+        NewTrackingLogEntry newTrackingLogEntry = new(StringAttribute.CreateRequired(request.Title),
+                                                      StringAttribute.CreateOptional(request.Description),
+                                                      request.TrackingLogId,
+                                                      request.StatusId,
+                                                      request.Priority,
+                                                      request.OrderIndex,
+                                                      userId,
+                                                      dateTimeService.UtcNow);
+        
+        TrackingLogEntry? entry = await trackingRepository.CreateTrackingLogEntry(newTrackingLogEntry, cancellationToken);
+
+        if (entry is null)
         {
             return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ServerError,
                                                                     message: MessageResources.CouldNotCreateMessage);
         }
 
-        return response;
+        return entry.ToDto();
     }
 
     public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId, 

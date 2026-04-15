@@ -49,6 +49,8 @@ public interface ITrackingRepository
     // TODO: Perhaps nullability is excessive
     Task<TrackingLogEntryStatus.TrackingLogEntryStatus?> CreateTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert, 
                                                                                       CancellationToken cancellationToken);
+    Task<TrackingLogEntryStatus.TrackingLogEntryStatus?> GetTrackingLogEntryStatusById(int id, 
+                                                                                       CancellationToken cancellationToken);
     Task<List<TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId,
                                                                                                CancellationToken cancellationToken);
 
