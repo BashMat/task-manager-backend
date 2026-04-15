@@ -78,14 +78,14 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
         ServiceResponse<TrackingLogEntryGetResponse> response = 
             await trackingService.CreateTrackingLogEntry(UserId, request, cancellationToken);
             
-        if (response.Data is not null && response.Success)
+        if (response is { Data: not null, Success: true})
         {
             return CreatedAtAction(nameof(GetTrackingLogEntryById),
                                    new { id = response.Data.Id },
                                    response);
         }
         
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        return HandleServiceResponse(response);
     }
     
     [HttpGet("log-entries")]

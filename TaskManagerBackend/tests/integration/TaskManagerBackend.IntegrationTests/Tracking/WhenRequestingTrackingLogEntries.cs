@@ -48,6 +48,29 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         content.Success.Should().BeTrue();
         content.Message.Should().BeNull();
     }
+    
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(false, false)]
+    public async Task CreatingTrackingLogEntryIsUnsuccessfulIfTrackingLogOrTrackingLogEntryStatusDoesNotExist(bool logExists,
+                                                                                                              bool statusExists)
+    {
+        const string Title = "NewLogEntry";
+        const string Description = "Test description";
+
+        HttpResponseMessage response = await CreateTrackingLogEntry(logExists ? DefaultTrackingLog!.Id : Faker.Random.Int(min: 100),
+                                                                    statusExists ? DefaultTrackingLogEntryStatus!.Id : Faker.Random.Int(min: 100),
+                                                                    Title,
+                                                                    Description);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        content.Detail.Should().Be(MessageResources.CouldNotCreateMessage);
+    }
 
     [Fact]
     public async Task CreatingTrackingLogEntryIsUnsuccessfulIfTitleIsNotSet()
@@ -57,6 +80,37 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
         HttpResponseMessage response = await HttpClient.Post("api/tracking/log-entries", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+    
+    [Fact]
+    public async Task CreatingTrackingLogEntryIsUnsuccessfulIfUserCannotEditTrackingLog()
+    {
+        string userName = Faker.Internet.UserName();
+        string email = Faker.Internet.Email();
+        string password = Faker.Internet.Password(length: 10);
+        UserSignUpRequest signUpRequest = new()
+                                          {
+                                              UserName = userName, 
+                                              Email = email,
+                                              Password = password
+                                          };
+        await HttpClient.SignUp(signUpRequest);
+        await HttpClient.IssueTokenByPasswordAndSetAuthorization(userName, 
+                                                                 password);
+        const string Title = "NewLogEntry";
+        const string Description = "Test description";
+
+        HttpResponseMessage response = await CreateTrackingLogEntry(DefaultTrackingLog!.Id,
+                                                                    DefaultTrackingLogEntryStatus!.Id,
+                                                                    Title,
+                                                                    Description);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.Forbidden);
+        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
     }
     
     [Fact]

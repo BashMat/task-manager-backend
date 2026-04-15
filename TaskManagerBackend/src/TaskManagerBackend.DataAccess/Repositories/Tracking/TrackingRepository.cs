@@ -203,6 +203,15 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         return trackingLogEntryStatus.ToDomain();
     }
 
+    public async Task<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus?> GetTrackingLogEntryStatusById(int id,
+                                                                                                                    CancellationToken cancellationToken)
+    {
+        return await dbContext.TrackingLogEntryStatuses.AsNoTracking()
+                              .Where(o => o.Id == id)
+                              .Select(o => o.ToDomain())
+                              .SingleOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<List<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId, 
                                                                                                                             CancellationToken cancellationToken)
     {
