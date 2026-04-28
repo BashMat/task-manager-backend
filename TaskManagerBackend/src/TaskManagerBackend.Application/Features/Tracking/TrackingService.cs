@@ -126,6 +126,28 @@ public class TrackingService(ITrackingRepository trackingRepository,
     {
         return trackingEntity.CreatedBy == userId;
     }
+    
+    private async Task<ServiceResponse<T>?> CanEditTrackingLog<T>(int trackingLogId,
+                                                                  int userId,
+                                                                  CancellationToken cancellationToken)
+    {
+        TrackingLogEntity? trackingLog = await trackingRepository.GetTrackingLogEntityById(trackingLogId,
+                                                                                           cancellationToken);
+
+        if (trackingLog is null)
+        {
+            return new ServiceResponse<T>(actionResultType: ActionResultType.UserError,
+                                          message: MessageResources.CouldNotCreateMessage);
+        }
+
+        if (!CanEditTrackingEntity(trackingLog, userId))
+        {
+            return new ServiceResponse<T>(actionResultType: ActionResultType.Unauthorized,
+                                          message: MessageResources.AccessDeniedMessage);
+        }
+
+        return null;
+    }
 
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, 
                                                                                            int trackingLogId, 
@@ -143,19 +165,12 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                            TrackingLogEntryCreateRequest request, 
                                                                                            CancellationToken cancellationToken)
     {
-        TrackingLogEntity? trackingLog = await trackingRepository.GetTrackingLogEntityById(request.TrackingLogId,
-                                                                                           cancellationToken);
+        ServiceResponse<TrackingLogEntryGetResponse>? failedResultOrNull = 
+            await CanEditTrackingLog<TrackingLogEntryGetResponse>(request.TrackingLogId, userId, cancellationToken);
 
-        if (trackingLog is null)
+        if (failedResultOrNull is not null)
         {
-            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
-                                                                    message: MessageResources.CouldNotCreateMessage);
-        }
-
-        if (!CanEditTrackingEntity(trackingLog, userId))
-        {
-            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.Unauthorized,
-                                                                    message: MessageResources.AccessDeniedMessage);
+            return failedResultOrNull;
         }
 
         TrackingLogEntryStatus? status = await trackingRepository.GetTrackingLogEntryStatusById(request.StatusId,
