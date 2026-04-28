@@ -220,6 +220,36 @@ public class WhenRequestingTrackingLogEntries : TrackingTestBase
     }
     
     [Fact]
+    public async Task UpdatingTrackingLogEntryByIdIsUnsuccessfulIfTrackingLogEntryDoesNotExist()
+    {
+        TrackingLogEntryGetResponse createdTrackingLogEntry = 
+            await CreateTrackingLogEntryAndValidateResponse(DefaultTrackingLog!.Id,
+                                                            DefaultTrackingLogEntryStatus!.Id);
+        const string Title = "NewLogEntry";
+        const string Description = "Test description";
+        UpdateTrackingLogEntryRequest request = new()
+                                                {
+                                                    Title = Title,
+                                                    Description = Description,
+                                                    TrackingLogId = createdTrackingLogEntry.TrackingLogId,
+                                                    StatusId = createdTrackingLogEntry.Status.Id,
+                                                    OrderIndex = createdTrackingLogEntry.OrderIndex,
+                                                    Priority = createdTrackingLogEntry.Priority,
+                                                    UpdatedAt = createdTrackingLogEntry.UpdatedAt
+                                                };
+
+        HttpResponseMessage response = await HttpClient.UpdateTrackingLogEntry(Faker.Random.Int(100_000_000),
+                                                                               request);
+        ProblemDetails? content = 
+            await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        content.Should().NotBeNull();
+        content.Status.Should().Be((int)HttpStatusCode.NotFound);
+        content.Detail.Should().Be(MessageResources.ResourceDoesNotExist);
+    }
+    
+    [Fact]
     public async Task DeletingTrackingLogEntryByIdIsSuccessful()
     {
         TrackingLogEntryGetResponse createdTrackingLogEntry = 
