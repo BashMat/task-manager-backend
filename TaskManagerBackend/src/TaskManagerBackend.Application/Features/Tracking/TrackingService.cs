@@ -26,21 +26,20 @@ public class TrackingService(ITrackingRepository trackingRepository,
                                                                                  TrackingLogCreateRequest request,
                                                                                  CancellationToken cancellationToken)
     {
-        NewTrackingLog logToInsert = new(StringAttribute.CreateRequired(request.Title),
-                                         StringAttribute.CreateOptional(request.Description),
-                                         userId,
-                                         dateTimeService.UtcNow);
+        NewTrackingLog newLog = new(StringAttribute.CreateRequired(request.Title),
+                                    StringAttribute.CreateOptional(request.Description),
+                                    userId,
+                                    dateTimeService.UtcNow);
 
-        TrackingLog? log = await trackingRepository.CreateTrackingLog(logToInsert, cancellationToken);
-        TrackingLogGetResponse? response = log?.ToDto();
+        TrackingLog? log = await trackingRepository.CreateTrackingLog(newLog, cancellationToken);
 
-        if (response is null)
+        if (log is null)
         {
             return new ServiceResponse<TrackingLogGetResponse>(actionResultType: ActionResultType.ServerError,
                                                                message: MessageResources.CouldNotCreateMessage);
         }
 
-        return response;
+        return log.ToDto();
     }
 
     public async Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId,
