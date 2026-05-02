@@ -2,7 +2,7 @@
 using TaskManagerBackend.DataAccess.Database.Models;
 using TaskManagerBackend.Domain.Entities;
 
-namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
+namespace TaskManagerBackend.DataAccess.Features.Tracking;
 
 public static class TrackingLogQueryables
 {

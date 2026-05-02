@@ -11,7 +11,7 @@ using TaskManagerBackend.Domain.Users;
 
 #endregion
 
-namespace TaskManagerBackend.DataAccess.Repositories.User;
+namespace TaskManagerBackend.DataAccess.Features.User;
 
 public class UserRepository(TaskManagerDbContext dbContext,
                             IDateTimeService dateTimeService,

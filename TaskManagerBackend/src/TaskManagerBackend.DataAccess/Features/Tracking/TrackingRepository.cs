@@ -14,7 +14,7 @@ using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.Tra
 
 #endregion
 
-namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
+namespace TaskManagerBackend.DataAccess.Features.Tracking;
 
 public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepository
 {
