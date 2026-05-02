@@ -24,8 +24,8 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     public async Task<IActionResult> CreateTrackingLog([FromBody] TrackingLogCreateRequest request,
                                                        CancellationToken cancellationToken)
     {
-        ServiceResponse<TrackingLogGetResponse> response = await trackingService.CreateTrackingLog(UserId,
-                                                                                                   request,
+        ServiceResponse<TrackingLogGetResponse> response = await trackingService.CreateTrackingLog(request,
+                                                                                                   UserId,
                                                                                                    cancellationToken);
             
         if (response.Success)
@@ -55,8 +55,8 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     public async Task<IActionResult> EditTrackingLog([FromBody] TrackingLogEditRequest request,
                                                      CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.EditTrackingLog(UserId, 
-                                                                           request, 
+        return HandleServiceResponse(await trackingService.EditTrackingLog(request, 
+                                                                           UserId,
                                                                            cancellationToken));
     }
     
@@ -64,7 +64,9 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     public async Task<IActionResult> DeleteTrackingLogById([FromRoute] int id,
                                                            CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.DeleteTrackingLogById(UserId, id, cancellationToken));
+        return HandleServiceResponse(await trackingService.DeleteTrackingLogById(id,
+                                                                                 UserId,
+                                                                                 cancellationToken));
     }
 
     #endregion
@@ -76,7 +78,7 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
                                                             CancellationToken cancellationToken)
     {
         ServiceResponse<TrackingLogEntryGetResponse> response = 
-            await trackingService.CreateTrackingLogEntry(UserId, request, cancellationToken);
+            await trackingService.CreateTrackingLogEntry(request, UserId, cancellationToken);
             
         if (response is { Data: not null, Success: true})
         {
@@ -109,17 +111,17 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
                                                                 UpdateTrackingLogEntryRequest request,
                                                                 CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.UpdateTrackingLogEntry(UserId,
-                                                                                  id,
-                                                                                  request,
-                                                                                  cancellationToken));
+        return HandleServiceResponse(await trackingService.UpdateTrackingLogEntryById(id, 
+                                                                                      request,
+                                                                                      UserId,
+                                                                                      cancellationToken));
     }
     
     [HttpDelete("log-entries/{id:int}")]
     public async Task<IActionResult> DeleteTrackingLogEntryById([FromRoute] int id,
                                                                 CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.DeleteTrackingLogEntryById(UserId, id, cancellationToken));
+        return HandleServiceResponse(await trackingService.DeleteTrackingLogEntryById(id, UserId, cancellationToken));
     }
 
     #endregion
@@ -132,8 +134,8 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
                                                                   CancellationToken cancellationToken)
     {
         ServiceResponse<TrackingLogEntryStatusGetResponse> response = 
-            await trackingService.CreateTrackingLogStatus(UserId,
-                                                          request,
+            await trackingService.CreateTrackingLogStatus(request,
+                                                          UserId,
                                                           cancellationToken);
             
         if (response.Success)
@@ -148,7 +150,7 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     public async Task<IActionResult> DeleteTrackingLogEntryStatus([FromRoute] int id,
                                                                   CancellationToken cancellationToken)
     {
-        return HandleServiceResponse(await trackingService.DeleteTrackingLogStatus(UserId, id, cancellationToken));
+        return HandleServiceResponse(await trackingService.DeleteTrackingLogStatus(id, UserId, cancellationToken));
     }
 
     #endregion
