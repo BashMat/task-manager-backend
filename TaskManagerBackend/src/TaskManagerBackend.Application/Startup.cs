@@ -20,8 +20,8 @@ using TaskManagerBackend.Application.Utility.Json;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
-using TaskManagerBackend.DataAccess.Repositories.Tracking;
-using TaskManagerBackend.DataAccess.Repositories.User;
+using TaskManagerBackend.DataAccess.Features.Tracking;
+using TaskManagerBackend.DataAccess.Features.User;
 using TaskManagerBackend.Domain.Tracking;
 using TaskManagerBackend.Domain.Users;
 

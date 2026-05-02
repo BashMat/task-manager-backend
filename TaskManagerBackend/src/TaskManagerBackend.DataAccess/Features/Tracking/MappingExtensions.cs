@@ -8,7 +8,7 @@ using TrackingLogEntryStatus = TaskManagerBackend.Domain.Tracking.TrackingLogEnt
 
 #endregion
 
-namespace TaskManagerBackend.DataAccess.Repositories.Tracking;
+namespace TaskManagerBackend.DataAccess.Features.Tracking;
 
 public static class MappingExtensions
 {
