@@ -9,7 +9,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Json;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Workflow;
 using Xunit;
 
 #endregion

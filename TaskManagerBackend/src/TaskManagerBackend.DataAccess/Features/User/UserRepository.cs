@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Database.Models;
-using TaskManagerBackend.Domain.Auth;
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Features.Auth;
+using TaskManagerBackend.Domain.Features.Users;
+using TaskManagerBackend.Domain.Shared.Data;
 
 #endregion
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TaskManagerBackend.Application.Utility.Json;
-using TaskManagerBackend.Domain.Validation;
+using TaskManagerBackend.Domain.Shared.Validation;
 
 namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 

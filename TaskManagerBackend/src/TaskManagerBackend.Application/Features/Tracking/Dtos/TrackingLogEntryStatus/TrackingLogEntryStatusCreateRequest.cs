@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TaskManagerBackend.Domain.Validation;
+using TaskManagerBackend.Domain.Shared.Validation;
 
 namespace TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 

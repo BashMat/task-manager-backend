@@ -5,13 +5,13 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Entities;
-using TaskManagerBackend.Domain.Tracking;
-using TaskManagerBackend.Domain.Tracking.TrackingLog;
-using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Features.Tracking;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus;
+using TaskManagerBackend.Domain.Shared.Data;
+using TaskManagerBackend.Domain.Shared.Entities;
+using TaskManagerBackend.Domain.Shared.Workflow;
 
 #endregion
 

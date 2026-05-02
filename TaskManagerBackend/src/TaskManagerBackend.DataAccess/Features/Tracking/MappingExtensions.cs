@@ -1,10 +1,11 @@
 ﻿#region
 
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Features.Users;
+using TaskManagerBackend.Domain.Shared.Data;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
-using TrackingLogEntryStatus = TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
+using TrackingLogEntryStatus_TrackingLogEntryStatus = TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus;
 
 #endregion
 
@@ -19,53 +20,53 @@ public static class MappingExtensions
                                                  StringAttribute.CreateRequired(user.Email)));
     }
 
-    public static TrackingLogEntryStatus.TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
+    public static TrackingLogEntryStatus_TrackingLogEntryStatus ToDomain(this Database.Models.TrackingLogEntryStatus trackingLogEntryStatus)
     {
-        return new TrackingLogEntryStatus.TrackingLogEntryStatus(trackingLogEntryStatus.Id,
+        return new TrackingLogEntryStatus_TrackingLogEntryStatus(trackingLogEntryStatus.Id,
                                                                  StringAttribute.CreateRequired(trackingLogEntryStatus.Title),
                                                                  StringAttribute.CreateOptional(trackingLogEntryStatus.Description),
                                                                  trackingLogEntryStatus.TrackingLogId);
     }
 
-    public static Domain.Tracking.TrackingLogEntry.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
+    public static Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry ToDomain(this TrackingLogEntry trackingLogEntry)
     {
-        return new Domain.Tracking.TrackingLogEntry.TrackingLogEntry(trackingLogEntry.Id,
-                                                                     StringAttribute.CreateRequired(trackingLogEntry.Title),
-                                                                     StringAttribute.CreateOptional(trackingLogEntry.Description),
-                                                                     trackingLogEntry.TrackingLogId,
-                                                                     trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
-                                                                     trackingLogEntry.Priority,
-                                                                     trackingLogEntry.OrderIndex,
-                                                                     trackingLogEntry.CreatedByNavigation.ToDomain(),
-                                                                     trackingLogEntry.CreatedAt,
-                                                                     trackingLogEntry.UpdatedByNavigation.ToDomain(),
-                                                                     trackingLogEntry.UpdatedAt);
+        return new Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry(trackingLogEntry.Id,
+                                                                              StringAttribute.CreateRequired(trackingLogEntry.Title),
+                                                                              StringAttribute.CreateOptional(trackingLogEntry.Description),
+                                                                              trackingLogEntry.TrackingLogId,
+                                                                              trackingLogEntry.TrackingLogEntryStatus.ToDomain(),
+                                                                              trackingLogEntry.Priority,
+                                                                              trackingLogEntry.OrderIndex,
+                                                                              trackingLogEntry.CreatedByNavigation.ToDomain(),
+                                                                              trackingLogEntry.CreatedAt,
+                                                                              trackingLogEntry.UpdatedByNavigation.ToDomain(),
+                                                                              trackingLogEntry.UpdatedAt);
     }
 
-    public static Domain.Tracking.TrackingLog.TrackingLog ToDomain(this TrackingLog trackingLog)
+    public static Domain.Features.Tracking.TrackingLog.TrackingLog ToDomain(this TrackingLog trackingLog)
     {
-        return new Domain.Tracking.TrackingLog.TrackingLog(trackingLog.Id,
-                                                           StringAttribute.CreateRequired(trackingLog.Title),
-                                                           StringAttribute.CreateOptional(trackingLog.Description),
-                                                           trackingLog.CreatedByNavigation.ToDomain(),
-                                                           trackingLog.CreatedAt,
-                                                           trackingLog.UpdatedByNavigation.ToDomain(),
-                                                           trackingLog.UpdatedAt,
-                                                           trackingLog.TrackingLogEntryStatuses.Select(s => s.ToDomain())
-                                                                      .ToList(),
-                                                           trackingLog.TrackingLogEntries
-                                                                      .Select(entry => entry.ToDomain())
-                                                                      .ToList());
+        return new Domain.Features.Tracking.TrackingLog.TrackingLog(trackingLog.Id,
+                                                                    StringAttribute.CreateRequired(trackingLog.Title),
+                                                                    StringAttribute.CreateOptional(trackingLog.Description),
+                                                                    trackingLog.CreatedByNavigation.ToDomain(),
+                                                                    trackingLog.CreatedAt,
+                                                                    trackingLog.UpdatedByNavigation.ToDomain(),
+                                                                    trackingLog.UpdatedAt,
+                                                                    trackingLog.TrackingLogEntryStatuses.Select(s => s.ToDomain())
+                                                                               .ToList(),
+                                                                    trackingLog.TrackingLogEntries
+                                                                               .Select(entry => entry.ToDomain())
+                                                                               .ToList());
     }
     
-    public static Domain.Tracking.TrackingLog.TrackingLogEntity ToDomainEntity(this TrackingLog trackingLog)
+    public static TrackingLogEntity ToDomainEntity(this TrackingLog trackingLog)
     {
-        return new Domain.Tracking.TrackingLog.TrackingLogEntity(trackingLog.Id,
-                                                                 StringAttribute.CreateRequired(trackingLog.Title),
-                                                                 StringAttribute.CreateOptional(trackingLog.Description),
-                                                                 trackingLog.CreatedBy,
-                                                                 trackingLog.CreatedAt,
-                                                                 trackingLog.UpdatedBy,
-                                                                 trackingLog.UpdatedAt);
+        return new TrackingLogEntity(trackingLog.Id,
+                                     StringAttribute.CreateRequired(trackingLog.Title),
+                                     StringAttribute.CreateOptional(trackingLog.Description),
+                                     trackingLog.CreatedBy,
+                                     trackingLog.CreatedAt,
+                                     trackingLog.UpdatedBy,
+                                     trackingLog.UpdatedAt);
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Workflow;
 using Xunit;
 
 #endregion

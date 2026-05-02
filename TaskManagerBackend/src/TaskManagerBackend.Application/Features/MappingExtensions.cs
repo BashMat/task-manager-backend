@@ -4,7 +4,10 @@ using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus;
+using TaskManagerBackend.Domain.Features.Users;
 
 #endregion
 
@@ -22,7 +25,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogEntryStatusGetResponse ToDto(this Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus trackingLogEntryStatus)
+    public static TrackingLogEntryStatusGetResponse ToDto(this TrackingLogEntryStatus trackingLogEntryStatus)
     {
         return new TrackingLogEntryStatusGetResponse
                {
@@ -33,7 +36,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogEntryGetResponse ToDto(this Domain.Tracking.TrackingLogEntry.TrackingLogEntry trackingLogEntry)
+    public static TrackingLogEntryGetResponse ToDto(this TrackingLogEntry trackingLogEntry)
     {
         return new TrackingLogEntryGetResponse
                {
@@ -51,7 +54,7 @@ public static class MappingExtensions
                };
     }
 
-    public static TrackingLogGetResponse ToDto(this Domain.Tracking.TrackingLog.TrackingLog trackingLog)
+    public static TrackingLogGetResponse ToDto(this TrackingLog trackingLog)
     {
         return new TrackingLogGetResponse
                {

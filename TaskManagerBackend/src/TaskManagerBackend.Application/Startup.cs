@@ -22,8 +22,8 @@ using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.DataAccess.Features.Tracking;
 using TaskManagerBackend.DataAccess.Features.User;
-using TaskManagerBackend.Domain.Tracking;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Features.Tracking;
+using TaskManagerBackend.Domain.Features.Users;
 
 #endregion
 

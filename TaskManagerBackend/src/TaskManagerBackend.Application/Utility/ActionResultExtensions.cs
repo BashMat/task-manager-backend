@@ -1,4 +1,4 @@
-﻿using TaskManagerBackend.Domain.Workflow;
+﻿using TaskManagerBackend.Domain.Shared.Workflow;
 
 namespace TaskManagerBackend.Application.Utility;
 

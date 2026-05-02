@@ -2,12 +2,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database;
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Tracking;
-using TaskManagerBackend.Domain.Tracking.TrackingLog;
-using TaskManagerBackend.Domain.Tracking.TrackingLogEntry;
-using TaskManagerBackend.Domain.Tracking.TrackingLogEntryStatus;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Features.Tracking;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntry;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus;
+using TaskManagerBackend.Domain.Shared.Data;
+using TaskManagerBackend.Domain.Shared.Workflow;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
 using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntryStatus;
@@ -20,8 +20,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
 {
     #region Tracking Log
 
-    public async Task<Domain.Tracking.TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog newTrackingLog, 
-                                                                                  CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLog.TrackingLog?> CreateTrackingLog(NewTrackingLog newTrackingLog, 
+                                                                                           CancellationToken cancellationToken)
     {
         TrackingLog trackingLog = new()
                                   {
@@ -38,8 +38,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         return await GetTrackingLogById(trackingLog.Id, cancellationToken);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId, 
-                                                                                        CancellationToken cancellationToken)
+    public async Task<List<Domain.Features.Tracking.TrackingLog.TrackingLog>> GetAllTrackingLogs(int userId, 
+                                                                                          CancellationToken cancellationToken)
     {
         return await dbContext.TrackingLogs.AsNoTracking()
                               .FilterByCreator(userId)
@@ -48,8 +48,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .ToListAsync(cancellationToken);
     }
 
-    public async Task<Domain.Tracking.TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId, 
-                                                                                   CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLog.TrackingLog?> GetTrackingLogById(int trackingLogId, 
+                                                                                            CancellationToken cancellationToken)
     {
         return await dbContext.TrackingLogs.AsNoTracking()
                               .FilterById(trackingLogId)
@@ -86,9 +86,9 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
-                                                                                           int trackingLogId,
-                                                                                           CancellationToken cancellationToken)
+    public async Task<List<Domain.Features.Tracking.TrackingLog.TrackingLog>> DeleteTrackingLogById(int userId,
+                                                                                    int trackingLogId,
+                                                                                    CancellationToken cancellationToken)
     {
         await dbContext.TrackingLogs.FilterById(trackingLogId).ExecuteDeleteAsync(cancellationToken);
 
@@ -99,8 +99,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
 
     #region Tracking Log Entries
 
-    public async Task<Domain.Tracking.TrackingLogEntry.TrackingLogEntry?> CreateTrackingLogEntry(NewTrackingLogEntry logEntryToInsert, 
-                                                                                                 CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry?> CreateTrackingLogEntry(NewTrackingLogEntry logEntryToInsert, 
+                                                                                          CancellationToken cancellationToken)
     {
         TrackingLogEntry entry = new()
                                  {
@@ -121,8 +121,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         return await GetTrackingLogEntryById(entry.Id, cancellationToken);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLogEntry.TrackingLogEntry>> GetAllTrackingLogEntries(int userId,
-                                                                                                        CancellationToken cancellationToken)
+    public async Task<List<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry>> GetAllTrackingLogEntries(int userId,
+                                                                                        CancellationToken cancellationToken)
     {
         return await dbContext.TrackingLogEntries.AsNoTracking()
                               .FilterByCreator(userId)
@@ -133,8 +133,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .ToListAsync(cancellationToken);
     }
 
-    public async Task<Domain.Tracking.TrackingLogEntry.TrackingLogEntry?> GetTrackingLogEntryById(int trackingLogEntryId,
-                                                                                                  CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry?> GetTrackingLogEntryById(int trackingLogEntryId,
+                                                                                           CancellationToken cancellationToken)
     {
         return await dbContext.TrackingLogEntries.AsNoTracking()
                               .FilterById(trackingLogEntryId)
@@ -145,9 +145,9 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Domain.Tracking.TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int trackingLogEntryId, 
-                                                                                                     UpdatableTrackingLogEntry updatableTrackingLogEntry,
-                                                                                                     CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int trackingLogEntryId, 
+                                                                                     UpdatableTrackingLogEntry updatableTrackingLogEntry,
+                                                                                     CancellationToken cancellationToken)
     {
         TrackingLogEntry? entry = await dbContext.TrackingLogEntries.FilterById(trackingLogEntryId)
                                                  .FirstOrDefaultAsync(cancellationToken);
@@ -171,9 +171,9 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         return await GetTrackingLogEntryById(trackingLogEntryId, cancellationToken);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId, 
-                                                                                                          int trackingLogEntryId,
-                                                                                                          CancellationToken cancellationToken)
+    public async Task<List<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int userId, 
+                                                                                          int trackingLogEntryId,
+                                                                                          CancellationToken cancellationToken)
     {
         await dbContext.TrackingLogEntries.FilterById(trackingLogEntryId).ExecuteDeleteAsync(cancellationToken);
 
@@ -184,8 +184,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
 
     #region Tracking Log Entry Statuses
 
-    public async Task<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus?> CreateTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert,
-                                                                                                                   CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus?> CreateTrackingLogEntryStatus(NewTrackingLogEntryStatus statusToInsert,
+                                                                            CancellationToken cancellationToken)
     {
         TrackingLogEntryStatus trackingLogEntryStatus = new()
                                                         {
@@ -203,8 +203,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         return trackingLogEntryStatus.ToDomain();
     }
 
-    public async Task<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus?> GetTrackingLogEntryStatusById(int id,
-                                                                                                                    CancellationToken cancellationToken)
+    public async Task<Domain.Features.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus?> GetTrackingLogEntryStatusById(int id,
+                                                                             CancellationToken cancellationToken)
     {
         return await dbContext.TrackingLogEntryStatuses.AsNoTracking()
                               .Where(o => o.Id == id)
@@ -212,8 +212,8 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId, 
-                                                                                                                            CancellationToken cancellationToken)
+    public async Task<List<Domain.Features.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>> DeleteTrackingLogEntryStatusById(int trackingLogEntryStatusId, 
+                                                                                     CancellationToken cancellationToken)
     {
         TrackingLogEntryStatus? status = await dbContext.TrackingLogEntryStatuses.AsNoTracking()
                                                         .FilterById(trackingLogEntryStatusId)
@@ -221,7 +221,7 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
 
         if (status is null)
         {
-            return new List<Domain.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>();
+            return new List<Domain.Features.Tracking.TrackingLogEntryStatus.TrackingLogEntryStatus>();
         }
 
         dbContext.Remove(status);
