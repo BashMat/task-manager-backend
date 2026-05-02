@@ -22,8 +22,8 @@ public class TrackingService(ITrackingRepository trackingRepository,
 {
     #region Tracking Logs
 
-    public async Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId,
-                                                                                 TrackingLogCreateRequest request,
+    public async Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(TrackingLogCreateRequest request,
+                                                                                 int userId,
                                                                                  CancellationToken cancellationToken)
     {
         NewTrackingLog newLog = new(StringAttribute.CreateRequired(request.Title),
@@ -70,8 +70,8 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return log.ToDto();
     }
 
-    public async Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(int userId,
-                                                                               TrackingLogEditRequest request,
+    public async Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(TrackingLogEditRequest request,
+                                                                               int userId,
                                                                                CancellationToken cancellationToken)
     {
         TrackingLogEntity? log = await trackingRepository.GetTrackingLogEntityById(request.Id, cancellationToken);
@@ -176,11 +176,10 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return null;
     }
 
-    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId, 
-                                                                                           int trackingLogId, 
+    public async Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int id, int userId,
                                                                                            CancellationToken cancellationToken)
     {
-        List<TrackingLog> logs = await trackingRepository.DeleteTrackingLogById(userId, trackingLogId, cancellationToken);
+        List<TrackingLog> logs = await trackingRepository.DeleteTrackingLogById(id, userId, cancellationToken);
         return logs.Select(l => l.ToDto()).ToList();
     }
 
@@ -188,8 +187,8 @@ public class TrackingService(ITrackingRepository trackingRepository,
 
     #region Tracking Log Entries
 
-    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(int userId, 
-                                                                                           TrackingLogEntryCreateRequest request, 
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(TrackingLogEntryCreateRequest request,
+                                                                                           int userId,
                                                                                            CancellationToken cancellationToken)
     {
         ServiceResponse<TrackingLogEntryGetResponse>? failedResultOrNull = 
@@ -257,10 +256,10 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return entry.ToDto();
     }
 
-    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
-                                                                                           int id,
-                                                                                           UpdateTrackingLogEntryRequest request,
-                                                                                           CancellationToken cancellationToken)
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntryById(int id,
+        UpdateTrackingLogEntryRequest request,
+        int userId,
+        CancellationToken cancellationToken)
     {
         TrackingLogEntry? entry = await trackingRepository.GetTrackingLogEntryById(id, cancellationToken);
 
@@ -317,12 +316,12 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return updatedEntry.ToDto();
     }
 
-    public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId, 
-                                                                                                     int trackingLogEntryId, 
+    public async Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int id,
+                                                                                                     int userId,
                                                                                                      CancellationToken cancellationToken)
     {
         List<TrackingLogEntry> entries = 
-            await trackingRepository.DeleteTrackingLogEntryById(userId, trackingLogEntryId, cancellationToken);
+            await trackingRepository.DeleteTrackingLogEntryById(id, userId, cancellationToken);
         return entries.Select(e => e.ToDto()).ToList();
     }
 
@@ -330,9 +329,10 @@ public class TrackingService(ITrackingRepository trackingRepository,
 
     #region Tracking Log Entry Statuses
 
-    public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId, 
-                                                                                                  TrackingLogEntryStatusCreateRequest request,
-                                                                                                  CancellationToken cancellationToken)
+    public async Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(
+        TrackingLogEntryStatusCreateRequest request,
+        int userId,
+        CancellationToken cancellationToken)
     {
         TrackingLogEntity? trackingLog = await trackingRepository.GetTrackingLogEntityById(request.TrackingLogId,
                                                                                            cancellationToken);
@@ -366,12 +366,12 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return status.ToDto();
     }
 
-    public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
-                                                                                                        int trackingLogEntryStatusId, 
+    public async Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int id,
+                                                                                                        int userId,
                                                                                                         CancellationToken cancellationToken)
     {
         List<TrackingLogEntryStatus> statuses = 
-            await trackingRepository.DeleteTrackingLogEntryStatusById(trackingLogEntryStatusId, cancellationToken);
+            await trackingRepository.DeleteTrackingLogEntryStatusById(id, cancellationToken);
         return statuses.Select(s => s.ToDto()).ToList();
     }
 

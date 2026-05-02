@@ -13,50 +13,50 @@ public interface ITrackingService
 {
     #region Tracking Logs
 
-    Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(int userId,
-                                                                    TrackingLogCreateRequest request,
+    Task<ServiceResponse<TrackingLogGetResponse>> CreateTrackingLog(TrackingLogCreateRequest request,
+                                                                    int userId,
                                                                     CancellationToken cancellationToken);
     Task<ServiceResponse<List<TrackingLogGetResponse>>> GetAllTrackingLogsByUserId(int userId,
                                                                                    CancellationToken cancellationToken);
     Task<ServiceResponse<TrackingLogGetResponse>> GetTrackingLogById(int id,
                                                                      int userId,
                                                                      CancellationToken cancellationToken);
-    Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(int userId,
-                                                                  TrackingLogEditRequest request,
+    Task<ServiceResponse<TrackingLogGetResponse>> EditTrackingLog(TrackingLogEditRequest request,
+                                                                  int userId,
                                                                   CancellationToken cancellationToken);
-    Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int userId,
-                                                                              int trackingLogId,
+    Task<ServiceResponse<List<TrackingLogGetResponse>>> DeleteTrackingLogById(int id,
+                                                                              int userId,
                                                                               CancellationToken cancellationToken);
 
     #endregion
     
     #region Tracking Log Entries
 
-    Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(int userId,
-                                                                              TrackingLogEntryCreateRequest request,
+    Task<ServiceResponse<TrackingLogEntryGetResponse>> CreateTrackingLogEntry(TrackingLogEntryCreateRequest request,
+                                                                              int userId,
                                                                               CancellationToken cancellationToken);
     Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> GetAllTrackingLogEntriesByUserId(int userId,
                                                                                               CancellationToken cancellationToken);
     Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id,
                                                                                int userId,
                                                                                CancellationToken cancellationToken);
-    Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntry(int userId,
-                                                                              int id,
-                                                                              UpdateTrackingLogEntryRequest request,
-                                                                              CancellationToken cancellationToken);
-    Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int userId, 
-                                                                                        int trackingLogEntryId,
+    Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntryById(int id,
+                                                                                  UpdateTrackingLogEntryRequest request,
+                                                                                  int userId,
+                                                                                  CancellationToken cancellationToken);
+    Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int id,
+                                                                                        int userId,
                                                                                         CancellationToken cancellationToken);
 
     #endregion
 
     #region Tracking Log Entry Statuses
 
-    Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(int userId,
-                                                                                     TrackingLogEntryStatusCreateRequest request,
+    Task<ServiceResponse<TrackingLogEntryStatusGetResponse>> CreateTrackingLogStatus(TrackingLogEntryStatusCreateRequest request,
+                                                                                     int userId,
                                                                                      CancellationToken cancellationToken);
-    Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int userId, 
-                                                                                           int trackingLogEntryStatusId,
+    Task<ServiceResponse<List<TrackingLogEntryStatusGetResponse>>> DeleteTrackingLogStatus(int id,
+                                                                                           int userId,
                                                                                            CancellationToken cancellationToken);
 
     #endregion
