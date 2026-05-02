@@ -7,8 +7,8 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Auth;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Features.Auth;
+using TaskManagerBackend.Domain.Shared.Workflow;
 
 #endregion
 

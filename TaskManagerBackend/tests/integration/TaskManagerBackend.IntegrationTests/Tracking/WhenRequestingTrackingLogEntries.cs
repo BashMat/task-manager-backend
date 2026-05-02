@@ -10,7 +10,7 @@ using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntry;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLogEntryStatus;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Workflow;
 using Xunit;
 
 #endregion

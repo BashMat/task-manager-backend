@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Workflow;
 
 #endregion
 

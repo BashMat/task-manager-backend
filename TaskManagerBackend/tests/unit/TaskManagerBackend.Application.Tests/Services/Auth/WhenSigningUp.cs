@@ -4,8 +4,8 @@ using FluentAssertions;
 using Moq;
 using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Utility;
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Users;
+using TaskManagerBackend.Domain.Features.Users;
+using TaskManagerBackend.Domain.Shared.Data;
 using Xunit;
 
 #endregion

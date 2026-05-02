@@ -1,8 +1,8 @@
 ﻿#region Usings
 
 using FluentAssertions;
-using TaskManagerBackend.Domain.Data;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Data;
+using TaskManagerBackend.Domain.Shared.Workflow;
 using Xunit;
 
 #endregion

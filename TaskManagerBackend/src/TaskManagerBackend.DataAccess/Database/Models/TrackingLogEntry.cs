@@ -1,4 +1,4 @@
-﻿using TaskManagerBackend.Domain.Entities;
+﻿using TaskManagerBackend.Domain.Shared.Entities;
 
 namespace TaskManagerBackend.DataAccess.Database.Models;
 

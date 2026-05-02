@@ -1,7 +1,7 @@
 ﻿#region Usings
 
 using System.Text.Json.Serialization;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Shared.Workflow;
 
 #endregion
 

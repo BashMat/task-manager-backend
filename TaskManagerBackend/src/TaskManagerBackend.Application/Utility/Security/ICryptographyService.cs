@@ -1,7 +1,7 @@
 ﻿#region Usings
 
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerBackend.Domain.Auth;
+using TaskManagerBackend.Domain.Features.Auth;
 
 #endregion
 

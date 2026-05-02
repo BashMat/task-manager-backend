@@ -4,8 +4,8 @@ using TaskManagerBackend.Application.Features.User.Dtos;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
-using TaskManagerBackend.Domain.Users;
-using TaskManagerBackend.Domain.Workflow;
+using TaskManagerBackend.Domain.Features.Users;
+using TaskManagerBackend.Domain.Shared.Workflow;
 
 #endregion
 

@@ -1,7 +1,7 @@
 #region Usings
 
 using System.ComponentModel.DataAnnotations;
-using TaskManagerBackend.Domain.Validation;
+using TaskManagerBackend.Domain.Shared.Validation;
 
 #endregion
 

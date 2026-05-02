@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database.Models;
-using TaskManagerBackend.Domain.Entities;
+using TaskManagerBackend.Domain.Shared.Entities;
 
 namespace TaskManagerBackend.DataAccess.Features.Tracking;
 
