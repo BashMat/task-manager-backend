@@ -95,12 +95,11 @@ public class Startup(IConfiguration configuration)
     private void SetUpConfiguration(WebApplicationBuilder builder)
     {
         BuildConnectionStrings();
-        ValidateConfiguration();
-        builder.Services.Configure<TokensConfiguration>(configuration.GetRequiredSection(ConfigurationKeys.TokensSection));
+        ConfigureTokens(builder);
         builder.Services.ConfigureOptions<JwtBearerOptionsConfigurator>();
     }
 
-    private void ValidateConfiguration()
+    private void ConfigureTokens(WebApplicationBuilder builder)
     {
         IConfigurationSection configurationSection = configuration.GetRequiredSection(ConfigurationKeys.TokensSection);
         
@@ -109,12 +108,23 @@ public class Startup(IConfiguration configuration)
             throw new ConfigurationErrorsException("Secret key for token was not specified.");
         }
 
-        string? accessTokenLifeTime = configurationSection[ConfigurationKeys.AccessTokenLifeTimeInMinutesKey];
-        if (string.IsNullOrWhiteSpace(accessTokenLifeTime)
-            || !Double.TryParse(accessTokenLifeTime, out _))
+        string? accessTokenLifeTimeInMinutesAsString = configurationSection[ConfigurationKeys.AccessTokenLifeTimeInMinutesKey];
+        if (string.IsNullOrWhiteSpace(accessTokenLifeTimeInMinutesAsString) ||
+            !int.TryParse(accessTokenLifeTimeInMinutesAsString, out int accessTokenLifeTimeInMinutesAsInt) ||
+            accessTokenLifeTimeInMinutesAsInt <= 0)
         {
             throw new ConfigurationErrorsException("Access token lifetime duration is invalid.");
         }
+        
+        string? refreshTokenLifeTimeInMinutesAsString = configurationSection[ConfigurationKeys.RefreshTokenLifeTimeInMinutesKey];
+        if (string.IsNullOrWhiteSpace(refreshTokenLifeTimeInMinutesAsString) ||
+            !int.TryParse(refreshTokenLifeTimeInMinutesAsString, out int refreshTokenLifeTimeInMinutesAsInt) ||
+            refreshTokenLifeTimeInMinutesAsInt <= 0)
+        {
+            throw new ConfigurationErrorsException("Refresh token lifetime duration is invalid.");
+        }
+        
+        builder.Services.Configure<TokensConfiguration>(configuration.GetRequiredSection(ConfigurationKeys.TokensSection));
     }
 
     private void BuildConnectionStrings()
