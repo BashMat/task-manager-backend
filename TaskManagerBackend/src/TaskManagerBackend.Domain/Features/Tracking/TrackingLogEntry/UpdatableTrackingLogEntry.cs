@@ -7,7 +7,7 @@ public class UpdatableTrackingLogEntry(StringAttribute title,
                                        int trackingLogId,
                                        int statusId,
                                        int? priority,
-                                       double orderIndex,
+                                       decimal orderIndex,
                                        int updatedBy,
                                        DateTime updatedAt)
 {
@@ -16,7 +16,7 @@ public class UpdatableTrackingLogEntry(StringAttribute title,
     public int TrackingLogId { get; } = trackingLogId;
     public int StatusId { get; } = statusId;
     public int? Priority { get; } = priority;
-    public double OrderIndex { get; } = orderIndex;
+    public decimal OrderIndex { get; } = orderIndex;
     public int UpdatedBy { get; } = updatedBy;
     public DateTime UpdatedAt { get; } = updatedAt;
 }
