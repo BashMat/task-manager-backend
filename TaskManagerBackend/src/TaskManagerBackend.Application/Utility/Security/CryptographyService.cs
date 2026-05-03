@@ -164,11 +164,11 @@ public class CryptographyService(IDateTimeService dateTimeService,
 
     private DateTime GetAccessTokenExpirationDateTime()
     {
-        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutesAsDouble);
+        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.AccessTokenLifeTimeInMinutes);
     }
     
     private DateTime GetRefreshTokenExpirationDateTime()
     {
-        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.RefreshTokenLifeTimeInMinutesAsDouble);
+        return dateTimeService.UtcNow.AddMinutes(tokensConfiguration.CurrentValue.RefreshTokenLifeTimeInMinutes);
     }
 }

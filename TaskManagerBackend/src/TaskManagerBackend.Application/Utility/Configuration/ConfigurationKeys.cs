@@ -8,6 +8,7 @@ public static class ConfigurationKeys
     public const string TokensSection = "Tokens";
     public const string SecretKey = "Secret";
     public const string AccessTokenLifeTimeInMinutesKey = "AccessTokenLifeTimeInMinutes";
+    public const string RefreshTokenLifeTimeInMinutesKey = "RefreshTokenLifeTimeInMinutes";
 
     public const string ConnectionStringsSection = "ConnectionStrings";
     public const string ConnectionStringsDataSection = "ConnectionStringsData";
