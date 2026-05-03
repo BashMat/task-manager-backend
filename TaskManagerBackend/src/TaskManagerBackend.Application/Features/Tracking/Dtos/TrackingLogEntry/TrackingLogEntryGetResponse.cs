@@ -15,7 +15,7 @@ public class TrackingLogEntryGetResponse
     public int TrackingLogId { get; init; }
     public required TrackingLogEntryStatusGetResponse Status { get; init; }
     public int? Priority { get; init; }
-    public double OrderIndex { get; init; }
+    public decimal OrderIndex { get; init; }
     public required UserInfoDto CreatedBy { get; init; }
     public DateTime CreatedAt { get; init; }
     public required UserInfoDto UpdatedBy { get; init; }

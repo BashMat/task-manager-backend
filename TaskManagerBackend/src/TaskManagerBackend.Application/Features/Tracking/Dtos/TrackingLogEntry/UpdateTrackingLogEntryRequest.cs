@@ -22,7 +22,7 @@ public class UpdateTrackingLogEntryRequest
     public int? Priority { get; init; }
 
     [Range(Constants.MinOrderIndex, Constants.MaxOrderIndex)]
-    public double OrderIndex { get; init; }
+    public decimal OrderIndex { get; init; }
 
     public DateTime UpdatedAt { get; init; }
 }

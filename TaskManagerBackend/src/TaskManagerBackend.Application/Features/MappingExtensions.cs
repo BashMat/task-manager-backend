@@ -46,7 +46,7 @@ public static class MappingExtensions
                    TrackingLogId = trackingLogEntry.TrackingLogId,
                    Status = trackingLogEntry.Status.ToDto(),
                    Priority = trackingLogEntry.Priority,
-                   OrderIndex = (double)trackingLogEntry.OrderIndex,
+                   OrderIndex = trackingLogEntry.OrderIndex,
                    CreatedAt = trackingLogEntry.CreatedAt,
                    CreatedBy = trackingLogEntry.CreatedBy.ToDto(),
                    UpdatedAt = trackingLogEntry.UpdatedAt,

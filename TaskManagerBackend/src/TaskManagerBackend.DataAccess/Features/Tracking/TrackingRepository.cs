@@ -162,7 +162,7 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         entry.TrackingLogId = updatableTrackingLogEntry.TrackingLogId;
         entry.StatusId = updatableTrackingLogEntry.StatusId;
         entry.Priority = updatableTrackingLogEntry.Priority;
-        entry.OrderIndex = (decimal)updatableTrackingLogEntry.OrderIndex;
+        entry.OrderIndex = updatableTrackingLogEntry.OrderIndex;
         entry.UpdatedBy = updatableTrackingLogEntry.UpdatedBy;
         entry.UpdatedAt = updatableTrackingLogEntry.UpdatedAt;
         
