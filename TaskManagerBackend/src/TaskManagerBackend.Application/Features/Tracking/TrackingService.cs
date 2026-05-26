@@ -256,10 +256,11 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return entry.ToDto();
     }
 
+    [Obsolete("Use specialized actions instead of single update action")]
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntryById(int id,
-        UpdateTrackingLogEntryRequest request,
-        int userId,
-        CancellationToken cancellationToken)
+                                                                                               UpdateTrackingLogEntryRequest request,
+                                                                                               int userId,
+                                                                                               CancellationToken cancellationToken)
     {
         TrackingLogEntry? entry = await trackingRepository.GetTrackingLogEntryById(id, cancellationToken);
 
@@ -306,6 +307,88 @@ public class TrackingService(ITrackingRepository trackingRepository,
 
         TrackingLogEntry? updatedEntry = 
             await trackingRepository.UpdateTrackingLogEntryById(id, updatableTrackingLogEntry, cancellationToken);
+        
+        if (updatedEntry is null)
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
+                                                                    message: MessageResources.ResourceDoesNotExist);
+        }
+        
+        return updatedEntry.ToDto();
+    }
+
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> MoveTrackingLogEntry(TrackingLogEntryMoveRequest request,
+                                                                                         int userId,
+                                                                                         CancellationToken cancellationToken)
+    {
+        if (request.TrackingLogEntryStatusId is { HasValue: false } &&
+            request.OrderIndex is { HasValue: false })
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                    message: MessageResources.ValidationErrorTitle);
+        }
+        
+        TrackingLogEntry? entry = await trackingRepository.GetTrackingLogEntryById(request.Id, cancellationToken);
+
+        if (entry is null)
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
+                                                                    message: MessageResources.ResourceDoesNotExist);
+        }
+        
+        if (!CanEditTrackingEntity(entry, userId))
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                                    message: MessageResources.AccessDeniedMessage);
+        }
+
+        TrackingLogEntryStatus? targetTrackingLogEntryStatusToMoveTo = null;
+        if (request.TrackingLogEntryStatusId is { HasValue: true } &&
+            entry.Status.Id != request.TrackingLogEntryStatusId.Value)
+        {
+            targetTrackingLogEntryStatusToMoveTo =
+                await trackingRepository.GetTrackingLogEntryStatusById(request.TrackingLogEntryStatusId.HasValue
+                                                                           ? request.TrackingLogEntryStatusId
+                                                                                    .Value
+                                                                           : entry.Status.Id,
+                                                                       cancellationToken);
+
+            if (targetTrackingLogEntryStatusToMoveTo is null)
+            {
+                return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                        message: MessageResources.ValidationErrorTitle);
+            }
+
+            if (entry.TrackingLogId != targetTrackingLogEntryStatusToMoveTo.TrackingLogId)
+            {
+                ServiceResponse<TrackingLogEntryGetResponse>? failedResultOrNull = 
+                    await CanActOnTrackingLogChildEntity<TrackingLogEntryGetResponse>(targetTrackingLogEntryStatusToMoveTo.TrackingLogId,
+                                                                                      userId,
+                                                                                      cancellationToken);
+
+                if (failedResultOrNull is not null)
+                {
+                    return failedResultOrNull;
+                }
+            }
+        }
+
+        int targetTrackingLogId = targetTrackingLogEntryStatusToMoveTo?.TrackingLogId ?? entry.TrackingLogId;
+        int targetTrackingLogEntryStatusId = targetTrackingLogEntryStatusToMoveTo?.Id ?? entry.Status.Id;
+
+        UpdatableTrackingLogEntry updatableTrackingLogEntry = new(entry.Title,
+                                                                  entry.Description,
+                                                                  targetTrackingLogId,
+                                                                  targetTrackingLogEntryStatusId,
+                                                                  entry.Priority,
+                                                                  request.OrderIndex is { HasValue: true }
+                                                                      ? request.OrderIndex.Value
+                                                                      : entry.OrderIndex,
+                                                                  userId,
+                                                                  dateTimeService.UtcNow);
+
+        TrackingLogEntry? updatedEntry = 
+            await trackingRepository.UpdateTrackingLogEntryById(request.Id, updatableTrackingLogEntry, cancellationToken);
         
         if (updatedEntry is null)
         {
