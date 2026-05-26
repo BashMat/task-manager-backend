@@ -109,8 +109,8 @@ public class TrackingTestBase : IntegrationTestBase,
     }
 
     protected async Task<TrackingLogEntryStatusGetResponse> CreateTrackingLogEntryStatusAndValidateResponse(int trackingLogId, 
-                                                                                                 string? title = null, 
-                                                                                                 string? description = null)
+                                                                                                            string? title = null,
+                                                                                                            string? description = null)
     {
         var creationResponse = await CreateTrackingLogEntryStatus(trackingLogId,
                                                                   title,
