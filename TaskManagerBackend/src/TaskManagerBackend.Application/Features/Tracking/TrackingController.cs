@@ -106,6 +106,7 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
     }
     
     [HttpPut("log-entries/{id:int}")]
+    [Obsolete("Use specialized actions instead of single update action")]
     public async Task<IActionResult> UpdateTrackingLogEntryById([FromRoute] int id,
                                                                 [FromBody] 
                                                                 UpdateTrackingLogEntryRequest request,
@@ -115,6 +116,16 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
                                                                                       request,
                                                                                       UserId,
                                                                                       cancellationToken));
+    }
+    
+    [HttpPost("log-entries/move")]
+    public async Task<IActionResult> MoveTrackingLogEntry([FromBody] 
+                                                          TrackingLogEntryMoveRequest request,
+                                                          CancellationToken cancellationToken)
+    {
+        return HandleServiceResponse(await trackingService.MoveTrackingLogEntry(request,
+                                                                                UserId,
+                                                                                cancellationToken));
     }
     
     [HttpDelete("log-entries/{id:int}")]

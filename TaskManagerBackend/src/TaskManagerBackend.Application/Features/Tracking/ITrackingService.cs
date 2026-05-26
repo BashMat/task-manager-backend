@@ -40,10 +40,14 @@ public interface ITrackingService
     Task<ServiceResponse<TrackingLogEntryGetResponse>> GetTrackingLogEntryById(int id,
                                                                                int userId,
                                                                                CancellationToken cancellationToken);
+    [Obsolete("Use specialized actions instead of single update action")]
     Task<ServiceResponse<TrackingLogEntryGetResponse>> UpdateTrackingLogEntryById(int id,
                                                                                   UpdateTrackingLogEntryRequest request,
                                                                                   int userId,
                                                                                   CancellationToken cancellationToken);
+    Task<ServiceResponse<TrackingLogEntryGetResponse>> MoveTrackingLogEntry(TrackingLogEntryMoveRequest request,
+                                                                            int userId,
+                                                                            CancellationToken cancellationToken);
     Task<ServiceResponse<List<TrackingLogEntryGetResponse>>> DeleteTrackingLogEntryById(int id,
                                                                                         int userId,
                                                                                         CancellationToken cancellationToken);
