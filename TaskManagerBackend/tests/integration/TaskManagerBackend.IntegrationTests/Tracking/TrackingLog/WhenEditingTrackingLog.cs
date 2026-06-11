@@ -8,115 +8,16 @@ using TaskManagerBackend.Application.Features.Auth.Dtos;
 using TaskManagerBackend.Application.Features.Tracking.Dtos.TrackingLog;
 using TaskManagerBackend.Application.Utility;
 using TaskManagerBackend.Application.Utility.Json;
-using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.Domain.Shared.Workflow;
 using Xunit;
 
 #endregion
 
-namespace TaskManagerBackend.IntegrationTests.Tracking;
+namespace TaskManagerBackend.IntegrationTests.Tracking.TrackingLog;
 
 // TODO: Add tests for problem details responses (request validation, errors during action execution)
-public class WhenRequestingTrackingLogs : TrackingTestBase
+public class WhenEditingTrackingLog(MsSqlTests fixture) : TrackingTestBase(fixture)
 {
-    public WhenRequestingTrackingLogs(MsSqlTests fixture) : base(fixture) { }
-
-    [Fact]
-    public async Task CreatingTrackingLogIsSuccessful()
-    {
-        DateTime utcDateTimeBeforeRequest = new DateTimeService().UtcNow;
-        const string Title = "NewLog";
-        const string Description = "Test description";
-
-        HttpResponseMessage response = await CreateTrackingLog(Title, Description);
-        ServiceResponse<TrackingLogGetResponse>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogGetResponse>>();
-
-        response.EnsureSuccessStatusCode();
-        content.Should().NotBeNull();
-        content.Data.Should().NotBeNull();
-        content.Data.Title.Should().Be(Title);
-        content.Data.Description.Should().Be(Description);
-        content.Data.CreatedBy.UserName.Should().Be(UserName);
-        content.Data.CreatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
-        content.Data.UpdatedBy.UserName.Should().Be(UserName);
-        content.Data.UpdatedAt.Should().BeAfter(utcDateTimeBeforeRequest);
-        content.Data.TrackingLogEntries.Should().BeEmpty();
-        content.Data.TrackingLogEntriesStatuses.Should().BeEmpty();
-        content.Success.Should().BeTrue();
-        content.Message.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task CreatingTrackingLogIsUnsuccessfulIfTitleIsNotSet()
-    {
-        var request = new { Property = 1 };
-
-        HttpResponseMessage response = await HttpClient.Post("api/tracking/logs", request);
-
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-    
-    [Fact]
-    public async Task GettingTrackingLogByIdIsSuccessful()
-    {
-        TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
-
-        HttpResponseMessage response = await HttpClient.GetTrackingLogById(createdTrackingLog.Id);
-        ServiceResponse<TrackingLogGetResponse>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogGetResponse>>();
-
-        response.EnsureSuccessStatusCode();
-        content.Should().NotBeNull();
-        content.Data.Should().BeEquivalentTo(createdTrackingLog);
-        content.Success.Should().BeTrue();
-        content.Message.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task GettingTrackingLogByIdIsFailedIfUserCannotGetTrackingLog()
-    {
-        TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
-        string userName = Faker.Internet.UserName();
-        string email = Faker.Internet.Email();
-        string password = Faker.Internet.Password(length: 10);
-        UserSignUpRequest signUpRequest = new()
-                                          {
-                                              UserName = userName, 
-                                              Email = email,
-                                              Password = password
-                                          };
-
-        await HttpClient.SignUp(signUpRequest);
-        await HttpClient.IssueTokenByPasswordAndSetAuthorization(userName, 
-                                                                 password);
-
-        HttpResponseMessage response = await HttpClient.GetTrackingLogById(createdTrackingLog.Id);
-        ProblemDetails? content = 
-            await response.Content.ReadFromJsonAsync<ProblemDetails>();
-
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        content.Should().NotBeNull();
-        content.Status.Should().Be((int)HttpStatusCode.Forbidden);
-        content.Detail.Should().Be(MessageResources.AccessDeniedMessage);
-    }
-    
-    [Fact]
-    public async Task GettingTrackingLogsIsSuccessful()
-    {
-        await CreateTrackingLog();
-
-        HttpResponseMessage response = await HttpClient.GetTrackingLogs();
-        ServiceResponse<IReadOnlyCollection<TrackingLogGetResponse>>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<IReadOnlyCollection<TrackingLogGetResponse>>>();
-
-        response.EnsureSuccessStatusCode();
-        content.Should().NotBeNull();
-        content.Data.Should().NotBeEmpty();
-        content.Success.Should().BeTrue();
-        content.Message.Should().BeNull();
-    }
-    
     [Theory]
     [InlineData(true, true)]
     [InlineData(true, null)]
@@ -239,21 +140,5 @@ public class WhenRequestingTrackingLogs : TrackingTestBase
         content.Should().NotBeNull();
         content.Status.Should().Be((int)HttpStatusCode.BadRequest);
         content.Detail.Should().Be(MessageResources.ValidationErrorTitle);
-    }
-    
-    [Fact]
-    public async Task DeletingTrackingLogByIdIsSuccessful()
-    {
-        TrackingLogGetResponse createdTrackingLog = await CreateTrackingLogAndValidateResponse();
-
-        HttpResponseMessage response = await HttpClient.DeleteTrackingLogById(createdTrackingLog.Id);
-        ServiceResponse<IReadOnlyCollection<TrackingLogGetResponse>>? content = 
-            await response.Content.ReadFromJsonAsync<ServiceResponse<IReadOnlyCollection<TrackingLogGetResponse>>>();
-
-        response.EnsureSuccessStatusCode();
-        content.Should().NotBeNull();
-        content.Data.Should().NotContainEquivalentOf(createdTrackingLog);
-        content.Success.Should().BeTrue();
-        content.Message.Should().BeNull();
     }
 }

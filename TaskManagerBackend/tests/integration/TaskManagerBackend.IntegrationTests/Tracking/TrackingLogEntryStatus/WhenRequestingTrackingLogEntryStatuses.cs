@@ -9,13 +9,11 @@ using Xunit;
 
 #endregion
 
-namespace TaskManagerBackend.IntegrationTests.Tracking;
+namespace TaskManagerBackend.IntegrationTests.Tracking.TrackingLogEntryStatus;
 
 // TODO: Add tests for problem details responses (request validation, errors during action execution)
-public class WhenRequestingTrackingLogEntryStatuses : TrackingTestBase
+public class WhenRequestingTrackingLogEntryStatuses(MsSqlTests fixture) : TrackingTestBase(fixture)
 {
-    public WhenRequestingTrackingLogEntryStatuses(MsSqlTests fixture) : base(fixture) { }
-
     [Fact]
     public async Task CreatingTrackingLogEntryStatusIsSuccessful()
     {
