@@ -45,6 +45,10 @@ public interface ITrackingService
                                                                                   UpdateTrackingLogEntryRequest request,
                                                                                   int userId,
                                                                                   CancellationToken cancellationToken);
+    
+    Task<ServiceResponse<TrackingLogEntryGetResponse>> EditTrackingLogEntry(TrackingLogEntryEditRequest request,
+                                                                            int userId,
+                                                                            CancellationToken cancellationToken);
     Task<ServiceResponse<TrackingLogEntryGetResponse>> MoveTrackingLogEntry(TrackingLogEntryMoveRequest request,
                                                                             int userId,
                                                                             CancellationToken cancellationToken);

@@ -122,31 +122,35 @@ public class TrackingTestBase : IntegrationTestBase,
         return creationResponseContent.Data;
     }
     
-    protected async Task<HttpResponseMessage> CreateTrackingLogEntry(int trackingLogId, 
-                                                                     int trackingLogEntryStatusId, 
-                                                                     string? title = null, 
-                                                                     string? description = null)
+    protected async Task<HttpResponseMessage> CreateTrackingLogEntry(int trackingLogId,
+                                                                     int trackingLogEntryStatusId,
+                                                                     string? title = null,
+                                                                     string? description = null,
+                                                                     double orderIndex = 0)
     {
         var request = new TrackingLogEntryCreateRequest()
                       {
                           TrackingLogId = trackingLogId,
                           StatusId = trackingLogEntryStatusId,
                           Title = title ?? Faker.Lorem.Word(),
-                          Description = description ?? Faker.Lorem.Text()
+                          Description = description ?? Faker.Lorem.Text(),
+                          OrderIndex = orderIndex
                       };
 
         return await HttpClient.CreateTrackingLogEntry(request);
     }
     
-    protected async Task<TrackingLogEntryGetResponse> CreateTrackingLogEntryAndValidateResponse(int trackingLogId, 
-                                                                                                int trackingLogEntryStatusId, 
-                                                                                                string? title = null, 
-                                                                                                string? description = null)
+    protected async Task<TrackingLogEntryGetResponse> CreateTrackingLogEntryAndValidateResponse(int trackingLogId,
+                                                                                                int trackingLogEntryStatusId,
+                                                                                                string? title = null,
+                                                                                                string? description = null,
+                                                                                                double orderIndex = 0)
     {
         var creationResponse = await CreateTrackingLogEntry(trackingLogId,
                                                             trackingLogEntryStatusId,
                                                             title,
-                                                            description);
+                                                            description,
+                                                            orderIndex);
         var creationResponseContent =
             await creationResponse.Content.ReadFromJsonAsync<ServiceResponse<TrackingLogEntryGetResponse>>();
         creationResponseContent.Should().NotBeNull();
@@ -166,5 +170,21 @@ public class TrackingTestBase : IntegrationTestBase,
                                            };
 
         return await HttpClient.EditTrackingLog(request);
+    }
+    
+    protected async Task<HttpResponseMessage> EditTrackingLogEntry(int id,
+                                                                   Optional<string> title,
+                                                                   Optional<int> trackingLogEntryStatusId,
+                                                                   Optional<string> description)
+    {
+        TrackingLogEntryEditRequest request = new()
+                                         {
+                                             Id = id,
+                                             Title = title,
+                                             TrackingLogEntryStatusId = trackingLogEntryStatusId,
+                                             Description = description
+                                         };
+
+        return await HttpClient.EditTrackingLogEntry(request);
     }
 }

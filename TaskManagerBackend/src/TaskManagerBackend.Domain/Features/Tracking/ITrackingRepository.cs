@@ -8,7 +8,7 @@ using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus;
 
 namespace TaskManagerBackend.Domain.Features.Tracking;
 
-public interface ITrackingRepository
+public interface ITrackingRepository : ITrackingQueries
 {
     #region Tracking Logs
 
@@ -35,9 +35,13 @@ public interface ITrackingRepository
                                                                            CancellationToken cancellationToken);
     Task<TrackingLogEntry.TrackingLogEntry?> GetTrackingLogEntryById(int id,
                                                                      CancellationToken cancellationToken);
+    Task<TrackingLogEntryEntity?> GetTrackingLogEntryEntityById(int id,
+                                                                CancellationToken cancellationToken);
     Task<TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int id,
                                                                         UpdatableTrackingLogEntry updatableTrackingLogEntry,
                                                                         CancellationToken cancellationToken);
+    Task Save(TrackingLogEntryEntity logEntry,
+              CancellationToken cancellationToken);
     Task<List<TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int id,
                                                                              int userId,
                                                                              CancellationToken cancellationToken);

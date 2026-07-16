@@ -118,6 +118,16 @@ public class TrackingController(ITrackingService trackingService) : ControllerBa
                                                                                       cancellationToken));
     }
     
+    [HttpPost("log-entries/edit")]
+    public async Task<IActionResult> EditTrackingLogEntry([FromBody] 
+                                                          TrackingLogEntryEditRequest request,
+                                                          CancellationToken cancellationToken)
+    {
+        return HandleServiceResponse(await trackingService.EditTrackingLogEntry(request,
+                                                                                UserId,
+                                                                                cancellationToken));
+    }
+    
     [HttpPost("log-entries/move")]
     public async Task<IActionResult> MoveTrackingLogEntry([FromBody] 
                                                           TrackingLogEntryMoveRequest request,
