@@ -145,6 +145,14 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
                               .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<TrackingLogEntryEntity?> GetTrackingLogEntryEntityById(int id,
+                                                                             CancellationToken cancellationToken)
+    {
+        return await dbContext.TrackingLogEntries.FilterById(id)
+                              .Select(log => log.ToDomainEntity())
+                              .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry?> UpdateTrackingLogEntryById(int id, 
         UpdatableTrackingLogEntry updatableTrackingLogEntry,
         CancellationToken cancellationToken)
@@ -169,6 +177,27 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return await GetTrackingLogEntryById(id, cancellationToken);
+    }
+    
+    public async Task Save(TrackingLogEntryEntity logEntry, 
+                           CancellationToken cancellationToken)
+    {
+        TrackingLogEntry? dbLogEntry = await dbContext.TrackingLogEntries.FilterById(logEntry.Id)
+                                                      .FirstOrDefaultAsync(cancellationToken);
+
+        if (dbLogEntry is null)
+        {
+            throw new InvariantException(actionResultType: ActionResultType.DataConflict, 
+                                         message: MessageResources.ResourceDoesNotExist);
+        }
+
+        dbLogEntry.Title = logEntry.Title.Value;
+        dbLogEntry.StatusId = logEntry.TrackingLogEntryStatusId;
+        dbLogEntry.Description = logEntry.Description?.Value;
+        dbLogEntry.UpdatedBy = logEntry.UpdatedBy;
+        dbLogEntry.UpdatedAt = logEntry.UpdatedAt;
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<List<Domain.Features.Tracking.TrackingLogEntry.TrackingLogEntry>> DeleteTrackingLogEntryById(int id,

@@ -1,6 +1,7 @@
 ﻿#region
 
 using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
+using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Domain.Features.Users;
 using TaskManagerBackend.Domain.Shared.Data;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
@@ -68,5 +69,17 @@ public static class MappingExtensions
                                      trackingLog.CreatedAt,
                                      trackingLog.UpdatedBy,
                                      trackingLog.UpdatedAt);
+    }
+    
+    public static TrackingLogEntryEntity ToDomainEntity(this TrackingLogEntry trackingLogEntry)
+    {
+        return new TrackingLogEntryEntity(trackingLogEntry.Id,
+                                          StringAttribute.CreateRequired(trackingLogEntry.Title),
+                                          trackingLogEntry.StatusId,
+                                          StringAttribute.CreateOptional(trackingLogEntry.Description),
+                                          trackingLogEntry.CreatedBy,
+                                          trackingLogEntry.CreatedAt,
+                                          trackingLogEntry.UpdatedBy,
+                                          trackingLogEntry.UpdatedAt);
     }
 }

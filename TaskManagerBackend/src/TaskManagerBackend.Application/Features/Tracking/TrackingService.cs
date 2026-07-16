@@ -317,6 +317,68 @@ public class TrackingService(ITrackingRepository trackingRepository,
         return updatedEntry.ToDto();
     }
 
+    public async Task<ServiceResponse<TrackingLogEntryGetResponse>> EditTrackingLogEntry(TrackingLogEntryEditRequest request,
+                                                                                         int userId,
+                                                                                         CancellationToken cancellationToken)
+    {
+        if (request.Title is { HasValue: false } &&
+            request.TrackingLogEntryStatusId is { HasValue: false } && 
+            request.Description is { HasValue: false })
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                    message: MessageResources.ValidationErrorTitle);
+        }
+        
+        TrackingLogEntryEntity? logEntry = await trackingRepository.GetTrackingLogEntryEntityById(request.Id, cancellationToken);
+        
+        if (logEntry is null)
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.ResourceNotFound,
+                                                                    message: MessageResources.ResourceDoesNotExist);
+        }
+        
+        if (!CanEditTrackingEntity(logEntry, userId))
+        {
+            return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.Unauthorized,
+                                                                    message: MessageResources.AccessDeniedMessage);
+        }
+
+        switch (request.Title)
+        {
+            case { HasValue: true, Value: null }:
+                return new ServiceResponse<TrackingLogEntryGetResponse>(actionResultType: ActionResultType.UserError,
+                                                                        message: MessageResources.ValidationErrorTitle);
+            case { HasValue: true, Value: not null }:
+            {
+                StringAttribute targetTitle = StringAttribute.CreateRequired(request.Title.Value);
+                logEntry.RenameToByUser(targetTitle,
+                                        userId,
+                                        dateTimeService.UtcNow);
+                break;
+            }
+        }
+        
+        if (request.TrackingLogEntryStatusId.HasValue)
+        {
+            logEntry.ChangeStatusToByUser(request.TrackingLogEntryStatusId.Value,
+                                          userId,
+                                          dateTimeService.UtcNow);
+        }
+
+        if (request.Description.HasValue)
+        {
+            StringAttribute? targetDescription = StringAttribute.CreateOptional(request.Description.Value);
+        
+            logEntry.EditDescriptionToByUser(targetDescription,
+                                             userId,
+                                             dateTimeService.UtcNow);
+        }
+        
+        await trackingRepository.Save(logEntry, cancellationToken);
+
+        return await GetTrackingLogEntryById(logEntry.Id, userId, cancellationToken);
+    }
+
     public async Task<ServiceResponse<TrackingLogEntryGetResponse>> MoveTrackingLogEntry(TrackingLogEntryMoveRequest request,
                                                                                          int userId,
                                                                                          CancellationToken cancellationToken)

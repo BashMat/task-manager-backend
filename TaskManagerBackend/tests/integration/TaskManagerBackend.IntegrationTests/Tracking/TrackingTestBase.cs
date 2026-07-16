@@ -167,4 +167,20 @@ public class TrackingTestBase : IntegrationTestBase,
 
         return await HttpClient.EditTrackingLog(request);
     }
+    
+    protected async Task<HttpResponseMessage> EditTrackingLogEntry(int id,
+                                                                   Optional<string> title,
+                                                                   Optional<int> trackingLogEntryStatusId,
+                                                                   Optional<string> description)
+    {
+        TrackingLogEntryEditRequest request = new()
+                                         {
+                                             Id = id,
+                                             Title = title,
+                                             TrackingLogEntryStatusId = trackingLogEntryStatusId,
+                                             Description = description
+                                         };
+
+        return await HttpClient.EditTrackingLogEntry(request);
+    }
 }
