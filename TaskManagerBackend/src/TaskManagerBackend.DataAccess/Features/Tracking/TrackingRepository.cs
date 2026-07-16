@@ -1,5 +1,6 @@
 ﻿#region Usings
 
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TaskManagerBackend.DataAccess.Database;
 using TaskManagerBackend.Domain.Features.Tracking;
@@ -7,7 +8,6 @@ using TaskManagerBackend.Domain.Features.Tracking.TrackingLog;
 using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntry;
 using TaskManagerBackend.Domain.Features.Tracking.TrackingLogEntryStatus;
 using TaskManagerBackend.Domain.Shared.Data;
-using TaskManagerBackend.Domain.Shared.Workflow;
 using TrackingLog = TaskManagerBackend.DataAccess.Database.Models.TrackingLog;
 using TrackingLogEntry = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntry;
 using TrackingLogEntryStatus = TaskManagerBackend.DataAccess.Database.Models.TrackingLogEntryStatus;
@@ -69,19 +69,16 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
     public async Task Save(TrackingLogEntity log, 
                            CancellationToken cancellationToken)
     {
-        TrackingLog? dbLog = await dbContext.TrackingLogs.FilterById(log.Id)
-                                            .FirstOrDefaultAsync(cancellationToken);
+        TrackingLog? entity = await dbContext.TrackingLogs.FilterById(log.Id)
+                                             .FirstOrDefaultAsync(cancellationToken);
 
-        if (dbLog is null)
-        {
-            throw new InvariantException(actionResultType: ActionResultType.DataConflict, 
-                                         message: MessageResources.ResourceDoesNotExist);
-        }
+        NotFoundException.ThrowIfNull(entity);
+        Debug.Assert(entity != null);
 
-        dbLog.Title = log.Title.Value;
-        dbLog.Description = log.Description?.Value;
-        dbLog.UpdatedBy = log.UpdatedBy;
-        dbLog.UpdatedAt = log.UpdatedAt;
+        entity.Title = log.Title.Value;
+        entity.Description = log.Description?.Value;
+        entity.UpdatedBy = log.UpdatedBy;
+        entity.UpdatedAt = log.UpdatedAt;
         
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -182,20 +179,17 @@ public class TrackingRepository(TaskManagerDbContext dbContext) : ITrackingRepos
     public async Task Save(TrackingLogEntryEntity logEntry, 
                            CancellationToken cancellationToken)
     {
-        TrackingLogEntry? dbLogEntry = await dbContext.TrackingLogEntries.FilterById(logEntry.Id)
-                                                      .FirstOrDefaultAsync(cancellationToken);
+        TrackingLogEntry? entity = await dbContext.TrackingLogEntries.FilterById(logEntry.Id)
+                                                  .FirstOrDefaultAsync(cancellationToken);
 
-        if (dbLogEntry is null)
-        {
-            throw new InvariantException(actionResultType: ActionResultType.DataConflict, 
-                                         message: MessageResources.ResourceDoesNotExist);
-        }
+        NotFoundException.ThrowIfNull(entity);
+        Debug.Assert(entity != null);
 
-        dbLogEntry.Title = logEntry.Title.Value;
-        dbLogEntry.StatusId = logEntry.TrackingLogEntryStatusId;
-        dbLogEntry.Description = logEntry.Description?.Value;
-        dbLogEntry.UpdatedBy = logEntry.UpdatedBy;
-        dbLogEntry.UpdatedAt = logEntry.UpdatedAt;
+        entity.Title = logEntry.Title.Value;
+        entity.StatusId = logEntry.TrackingLogEntryStatusId;
+        entity.Description = logEntry.Description?.Value;
+        entity.UpdatedBy = logEntry.UpdatedBy;
+        entity.UpdatedAt = logEntry.UpdatedAt;
         
         await dbContext.SaveChangesAsync(cancellationToken);
     }
