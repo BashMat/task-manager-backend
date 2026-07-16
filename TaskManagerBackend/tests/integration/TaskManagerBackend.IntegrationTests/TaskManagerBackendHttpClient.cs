@@ -159,6 +159,17 @@ public class TaskManagerBackendHttpClient
         return await _httpClient.PutAsJsonAsync($"api/tracking/log-entries/{id}", request);
     }
     
+    public async Task<HttpResponseMessage> EditTrackingLogEntry(TrackingLogEntryEditRequest request)
+    {
+        return await _httpClient.PostAsJsonAsync("api/tracking/log-entries/edit",
+                                                 request,
+                                                 options: new JsonSerializerOptions
+                                                          {
+                                                              Converters = { new JsonOptionalConverter() },
+                                                              DefaultIgnoreCondition =  System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault
+                                                          });
+    }
+    
     public async Task<HttpResponseMessage> MoveTrackingLogEntry(TrackingLogEntryMoveRequest request)
     {
         return await _httpClient.PostAsJsonAsync("api/tracking/log-entries/move",
