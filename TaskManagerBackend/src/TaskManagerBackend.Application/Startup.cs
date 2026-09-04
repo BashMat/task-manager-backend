@@ -20,6 +20,7 @@ using TaskManagerBackend.Application.Utility.Json;
 using TaskManagerBackend.Application.Utility.Security;
 using TaskManagerBackend.Common.Services;
 using TaskManagerBackend.DataAccess.Database;
+using TaskManagerBackend.DataAccess.Features.Files;
 using TaskManagerBackend.DataAccess.Features.Tracking;
 using TaskManagerBackend.DataAccess.Features.User;
 using TaskManagerBackend.Domain.Features.Tracking;
@@ -211,6 +212,9 @@ public class Startup(IConfiguration configuration)
         // Tracking:
         services.AddScoped<ITrackingRepository, TrackingRepository>();
         services.AddScoped<ITrackingService, TrackingService>();
+        
+        // Files:
+        services.AddScoped<IFilesRepository, FilesRepository>();
     }
 
     #endregion
