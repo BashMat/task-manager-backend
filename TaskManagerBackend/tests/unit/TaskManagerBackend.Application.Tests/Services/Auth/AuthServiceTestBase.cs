@@ -14,7 +14,7 @@ using TaskManagerBackend.Tests.Common;
 
 namespace TaskManagerBackend.Application.Tests.Services.Auth;
 
-public class AuthServiceTestBase : UnitTestsBase
+public abstract class AuthServiceTestBase : UnitTestBase
 {
     protected Mock<ICryptographyService> AuthProviderMock { get; private set; }
     protected Mock<IUserRepository> UserRepositoryMock { get; private set; }

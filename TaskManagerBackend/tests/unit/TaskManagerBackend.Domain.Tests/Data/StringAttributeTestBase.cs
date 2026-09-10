@@ -7,7 +7,7 @@ using Xunit;
 
 namespace TaskManagerBackend.Domain.Tests.Data;
 
-public class StringAttributeTestBase : UnitTestsBase
+public abstract class StringAttributeTestBase : UnitTestBase
 {
     public static TheoryData<string, string> GetNonEmptyStringTestData()
     {
