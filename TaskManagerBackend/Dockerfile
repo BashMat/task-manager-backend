@@ -2,8 +2,8 @@
 WORKDIR /app
 COPY . ./src
 RUN mkdir ./proj && cd ./src && \
-  find . -type f -a \( -iname "*.sln" -o -iname "*.csproj" -o -iname "*.props"\) \
-    -exec cp --parents "{}" ../proj/ \;
+  find . -type f -a \( -iname "*.slnx" -o -iname "*.csproj" -o -iname "*.props" \) \
+    -exec cp --parents -- "{}" ../proj/ \;
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS dotnet-build
 WORKDIR /app
